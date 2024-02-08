@@ -14,6 +14,7 @@ pub fn Home() -> impl IntoView {
                     <li><A href="drawers">"drawers"</A></li>
                     <li><A href="shells">"shells"</A></li>
                     <li><A href="tabs">"tabs"</A></li>
+                    <li><A href="accordion">"accordion"</A></li>
                 </ul>
             </nav>
         </div>

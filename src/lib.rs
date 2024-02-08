@@ -64,6 +64,7 @@ cfg_if! {
                             <Route path="drawers" view=move || view! {<Drawers /> } />
                             <Route path="shells" view=move || view! {<ShellsRoute /> } />
                             <Route path="tabs" view=move || view! {<TabsRoute /> } />
+                            <Route path="accordion" view=move || view! {<AccordionRoute /> } />
                             <Route path="" view=move || view! {<Home /> }/>
                         </Route>
                     </Routes>
