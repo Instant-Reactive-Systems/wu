@@ -1,0 +1,147 @@
+@layer base {
+	/* resets */
+	fieldset,
+	legend,
+	label {
+		@apply block;
+	}
+
+	/* placeholders */
+	::placeholder {
+		@apply text-surface-500 dark:text-surface-400;
+	}
+
+	/* webkit calendar picker */
+	input::-webkit-calendar-picker-indicator {
+		@apply dark:invert;
+	}
+
+	/* webkit search input cancel button */
+	input[type='search']::-webkit-search-cancel-button {
+		-webkit-appearance: none;
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z'/%3E%3C/svg%3E")
+			no-repeat 50% 50%;
+		@apply h-4 w-4 rounded-full bg-contain opacity-0 pointer-events-none;
+	}
+	input[type='search']:focus::-webkit-search-cancel-button {
+		@apply opacity-100 pointer-events-auto;
+	}
+	input[type='search']::-webkit-search-cancel-button {
+		@apply dark:invert;
+	}
+	
+	/* Progress Bar */
+	progress {
+		webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		@apply w-full h-2 overflow-hidden rounded-md;
+		@apply bg-surface-400 dark:bg-surface-500;
+	}
+	progress::-webkit-progress-bar {
+		@apply bg-surface-400 dark:bg-surface-500;
+	}
+	progress::-webkit-progress-value {
+		@apply bg-surface-900 dark:bg-surface-50;
+	}
+	::-moz-progress-bar {
+		@apply bg-surface-900 dark:bg-surface-50;
+	}
+	:indeterminate::-moz-progress-bar {
+		width: 0;
+	}
+	
+	/* Range Input */
+	/* https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color */
+	[type='range'] {
+		@apply w-full accent-surface-900 dark:accent-surface-50;
+	}
+
+	input,
+	textarea,
+	select {
+		@apply outline-0 w-full transition duration-100 px-2;
+		@apply bg-surface-200 dark:bg-surface-700 focus:brightness-105 hover:brightness-105;
+		@apply border border-surface-400 dark:border-surface-500 focus-within:border-primary-500;
+		@apply ring-0 focus-within:ring-1 focus-within:ring-primary-500;
+		@apply rounded-md;
+	}
+
+	/* Select (size/multiple) */
+	select {
+		@apply p-2 pr-8 space-y-1;
+	}
+	select[size] {
+		@apply bg-none;
+	}
+	select optgroup {
+		@apply space-y-1 font-bold;
+	}
+	select optgroup option {
+		@apply ml-0 pl-0;
+	}
+	select optgroup option:first-of-type {
+		@apply mt-3;
+	}
+	select optgroup option:last-child {
+		@apply mb-3;
+	}
+	select option {
+		@apply bg-surface-200 dark:bg-surface-700 px-4 py-2 cursor-pointer;
+	}
+	select option:checked {
+		/* https://stackoverflow.com/questions/50618602/change-color-of-selected-option-in-select-multiple */
+		background: rgb(var(--color-primary-500)) linear-gradient(0deg, rgb(var(--color-primary-500)) 0%, rgb(var(--color-primary-500)) 100%);
+	}
+
+	/* Checkbox & Radio */
+	[type='checkbox'],
+	[type='radio'] {
+		@apply w-5 h-5 ring-0 rounded cursor-pointer;
+		/* Background */
+		@apply bg-surface-200 dark:bg-surface-700 focus:brightness-105 hover:brightness-105;
+		/* Border */
+		@apply border border-surface-400 dark:border-surface-500 focus:border-primary-500;
+	}
+	[type='checkbox']:checked,
+	[type='radio']:checked {
+		@apply bg-primary-500 hover:bg-primary-500 focus:bg-primary-500 focus:ring-0;
+	}
+	[type='radio'] {
+		@apply rounded-md;
+	}
+
+	/* File Inputs */
+	[type='file'] {
+		@apply p-1;
+	}
+
+	/* Color Picker */
+	/* https://stackoverflow.com/questions/11167281/webkit-css-to-control-the-box-around-the-color-in-an-inputtype-color */
+	[type='color'] {
+		@apply border-none w-10 h-10 overflow-hidden rounded-md cursor-pointer;
+		-webkit-appearance: none; /* WebKit Only */
+	}
+	[type='color']::-webkit-color-swatch-wrapper {
+		@apply p-0;
+	}
+	[type='color']::-webkit-color-swatch {
+		@apply border-none hover:brightness-110;
+	}
+	[type='color']::-moz-color-swatch {
+		@apply border-none;
+	}
+
+	/* === States === */
+	input:disabled,
+	textarea:disabled,
+	select:disabled {
+		@apply opacity-50 cursor-not-allowed hover:brightness-100;
+	}
+
+	input[readonly],
+	textarea[readonly],
+	select[readonly] {
+		@apply border-0 cursor-not-allowed hover:brightness-100;
+	}
+}

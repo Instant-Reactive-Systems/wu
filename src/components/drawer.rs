@@ -1,0 +1,83 @@
+use leptos::*;
+use leptos_use::*;
+use crate::utils::Position;
+
+/// A context signal which allows toggling the drawer.
+#[derive(Clone)]
+pub struct ToggleDrawer(pub WriteSignal<bool>);
+
+/// Displays an overlay panel that attaches to any side of the screen.
+#[component]
+pub fn Drawer<VF, V>(
+    /// The contents of the drawer.
+    view: VF,
+    /// Enables an animation during opening and closing the drawer.
+    #[prop(default = true, into)] enable_anim: bool,
+    /// What side to put the drawer on.
+    #[prop(optional, into)] position: MaybeSignal<Position>,
+    /// Drawer class.
+    #[prop(default = "".into(), into)] class: TextProp,
+    /// Children of the component.
+    children: Children,
+) -> impl IntoView
+where
+    VF: Fn() -> V + 'static,
+    V: IntoView + 'static,
+{
+    let (opened, set_opened) = create_signal(false);
+    provide_context(ToggleDrawer(set_opened));
+
+    // setup 'close-on-outside-click' functionality
+    let target = create_node_ref::<html::Div>();
+    create_effect(move |_| {
+        target.on_load(move |_| {
+            let _ = on_click_outside(target, move |_| set_opened(false));
+        });
+    });
+
+    // dynamic drawer classes
+    let drawer_classes = {
+        move || {
+            let position_related_classes = match position() {
+                Position::Left => {
+                    format!(
+                        "h-full w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px] {}",
+                        if opened() { "!translate-x-0" } else { "" }
+                    )
+                }
+                Position::Right => {
+                    format!(
+                        "h-full w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px] {}",
+                        if opened() { "!translate-x-0" } else { "" }
+                    )
+                }
+                Position::Top => {
+                    format!(
+                        "w-full h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px] {}",
+                        if opened() { "!translate-y-0" } else { "" }
+                    )
+                },
+                Position::Bottom => {
+                    format!(
+                        "w-full h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px] {}",
+                        if opened() { "!translate-y-0" } else { "" }
+                    )
+                },
+            };
+
+            format!(
+                "overlay motion-safe:transition-none {} {} {}",
+                if enable_anim { "transition-transform" } else { "" },
+                position_related_classes,
+                class.get()
+            )
+        }
+    };
+
+    view! {
+        {children()}
+        <div node_ref=target class=drawer_classes>
+            {view()}
+        </div>
+    }
+}
