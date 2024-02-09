@@ -85,24 +85,27 @@ pub fn Tabs<T: 'static>(
         }
     }));
     provide_context(RemoveTab::<T>::new(move |id| {
-        set_tabs.update(move |tabs| tabs.retain(|tab| tab.with(|tab| tab.id != id)));
+        set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id != id)));
+        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
     }));
     provide_context(ModifyTab::<T>::new(move |(id, new_tab)| {
         let new_tab = TabWithId { id, tab: new_tab };
         tabs.with(move |tabs| {
-            let tab = tabs.iter().find(|tab| tab.with(|tab| tab.id == id));
+            let tab = tabs.iter().find(|tab| tab.with_untracked(|tab| tab.id == id));
             if let Some(tab) = tab { tab.update(move |tab| *tab = new_tab) }
         });
     }));
     provide_context(RemoveTabs::<T>::new(move |tab_ids| {
-        set_tabs.update(move |tabs| tabs.retain(|tab| !tab_ids.contains(&tab.with(|tab| tab.id))));
+        set_tabs.update(move |tabs| tabs.retain(|tab| !tab_ids.contains(&tab.with_untracked(|tab| tab.id))));
+        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
     }));
     provide_context(RemoveOtherTabs::<T>::new(move |id| {
-        set_tabs.update(move |tabs| tabs.retain(|tab| tab.with(|tab| tab.id == id)));
+        set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id == id)));
+        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
     }));
     provide_context(SwitchActiveTab::<T>::new(move |id| {
         // find if the tab exists
-        if tabs.with(move |tabs| !tabs.iter().any(|tab| tab.with(|tab| tab.id == id))) {
+        if tabs.with(move |tabs| !tabs.iter().any(|tab| tab.with_untracked(|tab| tab.id == id))) {
             tracing::error!("SwitchActiveTab: tab with id '{id}' does not exist");
         }
         // update the active tab id
@@ -112,7 +115,7 @@ pub fn Tabs<T: 'static>(
     let item = store_value(item);
 
     view! {
-        <div class=class>
+        <wu-tabs class=class>
             <ul class=list_class>
                 <Show
                     when=move || tabs.with(|tabs| !tabs.is_empty())
@@ -131,7 +134,7 @@ pub fn Tabs<T: 'static>(
                 Some(tab) => content.run(tab),
                 None => content_fallback.run(),
             }}
-        </div>
+        </wu-tabs>
     }
 }
 

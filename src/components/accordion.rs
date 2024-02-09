@@ -29,12 +29,12 @@ pub fn Accordion(
     accordion_item: Vec<AccordionItem>,
 ) -> impl IntoView {
     view! {
-        <div {..attrs} class=move || format!("flex flex-col {}", class.get())>
+        <wu-accordion {..attrs} class=move || format!("flex flex-col {}", class.get())>
             {accordion_item.into_iter().map(move |item| {
                 let (collapsed, set_collapsed) = create_signal(true);
 
                 view! {
-                    <div class=move || format!("flex flex-col {}", item.class.get())>
+                    <wu-accordion-item class=move || format!("flex flex-col {}", item.class.get())>
                         // Summary
                         <button
                             on:click=move |_| set_collapsed.update(move |x| *x = !*x)
@@ -49,9 +49,9 @@ pub fn Accordion(
                         >
                             {move || item.content.run()}
                         </div>
-                    </div>
+                    </wu-accordion-item>
                 }.into_view()
             }).collect::<Vec<_>>()}
-        </div>
+        </wu-accordion>
     }
 }

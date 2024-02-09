@@ -1,38 +1,40 @@
 use crate::utils::*;
 use leptos::*;
-use std::rc::Rc;
 use deref_derive::{Deref, DerefMut};
 
 /// Used to provide a custom view into the modal container.
 #[derive(Clone)]
 pub struct Modal {
-    /// Custom view to insert into the modal container.
-    pub content: Rc<dyn Fn() -> View>,
     /// Corresponds to the 'class' attribute of elements.
     pub class: TextProp,
+    /// Custom view to insert into the modal container.
+    pub content: ViewFn,
 }
 
-/// A context signal which allows adding a custom modal into the container.
-#[derive(Clone)]
-pub struct AddModal(pub SignalSetter<Modal>);
+crate::generate_marker_signal_setter!(
+    /// A context signal which allows popping a modal from the stack.
+    PopModal, ()
+);
 
-/// A context signal which allows popping a modal from the stack.
-#[derive(Clone)]
-pub struct PopModal(pub SignalSetter<()>);
+crate::generate_marker_signal_setter!(
+    /// A context signal which allows adding a custom modal into the container.
+    AddModal, Modal
+);
 
 /// Used to provide support for modals.
 #[component]
-pub fn ModalHook(
+pub fn ModalHook<M: 'static>(
+    #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Specifies the default 'class' attribute for all modals.
     #[prop(default = "".into(), into)] class: TextProp,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
-    const RESERVED_ID: &str = "wu-active-modal";
+    const ACTIVE_MODAL_ID: &str = "wu-active-modal";
 
     let (modal_id, set_modal_id) = create_signal(0u64);
     let (modals, set_modals) = create_signal(Vec::default());
-    let (add_focus_trap, pop_focus_trap) = create_focus_trap(RESERVED_ID);
+    let (add_focus_trap, pop_focus_trap) = create_focus_trap(ACTIVE_MODAL_ID);
 
     let add_modal = SignalSetter::map(move |modal: Modal| {
         let id = modal_id.get_untracked();
@@ -46,12 +48,14 @@ pub fn ModalHook(
         });
         pop_focus_trap(());
     });
-    provide_context(AddModal(add_modal));
-    provide_context(PopModal(pop_modal));
+    provide_context(AddModal::<M>::new(add_modal));
+    provide_context(PopModal::<M>::new(pop_modal));
 
     view! {
         {children()}
-        // Main modal overlay container
+        // backdrop
+        <wu-modal-backdrop class=move || format!("overlay {}", if modals.with(|modals| !modals.is_empty()) { "bg-black/50 backdrop-blur-sm" } else { "" })/>
+        // modals
         <For
             each=modals
             key=move |modal| modal.id
@@ -65,13 +69,13 @@ pub fn ModalHook(
                 };
 
                 view! {
-                    <div
-                        id=move || if last_modal() { RESERVED_ID } else { "" }
-                        class="overlay flex center z-2"
+                    <wu-modal
+                        id=move || if last_modal() { ACTIVE_MODAL_ID } else { "" }
+                        class="overlay flex center z-1"
                     >
                         <div class=classes>
                             <div class="overlay">
-                                {(*modal.content)()}
+                                {modal.content.run()}
                             </div>
                             {last_modal().then(move || view! {
                                 <div class="overlay flex justify-end">
@@ -84,11 +88,10 @@ pub fn ModalHook(
                                 </div>
                             })}
                         </div>
-                    </div>
+                    </wu-modal>
                 }
             }
         />
-        <div class=move || format!("overlay z-1 {}", if !modals().is_empty() { "bg-black/50 backdrop-blur-sm" } else { "" })/>
     }
 }
 
