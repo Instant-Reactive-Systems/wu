@@ -71,7 +71,7 @@ pub fn ToastHook<M: 'static>(
 
     view! {
         {children()}
-        <div class="overlay flex justify-end">
+        <wu-toast-hook class="overlay flex justify-end overflow-clip">
             <ul class="divide-y divide-primary-700 pointer-events-none [&>*]:pointer-events-auto">
                 <For
                     each=toasts
@@ -115,7 +115,7 @@ pub fn ToastHook<M: 'static>(
                     }
                 />
             </ul>
-        </div>
+        </wu-toast-hook>
     }
 }
 

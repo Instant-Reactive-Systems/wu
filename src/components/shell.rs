@@ -19,7 +19,7 @@ crate::generate_marker_bootleg_read_signal!(
 
 /// Used to specify a composable common layout.
 #[component]
-pub fn ShellHook<M: 'static>(
+pub fn Shell<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Corresponds to the 'class' attribute of elements.
 	#[prop(default = "".into(), into)] class: TextProp,
@@ -46,10 +46,8 @@ pub fn ShellHook<M: 'static>(
     }));
     provide_context(PushShellContext::<M>::new(move |cx| {
         set_shell_cxs.update(move |cxs| cxs.push(cx));
-        tracing::info!("pushing shell cx");
     }));
     provide_context(PopShellContext::<M>::new(move |_| {
-        tracing::info!("popping shell cx");
         if shell_cxs.with(move |cxs| cxs.len() > 1) {
             set_shell_cxs.update(move |cxs| _ = cxs.pop());
         }
@@ -57,25 +55,23 @@ pub fn ShellHook<M: 'static>(
     provide_context(ActiveShellContext::<M>::new(active_cx.clone()));
 
 	view! {
-        <div class="overlay overlay-container">
-            <div class=move || format!("flex flex-col {}", class.get())>
-                // Header
-                {let cx = active_cx.clone(); move || cx().header.run()}
-                // center area
-                <div class="grow flex flex-row">
-                    // LeftSidebar
-                    {let cx = active_cx.clone(); move || cx().left_sidebar.run()}
-                    // Main content area
-                    <div class="grow overlay-container">
-                        {children()}
-                    </div>
-                    // RightSidebar
-                    {let cx = active_cx.clone(); move || cx().right_sidebar.run()}
+        <wu-shell class=move || format!("overlay flex flex-col {}", class.get())>
+            // Header
+            {let cx = active_cx.clone(); move || cx().header.run()}
+            // center area
+            <div class="grow flex flex-row">
+                // LeftSidebar
+                {let cx = active_cx.clone(); move || cx().left_sidebar.run()}
+                // Main content area
+                <div class="grow overlay-container">
+                    {children()}
                 </div>
-                // Footer
-                {let cx = active_cx.clone(); move || cx().footer.run()}
+                // RightSidebar
+                {let cx = active_cx.clone(); move || cx().right_sidebar.run()}
             </div>
-        </div>
+            // Footer
+            {let cx = active_cx.clone(); move || cx().footer.run()}
+        </wu-shell>
 	}
 }
 

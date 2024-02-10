@@ -37,21 +37,21 @@ pub fn Collapse(
     let (collapsed, set_collapsed) = create_signal(!opened);
 
     view! {
-        <div {..attrs} class=move || format!("flex flex-col {}", class.get())>
-            // <Summary>
+        <wu-collapse {..attrs} class=move || format!("flex flex-col {}", class.get())>
+            // Summary
             <button
                 on:click=move |_| set_collapsed.update(move |x| *x = !*x)
                 class=move || format!("w-full {}", collapse_summary.class.get())
             >
                 {(collapse_summary.children)().into_view()}
             </button>
-            // <Content>
+            // Content
             <div
                 class=move || format!("w-full {}", collapse_content.class.get())
                 class=("hidden", collapsed)
             >
                 {(collapse_content.children)().into_view()}
             </div>
-        </div>
+        </wu-collapse>
     }
 }

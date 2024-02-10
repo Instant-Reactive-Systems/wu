@@ -11,7 +11,7 @@ pub fn TabsRoute() -> impl IntoView {
     view! {
         <Tabs<Tab>
             class="flex flex-row divide-x divide-surface-800"
-            list_class="flex flex-col divide-y divide-surface-800 w-[300px]"
+            list_class="flex flex-col divide-y divide-surface-800 w-[300px] scroll-lock"
             item=#[allow(unused_parens)] (move |tab: TabSignal<Tab>| {
                 let switch_active_tab = expect_context::<SwitchActiveTab<Tab>>();
                 view! {

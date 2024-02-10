@@ -1,16 +1,24 @@
 use leptos::*;
 use leptos_use::*;
 use crate::utils::Position;
+use deref_derive::{Deref, DerefMut};
 
-/// A context signal which allows toggling the drawer.
-#[derive(Clone)]
-pub struct ToggleDrawer(pub WriteSignal<bool>);
+crate::generate_marker_signal_setter!(
+    /// Opens the drawer.
+    OpenDrawer, ()
+);
+
+crate::generate_marker_signal_setter!(
+    /// Closes the drawer.
+    CloseDrawer, ()
+);
 
 /// Displays an overlay panel that attaches to any side of the screen.
 #[component]
-pub fn Drawer<VF, V>(
+pub fn DrawerHook<M: 'static>(
+    #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// The contents of the drawer.
-    view: VF,
+    #[prop(into)] view: ViewFn,
     /// Enables an animation during opening and closing the drawer.
     #[prop(default = true, into)] enable_anim: bool,
     /// What side to put the drawer on.
@@ -19,16 +27,13 @@ pub fn Drawer<VF, V>(
     #[prop(default = "".into(), into)] class: TextProp,
     /// Children of the component.
     children: Children,
-) -> impl IntoView
-where
-    VF: Fn() -> V + 'static,
-    V: IntoView + 'static,
-{
+) -> impl IntoView {
     let (opened, set_opened) = create_signal(false);
-    provide_context(ToggleDrawer(set_opened));
+    provide_context(OpenDrawer::<M>::new(move |_| set_opened(true)));
+    provide_context(CloseDrawer::<M>::new(move |_| set_opened(false)));
 
     // setup 'close-on-outside-click' functionality
-    let target = create_node_ref::<html::Div>();
+    let target = create_node_ref::<html::Custom>();
     create_effect(move |_| {
         target.on_load(move |_| {
             let _ = on_click_outside(target, move |_| set_opened(false));
@@ -76,8 +81,8 @@ where
 
     view! {
         {children()}
-        <div node_ref=target class=drawer_classes>
-            {view()}
-        </div>
+        <wu-drawer-hook node_ref=target class=drawer_classes>
+            {move || view.run()}
+        </wu-drawer-hook>
     }
 }

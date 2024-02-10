@@ -18,14 +18,13 @@ pub fn ShellsRoute() -> impl IntoView {
 
     view! {
         <div class="overlay">
-            <ShellHook<ShellsExample>
-                class="overlay-container"
-                header=ViewFn::from(move || view! { <div class="bg-blue-600 h-10"/> })
+            <Shell<ShellsExample>
+                header=move || view! { <div class="bg-blue-600 h-10"/> }
             >
-                <div class="overlay flex center">
+                <div class="flex center">
                     <p class="bg-surface-800">"content"</p>
                 </div>
-            </ShellHook<ShellsExample>>
+            </Shell<ShellsExample>>
         </div>
     }
 }
