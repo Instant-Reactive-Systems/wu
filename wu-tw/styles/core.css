@@ -29,7 +29,11 @@
 
 	html.dark, html.dark * {
 		scrollbar-color: rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.05);
-	} 
+	}
+
+	ul, ol, nav {
+		overflow: auto;
+	}
 
 	/* enables flexbox elements to properly be scrollable */
 	*:has(.scroll-lock) {
