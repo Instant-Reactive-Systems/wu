@@ -7,19 +7,19 @@ Styling for components with a strong border and weak body.
 # Usage
 
 ```html
-<span class="w-8 h-8 bg-ghost-blue-500"/>
+<span class="w-8 h-8 bg-ghost-blue"/>
 ```
 */
 export default ({ matchUtilities, theme }) => {
 	matchUtilities(
 		{
-			ghost: (value) => {
+			'ghost': (value, options) => {
 				return ({
-					borderColor: withAlphaValue(value, 1),
-					backgroundColor: withAlphaValue(value, 0.20),
+					borderColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
+					backgroundColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 0.20),
 				})
 			},
 		},
-		{ values: flattenColorPalette(theme('colors')), type: ['color', 'any'] }
+		{ values: flattenColorPalette(theme('colors')), type: ['color'] }
 	);
 };

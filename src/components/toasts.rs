@@ -38,6 +38,8 @@ pub fn ToastHook<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Toast class.
     #[prop(default = "".into(), into)] class: TextProp,
+    /// Dismiss button class.
+    #[prop(default = "".into(), into)] dismiss_btn_class: TextProp,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
@@ -72,7 +74,7 @@ pub fn ToastHook<M: 'static>(
     view! {
         {children()}
         <wu-toast-hook class="overlay flex justify-end overflow-clip">
-            <ul class="divide-y divide-primary-700 pointer-events-none [&>*]:pointer-events-auto">
+            <ul class="h-fit divide-y divide-light-2 border border-light-2 dark:x-[divide-dark-2,border-dark-2] rounded-bl-lg shadow-lg">
                 <For
                     each=toasts
                     key=move |toast| toast.id
@@ -81,7 +83,11 @@ pub fn ToastHook<M: 'static>(
                         let timeout_handle = toast.timeout_handle;
                         let class = {
                             let class = class.clone();
-                            move || format!("flex vcenter flex-row gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-primary-500 last:rounded-bl-md selection:bg-surface-900/20 {}", class.get())
+                            move || format!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-light-1 dark:bg-dark-1 last:rounded-bl-md {}", class.get())
+                        };
+                        let dismiss_btn_class = {
+                            let class = dismiss_btn_class.clone();
+                            move || format!("flex center text-sm font-thin rounded-full hover:bg-light-2 hover:dark:bg-dark-2 text-light-content dark:text-dark-content size-6 p-2 {}", class.get())
                         };
 
                         view! {
@@ -101,7 +107,7 @@ pub fn ToastHook<M: 'static>(
                                 // close
                                 {toast.dismissable.then(move || view! {
                                     <button
-                                        class="flex center text-sm font-thin rounded-full hover:bg-surface-500/20 square-6 p-2"
+                                        class=dismiss_btn_class
                                         on:click=move |_| {
                                             timeout_handle.clear();
                                             set_toasts.update(|toasts| toasts.retain(|toast| toast.id != id));

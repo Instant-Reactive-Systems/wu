@@ -13,9 +13,10 @@ cfg_if! {
         use leptos_meta::*;
         use leptos_router::*;
 
-        /// Toast hook marker type.
-        #[derive(Clone, Copy)]
-        pub struct Main;
+        generate_marker_type!(
+            /// General marker type.
+            Main
+        );
 
         #[component]
         pub fn App() -> impl IntoView {
@@ -24,17 +25,17 @@ cfg_if! {
             view! {
                 <Stylesheet id="leptos" href="/pkg/wu.css"/>
                 <Link rel="shortcut icon" type_="image/ico" href="/favicon.ico"/>
-                <Body class="min-h-lvh h-lvh max-h-lvh overlay-container bg-surface-800 text-surface-content"/>
+                <Body class="min-h-lvh h-lvh max-h-lvh overlay-container bg-light-1 text-light-content dark:x-[bg-dark-1,text-dark-content] [&_*]:x-[thin-scrollbar,scroll-light-2,thumb-light-3] dark:[&_*]:x-[scroll-dark-2,thumb-dark-3]"/>
                 <Title text="wu demo"/>
                 
                 <Router>
                     <Routes>
                         <Route path="/" view=move || view! {
-                            <ModalHook<Main> class="p-4 bg-surface-400 rounded-lg bg-gradient-to-tl from-blue-900 to-blue-600 border border-surface-800 shadow-lg">
+                            <ModalHook<Main> class="p-4 bg-light-1 dark:bg-dark-1 rounded-lg border border-light-2 dark:border-dark-2 shadow-lg">
                                 <DrawerHook<Main>
                                     enable_anim=true
                                     position=Position::Left
-                                    class="bg-surface-800 rounded-r-lg border-r border-r-surface-900 p-2"
+                                    class="bg-light-1 dark:bg-dark-1 rounded-r-lg border-r border-r-light-2 dark:border-r-dark-2 p-2"
                                     view=move || view! {
                                         <h1 class="font-bold text-xl text-center">"Drawer header"</h1>
                                         <p>
@@ -50,8 +51,8 @@ cfg_if! {
                                 >
                                     <ToastHook<Main>>
                                         <Shell<Main>
-                                            header=ViewFn::from(move || view! { <div class="flex-none bg-surface-500 w-full h-8"/> })
-                                            footer=ViewFn::from(move || view! { <div class="flex-none bg-surface-400 w-full h-8"/> })
+                                            header=ViewFn::from(move || view! { <div class="flex-none bg-light-2 dark:bg-dark-2 w-full h-8"/> })
+                                            footer=ViewFn::from(move || view! { <div class="flex-none bg-light-2 dark:bg-dark-2 w-full h-8"/> })
                                         >
                                             <Outlet />
                                         </Shell<Main>>
