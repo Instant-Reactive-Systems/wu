@@ -1,34 +1,10 @@
 @layer base {
-	body {
-		@apply bg-surface-50 dark:bg-surface-900;
-	}
-
 	::selection {
 		@apply bg-primary/25;
 	}
 
 	html {
 		-webkit-tap-highlight-color: rgba(128, 128, 128 / 0.5);
-	}
-
-	::-webkit-scrollbar {
-		@apply w-2 h-2;
-	}
-
-	::-webkit-scrollbar-track {
-		@apply bg-surface-50 dark:bg-surface-900 px-[1px];
-	}
-
-	::-webkit-scrollbar-thumb {
-		@apply rounded-md bg-surface-400 dark:bg-surface-500;
-	}
-
-	html, * {
-		scrollbar-color: rgba(0, 0, 0, 0.2) rgba(255, 255, 255, 0.05);
-	}
-
-	html.dark, html.dark * {
-		scrollbar-color: rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.05);
 	}
 
 	ul, ol, nav {

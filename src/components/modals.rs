@@ -54,7 +54,7 @@ pub fn ModalHook<M: 'static>(
     view! {
         {children()}
         // backdrop
-        <wu-modal-backdrop class=move || format!("overlay {}", if modals.with(|modals| !modals.is_empty()) { "bg-black/50 backdrop-blur-sm" } else { "" })/>
+        <wu-modal-backdrop class=move || format!("overlay {}", if modals.with(|modals| !modals.is_empty()) { "bg-black/25 backdrop-blur-sm" } else { "" })/>
         // modals
         <For
             each=modals
@@ -80,7 +80,7 @@ pub fn ModalHook<M: 'static>(
                             {last_modal().then(move || view! {
                                 <div class="overlay flex justify-end">
                                     <button
-                                        class="flex center text-sm font-thin rounded-full hover:bg-surface-200/20 square-6 p-2"
+                                        class="flex center text-sm font-thin rounded-full hover:bg-light-content/20 hover:dark:bg-dark-content/20 size-6 p-2"
                                         on:click=move |_| pop_modal(())
                                     >
                                         "✕"

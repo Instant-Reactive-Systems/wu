@@ -9,7 +9,9 @@ import maskPlugin from './utilities/mask.plugin.js';
 import stackPlugin from './utilities/stack.plugin.js';
 import swapPlugin from './utilities/swap.plugin.js';
 import textoutlinePlugin from './utilities/text-outline.plugin.js';
-import squarePlugin from './utilities/square.plugin.js';
+import thinscrollbarPlugin from './utilities/thin-scrollbar.plugin.js';
+import scrollbarcolorPlugin from './utilities/scroll-color.plugin.js';
+import xPlugin from './utilities/x.plugin.js';
 
 export default (params) => {
 	centerPlugin(params);
@@ -23,5 +25,7 @@ export default (params) => {
 	stackPlugin(params);
 	swapPlugin(params);
 	textoutlinePlugin(params);
-	squarePlugin(params);
+	thinscrollbarPlugin(params);
+	scrollbarcolorPlugin(params);
+	xPlugin(params);
 };

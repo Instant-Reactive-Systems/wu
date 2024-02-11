@@ -103,6 +103,20 @@ export default {
 					'DEFAULT': 'rgb(var(--color-surface-500) / <alpha-value>)',
 					'content': 'rgb(var(--color-surface-content) / <alpha-value>)',
 				},
+				'dark': {
+					'1': 'rgb(var(--color-surface-900) / <alpha-value>)',
+					'2': 'rgb(var(--color-surface-800) / <alpha-value>)',
+					'3': 'rgb(var(--color-surface-700) / <alpha-value>)',
+					'DEFAULT': 'rgb(var(--color-surface-900) / <alpha-value>)',
+					'content': 'rgb(var(--color-surface-100) / <alpha-value>)',
+				},
+				'light': {
+					'1': 'rgb(var(--color-surface-100) / <alpha-value>)',
+					'2': 'rgb(var(--color-surface-200) / <alpha-value>)',
+					'3': 'rgb(var(--color-surface-300) / <alpha-value>)',
+					'DEFAULT': 'rgb(var(--color-surface-100) / <alpha-value>)',
+					'content': 'rgb(var(--color-surface-900) / <alpha-value>)',
+				},
 			}
 		}
 	},
