@@ -75,6 +75,7 @@ pub fn ToastHook<M: 'static>(
         {children()}
         <wu-toast-hook class="overlay flex justify-end overflow-clip">
             <ul class="h-fit divide-y divide-light-2 border border-light-2 dark:x-[divide-dark-2,border-dark-2] rounded-bl-lg shadow-lg">
+
                 <For
                     each=toasts
                     key=move |toast| toast.id

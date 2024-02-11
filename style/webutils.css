@@ -476,6 +476,16 @@ ul, ol, nav {
   min-height: 0;
 }
 
+ul, ol, nav {
+  overflow: auto;
+}
+
+/* enables flexbox elements to properly be scrollable */
+
+*:has(.scroll-lock) {
+  min-height: 0;
+}
+
 :root {
   /* =~= Theme Colors  =~= */
   /* surface | #495a8f */
@@ -1474,10 +1484,6 @@ input[readonly]:hover,
 
 .max-h-lvh {
   max-height: 100lvh;
-}
-
-.min-h-lvh {
-  min-height: 100lvh;
 }
 
 .w-32 {
