@@ -1,5 +1,6 @@
-use leptos::*;
 use crate::components::*;
+use leptos::*;
+use crate::Main;
 
 struct Tab {
     name: TextProp,
@@ -9,7 +10,7 @@ struct Tab {
 #[component]
 pub fn TabsRoute() -> impl IntoView {
     view! {
-        <Tabs<Tab>
+        <Tabs<Main, Tab>
             class="flex flex-row divide-x divide-surface-800"
             list_class="flex flex-col divide-y divide-surface-800 w-[300px] scroll-lock"
             item=#[allow(unused_parens)] (move |tab: TabSignal<Tab>| {
@@ -23,11 +24,11 @@ pub fn TabsRoute() -> impl IntoView {
                 }
             })
             content=#[allow(unused_parens)] (move |tab: TabSignal<Tab>| {
-                let add_tab = expect_context::<AddTab<Tab>>();
-                let remove_tab = expect_context::<RemoveTab<Tab>>();
-                let modify_tab = expect_context::<ModifyTab<Tab>>();
-                let remove_tabs = expect_context::<RemoveTabs<Tab>>();
-                let remove_other_tabs = expect_context::<RemoveOtherTabs<Tab>>();
+                let add_tab = expect_context::<AddTab<crate::Main, Tab>>();
+                let remove_tab = expect_context::<RemoveTab<crate::Main>>();
+                let modify_tab = expect_context::<ModifyTab<crate::Main, Tab>>();
+                let remove_tabs = expect_context::<RemoveTabs<crate::Main>>();
+                let remove_other_tabs = expect_context::<RemoveOtherTabs<crate::Main>>();
                 view! {
                     <div class="grow flex flex-col p-8">
                         <h1 class="text-xl tablet:text-3xl text-center">{move || tab.with(|tab| tab.content.clone())}</h1>
@@ -52,4 +53,3 @@ pub fn TabsRoute() -> impl IntoView {
         />
     }
 }
-

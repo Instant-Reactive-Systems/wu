@@ -22,7 +22,9 @@ pub fn create_focus_trap(
         let target = match document().get_element_by_id(&selector_id) {
             Some(target) => target,
             None => {
-                tracing::warn!("no element tagged with '{selector_id}' found, will not apply trap focus");
+                tracing::warn!(
+                    "no element tagged with '{selector_id}' found, will not apply trap focus"
+                );
                 return;
             }
         };

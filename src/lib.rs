@@ -27,7 +27,7 @@ cfg_if! {
                 <Link rel="shortcut icon" type_="image/ico" href="/favicon.ico"/>
                 <Body class="min-h-lvh h-lvh max-h-lvh overlay-container bg-light-1 text-light-content dark:x-[bg-dark-1,text-dark-content] [&_*]:x-[thin-scrollbar,scroll-light-2,thumb-light-3] dark:[&_*]:x-[scroll-dark-2,thumb-dark-3]"/>
                 <Title text="wu demo"/>
-                
+
                 <Router>
                     <Routes>
                         <Route path="/" view=move || view! {

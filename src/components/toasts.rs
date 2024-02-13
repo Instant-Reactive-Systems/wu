@@ -1,9 +1,9 @@
-use leptos::*;
 use leptos::leptos_dom::helpers::TimeoutHandle;
+use leptos::*;
 
+use deref_derive::{Deref, DerefMut};
 use std::borrow::Cow;
 use std::time::Duration;
-use deref_derive::{Deref, DerefMut};
 
 /// A toast message.
 ///
@@ -37,9 +37,11 @@ crate::generate_marker_signal_setter!(
 pub fn ToastHook<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Toast class.
-    #[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// Dismiss button class.
-    #[prop(default = "".into(), into)] dismiss_btn_class: TextProp,
+    #[prop(default = "".into(), into)]
+    dismiss_btn_class: TextProp,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
@@ -139,4 +141,3 @@ impl PartialEq for ToastWithId {
         self.id == other.id
     }
 }
-

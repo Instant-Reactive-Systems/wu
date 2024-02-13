@@ -78,7 +78,50 @@ macro_rules! generate_marker_signal_setter {
                 Self { setter: ::leptos::SignalSetter::<$ty>::map(setter), _phant: Default::default() }
             }
         }
-    };
+    }
+}
+
+
+/// Generates a newtype for a `Clone,Copy` SignalSetter with a generic marker
+/// and active type to allow multiple hooks.
+///
+///
+/// # Usage
+/// The below code:
+/// ```no_run
+/// generate_generic_marker_signal_setter(
+///     /// Some docs
+///     #[derive(Debug)]
+///     MySignalSetter, T
+/// )
+/// ```
+///
+/// Use the newly generated type as you would a normal `SignalSetter`.
+#[macro_export]
+macro_rules! generate_generic_marker_signal_setter {
+    ($(#[$outer:meta])* $name:ident, $map_ty:ty, $ty:ident) => {
+        $(#[$outer])*
+        #[derive(Deref, DerefMut)]
+        pub struct $name <M: 'static, $ty: 'static> {
+            #[deref]
+            setter: ::leptos::SignalSetter<$map_ty>,
+            _phant: std::marker::PhantomData<(M, T)>,
+        }
+
+        impl<M: 'static, $ty> Clone for $name <M, $ty> {
+            fn clone(&self) -> Self {
+                *self
+            }
+        }
+
+        impl<M: 'static, $ty> Copy for $name <M, $ty> {}
+
+        impl<M: 'static, $ty> $name <M, $ty> {
+            pub fn new(setter: impl Fn($map_ty) + 'static) -> Self {
+                Self { setter: ::leptos::SignalSetter::<$map_ty>::map(setter), _phant: Default::default() }
+            }
+        }
+    }
 }
 
 /// Generates a newtype for a `Clone` read signal with a generic marker to
@@ -277,4 +320,3 @@ impl<T> Clone for ParamViewFn<T> {
         Self(self.0.clone())
     }
 }
-
