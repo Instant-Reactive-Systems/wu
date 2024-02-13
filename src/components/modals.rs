@@ -1,6 +1,6 @@
 use crate::utils::*;
-use leptos::*;
 use deref_derive::{Deref, DerefMut};
+use leptos::*;
 
 /// Used to provide a custom view into the modal container.
 #[derive(Clone)]
@@ -26,7 +26,8 @@ crate::generate_marker_signal_setter!(
 pub fn ModalHook<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Specifies the default 'class' attribute for all modals.
-    #[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
@@ -112,4 +113,3 @@ impl PartialEq for ModalWithId {
         self.id == other.id
     }
 }
-

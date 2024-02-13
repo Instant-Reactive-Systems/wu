@@ -1,10 +1,10 @@
-use leptos::*;
-use deref_derive::{Deref, DerefMut};
 use crate::utils::ParamViewFn;
+use deref_derive::{Deref, DerefMut};
+use leptos::*;
 
-crate::generate_marker_signal_setter!(
+crate::generate_generic_marker_signal_setter!(
     /// Adds a tab.
-    AddTab, M
+    AddTab, T, T
 );
 
 crate::generate_marker_signal_setter!(
@@ -12,9 +12,9 @@ crate::generate_marker_signal_setter!(
     RemoveTab, TabId
 );
 
-crate::generate_marker_signal_setter!(
+crate::generate_generic_marker_signal_setter!(
     /// Modify a tab.
-    ModifyTab, (TabId, M)
+    ModifyTab, (TabId, T), T
 );
 
 crate::generate_marker_signal_setter!(
@@ -38,41 +38,52 @@ pub type TabSignal<T> = RwSignal<TabWithId<T>>;
 
 /// Use tabs to quickly switch between different views and pages.
 #[component]
-pub fn Tabs<T: 'static>(
-    #[prop(optional)] _phant: std::marker::PhantomData<T>,
+pub fn Tabs<M: 'static, T: 'static>(
+    #[prop(optional)] _phant: std::marker::PhantomData<(M, T)>,
     /// List of tab contexts.
-    #[prop(default = Vec::default(), into)] tabs: Vec<T>,
+    #[prop(default = Vec::default(), into)]
+    tabs: Vec<T>,
     /// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// List class.
-	#[prop(default = "".into(), into)] list_class: TextProp,
+    #[prop(default = "".into(), into)]
+    list_class: TextProp,
     /// List item slot.
-	#[prop(optional, into)] item: ParamViewFn<TabSignal<T>>,
+    #[prop(optional, into)]
+    item: ParamViewFn<TabSignal<T>>,
     /// Content slot.
-	#[prop(optional, into)] content: ParamViewFn<TabSignal<T>>,
+    #[prop(optional, into)]
+    content: ParamViewFn<TabSignal<T>>,
     /// List fallback.
-	#[prop(optional, into)] list_fallback: ViewFn,
+    #[prop(optional, into)]
+    list_fallback: ViewFn,
     /// Content fallback.
-	#[prop(optional, into)] content_fallback: ViewFn,
+    #[prop(optional, into)]
+    content_fallback: ViewFn,
 ) -> impl IntoView {
     let is_default_full = !tabs.is_empty();
     let (tab_id, set_tab_id) = create_signal::<TabId>(tabs.len() as TabId);
-	let (tabs, set_tabs) = create_signal::<Vec<TabSignal<T>>>(
-        tabs
-            .into_iter()
+    let (tabs, set_tabs) = create_signal::<Vec<TabSignal<T>>>(
+        tabs.into_iter()
             .enumerate()
             .map(|(id, tab)| TabWithId { id: id as u64, tab })
             .map(|tab| create_rw_signal(tab))
-            .collect()
+            .collect(),
     );
-    let (active_tab_id, set_active_tab_id) = create_signal::<Option<TabId>>(is_default_full.then_some(0));
-    let active_tab = move || with!(|tabs, active_tab_id| {
-        active_tab_id.and_then(|active_tab_id| {
-            tabs.iter().find(|tab| tab.with(|tab| tab.id == active_tab_id)).cloned()
+    let (active_tab_id, set_active_tab_id) =
+        create_signal::<Option<TabId>>(is_default_full.then_some(0));
+    let active_tab = move || {
+        with!(|tabs, active_tab_id| {
+            active_tab_id.and_then(|active_tab_id| {
+                tabs.iter()
+                    .find(|tab| tab.with(|tab| tab.id == active_tab_id))
+                    .cloned()
+            })
         })
-    });
+    };
 
-    provide_context(AddTab::<T>::new(move |tab| {
+    provide_context(AddTab::<M, T>::new(move |tab| {
         // add to tabs
         let id = tab_id.get_untracked();
         let tab = create_rw_signal(TabWithId { id, tab });
@@ -84,28 +95,50 @@ pub fn Tabs<T: 'static>(
             set_active_tab_id.update(move |active_tab_id| *active_tab_id = Some(0))
         }
     }));
-    provide_context(RemoveTab::<T>::new(move |id| {
+    provide_context(RemoveTab::<M>::new(move |id| {
         set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id != id)));
-        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
-    }));
-    provide_context(ModifyTab::<T>::new(move |(id, new_tab)| {
-        let new_tab = TabWithId { id, tab: new_tab };
-        tabs.with(move |tabs| {
-            let tab = tabs.iter().find(|tab| tab.with_untracked(|tab| tab.id == id));
-            if let Some(tab) = tab { tab.update(move |tab| *tab = new_tab) }
+        set_active_tab_id.update(move |active_tab_id| {
+            *active_tab_id = tabs.with_untracked(|tabs| {
+                (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))
+            })
         });
     }));
-    provide_context(RemoveTabs::<T>::new(move |tab_ids| {
-        set_tabs.update(move |tabs| tabs.retain(|tab| !tab_ids.contains(&tab.with_untracked(|tab| tab.id))));
-        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
+    provide_context(ModifyTab::<M, T>::new(move |(id, new_tab)| {
+        let new_tab = TabWithId { id, tab: new_tab };
+        tabs.with(move |tabs| {
+            let tab = tabs
+                .iter()
+                .find(|tab| tab.with_untracked(|tab| tab.id == id));
+            if let Some(tab) = tab {
+                tab.update(move |tab| *tab = new_tab)
+            }
+        });
     }));
-    provide_context(RemoveOtherTabs::<T>::new(move |id| {
+    provide_context(RemoveTabs::<M>::new(move |tab_ids| {
+        set_tabs.update(move |tabs| {
+            tabs.retain(|tab| !tab_ids.contains(&tab.with_untracked(|tab| tab.id)))
+        });
+        set_active_tab_id.update(move |active_tab_id| {
+            *active_tab_id = tabs.with_untracked(|tabs| {
+                (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))
+            })
+        });
+    }));
+    provide_context(RemoveOtherTabs::<M>::new(move |id| {
         set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id == id)));
-        set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
+        set_active_tab_id.update(move |active_tab_id| {
+            *active_tab_id = tabs.with_untracked(|tabs| {
+                (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))
+            })
+        });
     }));
     provide_context(SwitchActiveTab::<T>::new(move |id| {
         // find if the tab exists
-        if tabs.with(move |tabs| !tabs.iter().any(|tab| tab.with_untracked(|tab| tab.id == id))) {
+        if tabs.with(move |tabs| {
+            !tabs
+                .iter()
+                .any(|tab| tab.with_untracked(|tab| tab.id == id))
+        }) {
             tracing::error!("SwitchActiveTab: tab with id '{id}' does not exist");
         }
         // update the active tab id
@@ -164,4 +197,3 @@ impl<T> PartialEq for TabWithId<T> {
         self.id == other.id
     }
 }
-

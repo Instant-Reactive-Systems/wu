@@ -1,6 +1,6 @@
+use deref_derive::{Deref, DerefMut};
 use leptos::*;
 use std::rc::Rc;
-use deref_derive::{Deref, DerefMut};
 
 crate::generate_marker_signal_setter!(
     /// Pushes a new shell context.
@@ -22,17 +22,22 @@ crate::generate_marker_bootleg_read_signal!(
 pub fn Shell<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// Header slot.
-	#[prop(optional, into)] header: ViewFn,
+    #[prop(optional, into)]
+    header: ViewFn,
     /// Left sidebar slot.
-	#[prop(optional, into)] left_sidebar: ViewFn,
+    #[prop(optional, into)]
+    left_sidebar: ViewFn,
     /// Right sidebar slot.
-	#[prop(optional, into)] right_sidebar: ViewFn,
+    #[prop(optional, into)]
+    right_sidebar: ViewFn,
     /// Footer slot.
-	#[prop(optional, into)] footer: ViewFn,
+    #[prop(optional, into)]
+    footer: ViewFn,
     /// Children of the component.
-	children: Children,
+    children: Children,
 ) -> impl IntoView {
     let (shell_cxs, set_shell_cxs) = create_signal::<Vec<ShellContext>>(vec![ShellContext {
         header: header.clone(),
@@ -40,10 +45,12 @@ pub fn Shell<M: 'static>(
         right_sidebar: right_sidebar.clone(),
         footer: footer.clone(),
     }]);
-    let active_cx = Rc::new(move || shell_cxs.with(move |cxs| {
-        let id = cxs.len().saturating_sub(1);
-        cxs[id].clone()
-    }));
+    let active_cx = Rc::new(move || {
+        shell_cxs.with(move |cxs| {
+            let id = cxs.len().saturating_sub(1);
+            cxs[id].clone()
+        })
+    });
     provide_context(PushShellContext::<M>::new(move |cx| {
         set_shell_cxs.update(move |cxs| cxs.push(cx));
     }));
@@ -54,7 +61,7 @@ pub fn Shell<M: 'static>(
     }));
     provide_context(ActiveShellContext::<M>::new(active_cx.clone()));
 
-	view! {
+    view! {
         <wu-shell class=move || format!("overlay flex flex-col {}", class.get())>
             // Header
             {let cx = active_cx.clone(); move || cx().header.run()}
@@ -72,7 +79,7 @@ pub fn Shell<M: 'static>(
             // Footer
             {let cx = active_cx.clone(); move || cx().footer.run()}
         </wu-shell>
-	}
+    }
 }
 
 /// Holds all slots for a context.
@@ -87,4 +94,3 @@ pub struct ShellContext {
     /// Footer slot.
     pub footer: ViewFn,
 }
-

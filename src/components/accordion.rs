@@ -10,21 +10,25 @@ pub struct AccordionItem {
     #[prop(default = "".into(), into)]
     pub summary_class: TextProp,
     /// Summary slot.
-    #[prop(into)] pub summary: ViewFn,
+    #[prop(into)]
+    pub summary: ViewFn,
     /// Content class.
     #[prop(default = "".into(), into)]
     pub content_class: TextProp,
     /// Content slot.
-    #[prop(into)] pub content: ViewFn,
+    #[prop(into)]
+    pub content: ViewFn,
 }
 
 /// Divides content into collapsible sections.
 #[component]
 pub fn Accordion(
     /// Corresponds to the 'class' attribute of elements.
-    #[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// List of attributes to put on the top-level of the slot.
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(attrs)]
+    attrs: Vec<(&'static str, Attribute)>,
     /// Accordion item slots.
     accordion_item: Vec<AccordionItem>,
 ) -> impl IntoView {

@@ -1,7 +1,7 @@
-use leptos::*;
-use leptos_use::*;
 use crate::utils::Position;
 use deref_derive::{Deref, DerefMut};
+use leptos::*;
+use leptos_use::*;
 
 crate::generate_marker_signal_setter!(
     /// Opens the drawer.
@@ -18,13 +18,17 @@ crate::generate_marker_signal_setter!(
 pub fn DrawerHook<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
     /// The contents of the drawer.
-    #[prop(into)] view: ViewFn,
+    #[prop(into)]
+    view: ViewFn,
     /// Enables an animation during opening and closing the drawer.
-    #[prop(default = true, into)] enable_anim: bool,
+    #[prop(default = true, into)]
+    enable_anim: bool,
     /// What side to put the drawer on.
-    #[prop(optional, into)] position: MaybeSignal<Position>,
+    #[prop(optional, into)]
+    position: MaybeSignal<Position>,
     /// Drawer class.
-    #[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
@@ -61,18 +65,22 @@ pub fn DrawerHook<M: 'static>(
                         "w-full h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px] {}",
                         if opened() { "!translate-y-0" } else { "" }
                     )
-                },
+                }
                 Position::Bottom => {
                     format!(
                         "w-full h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px] {}",
                         if opened() { "!translate-y-0" } else { "" }
                     )
-                },
+                }
             };
 
             format!(
                 "overlay motion-safe:transition-none {} {} {}",
-                if enable_anim { "transition-transform" } else { "" },
+                if enable_anim {
+                    "transition-transform"
+                } else {
+                    ""
+                },
                 position_related_classes,
                 class.get()
             )

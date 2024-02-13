@@ -13,8 +13,10 @@ pub fn Toasts() -> impl IntoView {
     };
     let make_view_toast = move |_| {
         create_toast(Toast {
-            msg: ToastMsg::View(ViewFn::from(move || view! {
-                <p>"hello world from view"</p>
+            msg: ToastMsg::View(ViewFn::from(move || {
+                view! {
+                    <p>"hello world from view"</p>
+                }
             })),
             timeout: std::time::Duration::from_secs(5),
             dismissable: true,

@@ -24,11 +24,14 @@ pub struct CollapseContent {
 #[component]
 pub fn Collapse(
     /// Corresponds to the 'class' attribute of elements.
-    #[prop(default = "".into(), into)] class: TextProp,
+    #[prop(default = "".into(), into)]
+    class: TextProp,
     /// List of attributes to put on the top-level of the slot.
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(attrs)]
+    attrs: Vec<(&'static str, Attribute)>,
     /// Whether to create the component with an initially opened state.
-    #[prop(default = false)] opened: bool,
+    #[prop(default = false)]
+    opened: bool,
     /// Summary slot.
     collapse_summary: CollapseSummary,
     /// Content slot.
