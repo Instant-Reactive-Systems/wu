@@ -16,6 +16,7 @@ import progressPlugin from './components/progress.plugin.js';
 import stepsPlugin from './components/steps.plugin.js';
 import tabsPlugin from './components/tabs.plugin.js';
 import windowPlugin from './components/window.plugin.js';
+import avatarPlugin from './components/avatar.plugin.js';
 
 export default (params) => {
 	alertPlugin(params);
@@ -36,4 +37,5 @@ export default (params) => {
 	stepsPlugin(params);
 	tabsPlugin(params);
 	windowPlugin(params);
+	avatarPlugin(params);
 };
