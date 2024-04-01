@@ -19,6 +19,7 @@ web-sys = { version = "0.3", features = ["Document", "Element", "NodeList", "Eve
 cfg-if = { version = "1.0" }
 log = { version = "0.4.17", optional = true }
 deref-derive = "0.1"
+tailwind_fuse = { version = "0.1" }
 
 # dependecies for client (enable when csr or hydrate set)
 wasm-bindgen = { version = "0.2" }

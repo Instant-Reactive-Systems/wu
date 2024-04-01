@@ -12,6 +12,8 @@ import textoutlinePlugin from './utilities/text-outline.plugin.js';
 import thinscrollbarPlugin from './utilities/thin-scrollbar.plugin.js';
 import scrollbarcolorPlugin from './utilities/scroll-color.plugin.js';
 import xPlugin from './utilities/x.plugin.js';
+import verticalPlugin from './utilities/vertical.plugin.js';
+import horizontalPlugin from './utilities/horizontal.plugin.js';
 
 export default (params) => {
 	centerPlugin(params);
@@ -28,4 +30,6 @@ export default (params) => {
 	thinscrollbarPlugin(params);
 	scrollbarcolorPlugin(params);
 	xPlugin(params);
+	verticalPlugin(params);
+	horizontalPlugin(params);
 };

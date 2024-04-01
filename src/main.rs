@@ -62,7 +62,7 @@ cfg_if! {
                     // <https://github.com/leptos-rs/start-axum#executing-a-server-on-a-remote-machine-without-the-toolchain>
                     // Alternately a file can be specified such as Some("Cargo.toml")
                     // The file would need to be included with the executable when moved to deployment
-                    let conf = get_configuration(Some("Cargo.toml")).await.unwrap();
+                    let conf = get_configuration(None).await.unwrap();
                     let addr = conf.leptos_options.site_addr;
                     let leptos_options = conf.leptos_options;
                     // Generate the list of routes in your Leptos App

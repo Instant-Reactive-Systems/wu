@@ -57,6 +57,9 @@ export default {
 				'11': '2.75rem',
 				'12': '3rem',
 			},
+			'aria': {
+				'current': 'current',
+			},
 		},
 	},
 }

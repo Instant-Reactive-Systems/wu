@@ -35,5 +35,14 @@ export default ({ addUtilities }) => {
 		'.hcenter': {
 			'@apply justify-center': {},
 		},
+		'.center-none': {
+			'@apply justify-normal items-start': {},
+		},
+		'.vcenter-none': {
+			'@apply items-start': {},
+		},
+		'.hcenter-none': {
+			'@apply justify-normal': {},
+		},
 	});
 };

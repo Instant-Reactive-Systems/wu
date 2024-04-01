@@ -2,6 +2,7 @@ use crate::utils::Position;
 use deref_derive::{Deref, DerefMut};
 use leptos::*;
 use leptos_use::*;
+use tailwind_fuse::*;
 
 crate::generate_marker_signal_setter!(
     /// Opens the drawer.
@@ -49,33 +50,33 @@ pub fn DrawerHook<M: 'static>(
         move || {
             let position_related_classes = match position() {
                 Position::Left => {
-                    format!(
-                        "h-full w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px] {}",
+                    tw_merge!(
+                        "h-full w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px]",
                         if opened() { "!translate-x-0" } else { "" }
                     )
                 }
                 Position::Right => {
-                    format!(
-                        "h-full w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px] {}",
+                    tw_merge!(
+                        "h-full w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px]",
                         if opened() { "!translate-x-0" } else { "" }
                     )
                 }
                 Position::Top => {
-                    format!(
-                        "w-full h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px] {}",
+                    tw_merge!(
+                        "w-full h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px]",
                         if opened() { "!translate-y-0" } else { "" }
                     )
                 }
                 Position::Bottom => {
-                    format!(
-                        "w-full h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px] {}",
+                    tw_merge!(
+                        "w-full h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px]",
                         if opened() { "!translate-y-0" } else { "" }
                     )
                 }
             };
 
-            format!(
-                "overlay motion-safe:transition-none {} {} {}",
+            tw_merge!(
+                "overlay motion-safe:transition-none",
                 if enable_anim {
                     "transition-transform"
                 } else {

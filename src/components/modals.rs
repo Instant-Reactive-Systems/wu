@@ -1,6 +1,7 @@
 use crate::utils::*;
 use deref_derive::{Deref, DerefMut};
 use leptos::*;
+use tailwind_fuse::*;
 
 /// Used to provide a custom view into the modal container.
 #[derive(Clone)]
@@ -55,7 +56,7 @@ pub fn ModalHook<M: 'static>(
     view! {
         {children()}
         // backdrop
-        <wu-modal-backdrop class=move || format!("overlay {}", if modals.with(|modals| !modals.is_empty()) { "bg-black/25 backdrop-blur-sm" } else { "" })/>
+        <wu-modal-backdrop class=move || tw_merge!("overlay", if modals.with(|modals| !modals.is_empty()) { "bg-black/25 backdrop-blur-sm" } else { "" })/>
         // modals
         <For
             each=modals
@@ -66,7 +67,7 @@ pub fn ModalHook<M: 'static>(
                     let classes = modal.class.clone();
                     let default_modal_classes = class.clone();
                     // need overlay-container for close button
-                    move || format!("overlay-container {} {}", default_modal_classes.get(), classes.get())
+                    move || tw_merge!("overlay-container", default_modal_classes.get(), classes.get())
                 };
 
                 view! {
@@ -81,10 +82,12 @@ pub fn ModalHook<M: 'static>(
                             {last_modal().then(move || view! {
                                 <div class="overlay flex justify-end">
                                     <button
-                                        class="flex center text-sm font-thin rounded-full hover:bg-light-content/20 hover:dark:bg-dark-content/20 size-6 p-2"
+                                        class="flex center text-sm font-thin rounded-full hover:bg-light-content/20 hover:dark:bg-dark-content/20 w-fit h-fit p-2"
                                         on:click=move |_| pop_modal(())
                                     >
-                                        "✕"
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        </svg>
                                     </button>
                                 </div>
                             })}

@@ -1,5 +1,7 @@
 use deref_derive::{Deref, DerefMut};
 use leptos::*;
+use tailwind_fuse::*;
+
 use std::rc::Rc;
 
 crate::generate_marker_signal_setter!(
@@ -62,7 +64,7 @@ pub fn Shell<M: 'static>(
     provide_context(ActiveShellContext::<M>::new(active_cx.clone()));
 
     view! {
-        <wu-shell class=move || format!("overlay flex flex-col {}", class.get())>
+        <wu-shell class=move || tw_merge!("overlay flex flex-col", class.get())>
             // Header
             {let cx = active_cx.clone(); move || cx().header.run()}
             // center area

@@ -1,4 +1,5 @@
 use leptos::*;
+use tailwind_fuse::*;
 
 /// A collapsible section.
 #[slot]
@@ -33,22 +34,22 @@ pub fn Accordion(
     accordion_item: Vec<AccordionItem>,
 ) -> impl IntoView {
     view! {
-        <wu-accordion {..attrs} class=move || format!("flex flex-col {}", class.get())>
+        <wu-accordion {..attrs} class=move || tw_merge!("flex flex-col", class.get())>
             {accordion_item.into_iter().map(move |item| {
                 let (collapsed, set_collapsed) = create_signal(true);
 
                 view! {
-                    <wu-accordion-item class=move || format!("flex flex-col {}", item.class.get())>
+                    <wu-accordion-item class=move || tw_merge!("flex flex-col", item.class.get())>
                         // Summary
                         <button
                             on:click=move |_| set_collapsed.update(move |x| *x = !*x)
-                            class=move || format!("w-full {}", item.summary_class.get())
+                            class=move || tw_merge!("w-full", item.summary_class.get())
                         >
                             {move || item.summary.run()}
                         </button>
                         // Content
                         <div
-                            class=move || format!("w-full {}", item.content_class.get())
+                            class=move || tw_merge!("w-full", item.content_class.get())
                             class=("hidden", collapsed)
                         >
                             {move || item.content.run()}
