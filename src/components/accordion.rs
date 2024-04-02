@@ -19,6 +19,9 @@ pub struct AccordionItem {
     /// Content slot.
     #[prop(into)]
     pub content: ViewFn,
+    /// If the accordion item should be collapsed by default.
+    #[prop(default = true, into)]
+    pub collapsed: bool,
 }
 
 /// Divides content into collapsible sections.
@@ -36,7 +39,7 @@ pub fn Accordion(
     view! {
         <wu-accordion {..attrs} class=move || tw_merge!("flex flex-col", class.get())>
             {accordion_item.into_iter().map(move |item| {
-                let (collapsed, set_collapsed) = create_signal(true);
+                let (collapsed, set_collapsed) = create_signal(item.collapsed);
 
                 view! {
                     <wu-accordion-item class=move || tw_merge!("flex flex-col", item.class.get())>
