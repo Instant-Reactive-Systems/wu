@@ -1,6 +1,7 @@
 use crate::utils::*;
 use deref_derive::{Deref, DerefMut};
 use leptos::*;
+use leptos_meta::*;
 use tailwind_fuse::*;
 
 /// Used to provide a custom view into the modal container.
@@ -73,7 +74,7 @@ pub fn ModalHook<M: 'static>(
                 view! {
                     <wu-modal
                         id=move || if last_modal() { ACTIVE_MODAL_ID } else { "" }
-                        class="overlay flex center z-1"
+                        class="overlay-glued h-full max-h-svh flex center z-1"
                     >
                         <div class=classes>
                             <div class="overlay">

@@ -24,7 +24,7 @@ pub fn Toasts() -> impl IntoView {
     };
 
     view! {
-        <div class="flex flex-row center gap-4">
+        <div class="h-[1400px] flex flex-row center gap-4">
             <button on:click=make_text_toast class="btn bg-yellow-600 rounded-lg">"make text toast"</button>
             <button on:click=make_view_toast class="btn bg-yellow-600 rounded-lg">"make view toast"</button>
         </div>

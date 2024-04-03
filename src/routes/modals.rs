@@ -1,5 +1,6 @@
 use crate::components::*;
 use leptos::*;
+use leptos_meta::*;
 use leptos_router::*;
 use std::rc::Rc;
 
@@ -52,7 +53,7 @@ pub fn Modals() -> impl IntoView {
     };
 
     view! {
-        <div class="flex center">
+        <div class="h-[1200px] flex center">
             <button on:click=open_modal class="btn bg-red-600 rounded-lg">"open modal"</button>
         </div>
     }
