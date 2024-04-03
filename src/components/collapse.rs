@@ -30,15 +30,17 @@ pub fn Collapse(
     /// List of attributes to put on the top-level of the slot.
     #[prop(attrs)]
     attrs: Vec<(&'static str, Attribute)>,
-    /// Whether to create the component with an initially opened state.
-    #[prop(default = false)]
-    opened: bool,
+    /// Whether to create the component with an initially collapsed state.
+    ///
+    /// Defaults to true.
+    #[prop(default = true)]
+    collapsed: bool,
     /// Summary slot.
     collapse_summary: CollapseSummary,
     /// Content slot.
     collapse_content: CollapseContent,
 ) -> impl IntoView {
-    let (collapsed, set_collapsed) = create_signal(!opened);
+    let (collapsed, set_collapsed) = create_signal(collapsed);
 
     view! {
         <wu-collapse {..attrs} class=move || tw_merge!("flex flex-col", class.get())>

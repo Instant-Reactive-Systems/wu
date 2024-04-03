@@ -46,46 +46,44 @@ pub fn DrawerHook<M: 'static>(
     });
 
     // dynamic drawer classes
-    let drawer_classes = {
-        move || {
-            let position_related_classes = match position() {
-                Position::Left => {
-                    tw_merge!(
-                        "h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px]",
-                        if opened() { "!translate-x-0" } else { "" }
-                    )
-                }
-                Position::Right => {
-                    tw_merge!(
-                        "h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px]",
-                        if opened() { "!translate-x-0" } else { "" }
-                    )
-                }
-                Position::Top => {
-                    tw_merge!(
-                        "w-full max-w-svw h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px]",
-                        if opened() { "!translate-y-0" } else { "" }
-                    )
-                }
-                Position::Bottom => {
-                    tw_merge!(
-                        "w-full max-w-svw h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px]",
-                        if opened() { "!translate-y-0" } else { "" }
-                    )
-                }
-            };
+    let drawer_classes = move || {
+        let position_related_classes = match position() {
+            Position::Left => {
+                tw_merge!(
+                    "h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px]",
+                    if opened() { "!translate-x-0" } else { "" }
+                )
+            }
+            Position::Right => {
+                tw_merge!(
+                    "h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px]",
+                    if opened() { "!translate-x-0" } else { "" }
+                )
+            }
+            Position::Top => {
+                tw_merge!(
+                    "w-full max-w-svw h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px]",
+                    if opened() { "!translate-y-0" } else { "" }
+                )
+            }
+            Position::Bottom => {
+                tw_merge!(
+                    "w-full max-w-svw h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px]",
+                    if opened() { "!translate-y-0" } else { "" }
+                )
+            }
+        };
 
-            tw_merge!(
-                "overlay-glued motion-safe:transition-none",
-                if enable_anim {
-                    "transition-transform"
-                } else {
-                    ""
-                },
-                position_related_classes,
-                class.get()
-            )
-        }
+        tw_merge!(
+            "overlay-glued motion-safe:transition-none",
+            if enable_anim {
+                "transition-transform"
+            } else {
+                ""
+            },
+            position_related_classes,
+            class.get()
+        )
     };
 
     view! {

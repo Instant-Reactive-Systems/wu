@@ -178,7 +178,7 @@ pub fn Tabs<M: 'static, T: 'static>(
 pub struct TabWithId<T> {
     /// Tab's unique ID.
     pub id: u64,
-    /// A cheaply clonable version of the tab itself.
+    /// The tab itself.
     #[deref]
     tab: T,
 }
