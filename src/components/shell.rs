@@ -14,11 +14,6 @@ crate::generate_marker_signal_setter!(
     PopShellContext, ()
 );
 
-crate::generate_marker_bootleg_read_signal!(
-    /// Gets the current active shell context.
-    ActiveShellContext, ShellContext
-);
-
 /// Used to specify a composable common layout.
 #[component]
 pub fn Shell<M: 'static>(
@@ -42,44 +37,52 @@ pub fn Shell<M: 'static>(
     children: Children,
 ) -> impl IntoView {
     let (shell_cxs, set_shell_cxs) = create_signal::<Vec<ShellContext>>(vec![ShellContext {
-        header: header.clone(),
-        left_sidebar: left_sidebar.clone(),
-        right_sidebar: right_sidebar.clone(),
-        footer: footer.clone(),
+        header: Some(header.clone()),
+        left_sidebar: Some(left_sidebar.clone()),
+        right_sidebar: Some(right_sidebar.clone()),
+        footer: Some(footer.clone()),
     }]);
-    let active_cx = Rc::new(move || {
-        shell_cxs.with(move |cxs| {
-            let id = cxs.len().saturating_sub(1);
-            cxs[id].clone()
-        })
+    let main_cx = move || shell_cxs.with(move |cxs| {
+        // SAFETY: All of the below unwraps are guaranteed to succeed, given that
+        // the initial context is always populated.
+        let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).unwrap().unwrap();
+        let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).unwrap().unwrap();
+        let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).unwrap().unwrap();
+        let footer = cxs.iter().rev().map(|cx| cx.footer.clone()).find(Option::is_some).unwrap().unwrap();
+        
+        MainShellContext {
+            header,
+            left_sidebar,
+            right_sidebar,
+            footer,
+        }
     });
     provide_context(PushShellContext::<M>::new(move |cx| {
         set_shell_cxs.update(move |cxs| cxs.push(cx));
     }));
     provide_context(PopShellContext::<M>::new(move |_| {
-        if shell_cxs.with(move |cxs| cxs.len() > 1) {
-            set_shell_cxs.update(move |cxs| _ = cxs.pop());
-        }
+        let last_one = shell_cxs.with_untracked(move |cxs| cxs.len() == 1);
+        if last_one { return } // must not pop first shell context
+        set_shell_cxs.update(move |cxs| _ = cxs.pop());
     }));
-    provide_context(ActiveShellContext::<M>::new(active_cx.clone()));
 
     view! {
         <wu-shell class=move || tw_merge!("overlay flex flex-col", class.get())>
             // Header
-            {let cx = active_cx.clone(); move || cx().header.run()}
+            {move || main_cx().header.run()}
             // center area
             <div class="grow flex flex-row">
                 // LeftSidebar
-                {let cx = active_cx.clone(); move || cx().left_sidebar.run()}
+                {move || main_cx().left_sidebar.run()}
                 // Main content area
                 <div class="grow overlay-container">
                     {children()}
                 </div>
                 // RightSidebar
-                {let cx = active_cx.clone(); move || cx().right_sidebar.run()}
+                {move || main_cx().right_sidebar.run()}
             </div>
             // Footer
-            {let cx = active_cx.clone(); move || cx().footer.run()}
+            {move || main_cx().footer.run()}
         </wu-shell>
     }
 }
@@ -87,6 +90,19 @@ pub fn Shell<M: 'static>(
 /// Holds all slots for a context.
 #[derive(Clone)]
 pub struct ShellContext {
+    /// Header slot.
+    pub header: Option<ViewFn>,
+    /// Left sidebar slot.
+    pub left_sidebar: Option<ViewFn>,
+    /// Right sidebar slot.
+    pub right_sidebar: Option<ViewFn>,
+    /// Footer slot.
+    pub footer: Option<ViewFn>,
+}
+
+/// Holds the the slots of the currently displayed shell context.
+#[derive(Clone)]
+struct MainShellContext {
     /// Header slot.
     pub header: ViewFn,
     /// Left sidebar slot.
