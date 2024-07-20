@@ -10,11 +10,11 @@ struct Tab {
 #[component]
 pub fn TabsRoute() -> impl IntoView {
     view! {
-        <Tabs<Main, Tab>
+        <wu::Tabs<Main, Tab>
             class="flex flex-row divide-x divide-surface-800"
             list_class="flex flex-col divide-y divide-surface-800 w-[300px] scroll-lock"
-            item=#[allow(unused_parens)] (move |tab: TabSignal<Tab>| {
-                let switch_active_tab = expect_context::<SwitchActiveTab<Tab>>();
+            item=#[allow(unused_parens)] (move |tab: wu::TabSignal<Tab>| {
+                let switch_active_tab = expect_context::<wu::SwitchActiveTab<Tab>>();
                 view! {
                     <li class="w-full">
                         <button on:click=move |_| switch_active_tab(tab.with(|tab| tab.id)) class="cover flex center font-bold btn">
@@ -23,12 +23,12 @@ pub fn TabsRoute() -> impl IntoView {
                     </li>
                 }
             })
-            content=#[allow(unused_parens)] (move |tab: TabSignal<Tab>| {
-                let add_tab = expect_context::<AddTab<crate::Main, Tab>>();
-                let remove_tab = expect_context::<RemoveTab<crate::Main>>();
-                let modify_tab = expect_context::<ModifyTab<crate::Main, Tab>>();
-                let remove_tabs = expect_context::<RemoveTabs<crate::Main>>();
-                let remove_other_tabs = expect_context::<RemoveOtherTabs<crate::Main>>();
+            content=#[allow(unused_parens)] (move |tab: wu::TabSignal<Tab>| {
+                let add_tab = expect_context::<wu::AddTab<Main, Tab>>();
+                let remove_tab = expect_context::<wu::RemoveTab<Main>>();
+                let modify_tab = expect_context::<wu::ModifyTab<Main, Tab>>();
+                let remove_tabs = expect_context::<wu::RemoveTabs<Main>>();
+                let remove_other_tabs = expect_context::<wu::RemoveOtherTabs<Main>>();
                 view! {
                     <div class="grow flex flex-col p-8">
                         <h1 class="text-xl tablet:text-3xl text-center">{move || tab.with(|tab| tab.content.clone())}</h1>

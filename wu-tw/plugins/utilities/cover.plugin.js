@@ -1,26 +1,10 @@
 /*
-Utilities for quickly centering the contents of a container.
+Utilities for covering the full area of the parent.                                                                                                                                                                                                                                                                                                                                             ontents of a container.
 
 # Usage
-
-## Center both vertically and horizontally
 ```html
-<div class="w-16 h-16 center">
-  <div class="w-8 h-8"/>
-</div>
-```
-
-## Center vertically
-```html
-<div class="w-16 h-16 vcenter">
-  <div class="w-8 h-8"/>
-</div>
-```
-
-## Center horizontally 
-```html
-<div class="w-16 h-16 hcenter">
-  <div class="w-8 h-8"/>
+<div class="w-32 h-32">
+  <div class="cover"/>
 </div>
 ```
 */

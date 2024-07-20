@@ -7,8 +7,8 @@ use std::rc::Rc;
 /// Position of an element.
 #[derive(Clone, Copy, Default)]
 pub enum Position {
-    #[default]
     Left,
+    #[default]
     Right,
     Top,
     Bottom,
@@ -17,40 +17,15 @@ pub enum Position {
 /// Generates a newtype for a `Clone,Copy` SignalSetter with a generic marker to
 /// allow multiple hooks.
 ///
-///
 /// # Usage
-/// The below code:
 /// ```no_run
-/// generate_marker_signal_setter(
+/// #[derive(Debug)]
+/// pub struct ReturnType;
+/// wu::generate_marker_signal_setter!(
 ///     /// Some docs
 ///     #[derive(Debug)]
 ///     MySignalSetter, ReturnType
-/// )
-/// ```
-/// generates this:
-/// ```
-/// /// Some docs
-/// #[derive(Debug)]
-/// #[derive(Deref, DerefMut)]
-/// pub struct MySignalSetter<M: 'static> {
-///     #[deref]
-///     setter: ::leptos::SignalSetter<ReturnType>,
-///     _phant: std::marker::PhantomData<M>,
-/// }
-///
-/// impl<M: 'static> Clone for MySignalSetter<M> {
-///     fn clone(&self) -> Self {
-///         *self
-///     }
-/// }
-///
-/// impl<M: 'static> Copy for MySignalSetter<M> {}
-///
-/// impl<M: 'static> MySignalSetter<M> {
-///     pub fn new(setter: impl Fn($ty) + 'static) -> Self {
-///         Self { setter: ::leptos::SignalSetter::<$ty>::map(setter), _phant: Default::default() }
-///     }
-/// }
+/// );
 /// ```
 ///
 /// Use the newly generated type as you would a normal `SignalSetter`.
@@ -58,9 +33,7 @@ pub enum Position {
 macro_rules! generate_marker_signal_setter {
     ($(#[$outer:meta])* $name:ident, $ty:ty) => {
         $(#[$outer])*
-        #[derive(Deref, DerefMut)]
         pub struct $name <M: 'static> {
-            #[deref]
             setter: ::leptos::SignalSetter<$ty>,
             _phant: std::marker::PhantomData<M>,
         }
@@ -73,9 +46,29 @@ macro_rules! generate_marker_signal_setter {
 
         impl<M: 'static> Copy for $name <M> {}
 
+        impl<M: 'static> std::ops::Deref for $name <M> {
+            type Target = ::leptos::SignalSetter<$ty>;
+
+            fn deref(&self) -> &Self::Target {
+                &self.setter
+            }
+        }
+
+        impl<M: 'static> std::ops::DerefMut for $name <M> {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.setter
+            }
+        }
+
         impl<M: 'static> $name <M> {
             pub fn new(setter: impl Fn($ty) + 'static) -> Self {
                 Self { setter: ::leptos::SignalSetter::<$ty>::map(setter), _phant: Default::default() }
+            }
+        }
+
+        impl<M: 'static> std::convert::From<::leptos::SignalSetter<$ty>> for $name <M> {
+            fn from(value: ::leptos::SignalSetter<$ty>) -> Self {
+                Self { setter: value, _phant: Default::default() }
             }
         }
     }
@@ -85,15 +78,13 @@ macro_rules! generate_marker_signal_setter {
 /// Generates a newtype for a `Clone,Copy` SignalSetter with a generic marker
 /// and active type to allow multiple hooks.
 ///
-///
 /// # Usage
-/// The below code:
 /// ```no_run
-/// generate_generic_marker_signal_setter(
+/// wu::generate_generic_marker_signal_setter!(
 ///     /// Some docs
 ///     #[derive(Debug)]
-///     MySignalSetter, T
-/// )
+///     MySignalSetter, T, T
+/// );
 /// ```
 ///
 /// Use the newly generated type as you would a normal `SignalSetter`.
@@ -101,9 +92,7 @@ macro_rules! generate_marker_signal_setter {
 macro_rules! generate_generic_marker_signal_setter {
     ($(#[$outer:meta])* $name:ident, $map_ty:ty, $ty:ident) => {
         $(#[$outer])*
-        #[derive(Deref, DerefMut)]
         pub struct $name <M: 'static, $ty: 'static> {
-            #[deref]
             setter: ::leptos::SignalSetter<$map_ty>,
             _phant: std::marker::PhantomData<(M, T)>,
         }
@@ -116,9 +105,29 @@ macro_rules! generate_generic_marker_signal_setter {
 
         impl<M: 'static, $ty> Copy for $name <M, $ty> {}
 
+        impl<M: 'static, $ty> std::ops::Deref for $name <M, $ty> {
+            type Target = ::leptos::SignalSetter<$map_ty>;
+
+            fn deref(&self) -> &Self::Target {
+                &self.setter
+            }
+        }
+
+        impl<M: 'static, $ty> std::ops::DerefMut for $name <M, $ty> {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.setter
+            }
+        }
+
         impl<M: 'static, $ty> $name <M, $ty> {
             pub fn new(setter: impl Fn($map_ty) + 'static) -> Self {
                 Self { setter: ::leptos::SignalSetter::<$map_ty>::map(setter), _phant: Default::default() }
+            }
+        }
+
+        impl<M: 'static, $ty> std::convert::From<::leptos::SignalSetter<$map_ty>> for $name <M, $ty> {
+            fn from(value: ::leptos::SignalSetter<$map_ty>) -> Self {
+                Self { setter: value, _phant: Default::default() }
             }
         }
     }
@@ -127,38 +136,13 @@ macro_rules! generate_generic_marker_signal_setter {
 /// Generates a newtype for a `Clone` read signal with a generic marker to
 /// allow multiple hooks.
 ///
-///
 /// # Usage
-/// The below code:
 /// ```no_run
-/// generate_marker_bootleg_read_signal(
+/// pub struct ReturnType;
+/// wu::generate_marker_bootleg_read_signal!(
 ///     /// Some docs
-///     #[derive(Debug)]
 ///     MyReadSignal, ReturnType
-/// )
-/// ```
-/// generates this:
-/// ```
-/// /// Some docs
-/// #[derive(Debug)]
-/// #[derive(Deref, DerefMut)]
-/// pub struct MyReadSignal<M: 'static> {
-///     #[deref]
-///     reader: ::std::rc::Rc<dyn Fn() -> ReturnType>,
-///     _phant: std::marker::PhantomData<M>,
-/// }
-///
-/// impl<M: 'static> Clone for MyReadSignal<M> {
-///     fn clone(&self) -> Self {
-///         Self { reader: self.reader.clone(), _phant: Default::default() }
-///     }
-/// }
-///
-/// impl<M: 'static> MyReadSignal<M> {
-///     pub fn new(reader: ::std::rc::Rc<dyn Fn() -> ReturnType>) -> Self {
-///         Self { reader, _phant: Default::default() }
-///     }
-/// }
+/// );
 /// ```
 ///
 /// Use the newly generated type as you would a normal read signal.
@@ -166,9 +150,7 @@ macro_rules! generate_generic_marker_signal_setter {
 macro_rules! generate_marker_bootleg_read_signal {
     ($(#[$outer:meta])* $name:ident, $ty:ty) => {
         $(#[$outer])*
-        #[derive(Deref, DerefMut)]
         pub struct $name <M: 'static> {
-            #[deref]
             reader: ::std::rc::Rc<dyn Fn() -> $ty>,
             _phant: std::marker::PhantomData<M>,
         }
@@ -176,6 +158,20 @@ macro_rules! generate_marker_bootleg_read_signal {
         impl<M: 'static> Clone for $name <M> {
             fn clone(&self) -> Self {
                 Self { reader: self.reader.clone(), _phant: Default::default() }
+            }
+        }
+
+        impl<M: 'static> std::ops::Deref for $name <M> {
+            type Target = ::std::rc::Rc<dyn Fn() -> $ty>;
+
+            fn deref(&self) -> &Self::Target {
+                &self.reader
+            }
+        }
+
+        impl<M: 'static> std::ops::DerefMut for $name <M> {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.reader
             }
         }
 
@@ -202,50 +198,14 @@ macro_rules! generate_marker_type {
 ///
 ///
 /// # Usage
-/// The below code:
 /// ```no_run
-/// generate_marker_arbitrary_write_signal(
+/// #[derive(Debug)]
+/// pub struct ReturnType;
+/// wu::generate_marker_arbitrary_write_signal!(
 ///     /// Some docs
 ///     #[derive(Debug)]
 ///     MyWriteSignal, ReturnType
-/// )
-/// ```
-/// generates this:
-/// ```
-/// /// Some docs
-/// #[derive(Debug)]
-/// #[derive(Deref, DerefMut)]
-/// pub struct MyWriteSignal<M: 'static> {
-///     #[deref]
-///     writer: ::leptos::WriteSignal<ReturnType>,
-///     _phant: std::marker::PhantomData<M>,
-/// }
-///
-/// impl<M: 'static> Clone for MyWriteSignal<M> {
-///     fn clone(&self) -> Self {
-///         *self
-///     }
-/// }
-///
-/// impl<M: 'static> Copy for MyWriteSignal<M> {}
-///
-/// impl<M: 'static> MyWriteSignal<M> {
-///     pub fn new(writer: ::leptos::WriteSignal<ReturnType>) -> Self {
-///         Self { writer, _phant: Default::default() }
-///     }
-/// }
-///
-/// impl<M: 'static> ::leptos::SignalUpdate<ReturnType> for MyWriteSignal<M> {
-///     type Value = ReturnType;
-///
-///     fn update(&self, f: impl FnOnce(&mut Self::Value)) {
-///         self.writer.update(f)
-///     }
-///
-///     fn try_update<O>(&self, f: impl FnOnce(&mut Self::Value) -> O) -> Option<O> {
-///         self.writer.try_update(f)
-///     }
-/// }
+/// );
 /// ```
 ///
 /// Use the newly generated type as you would a normal `WriteSignal`.
@@ -253,9 +213,7 @@ macro_rules! generate_marker_type {
 macro_rules! generate_marker_arbitrary_write_signal {
     ($(#[$outer:meta])* $name:ident, $ty:ty) => {
         $(#[$outer])*
-        #[derive(Deref, DerefMut)]
         pub struct $name <M: 'static> {
-            #[deref]
             writer: ::leptos::WriteSignal<$ty>,
             _phant: std::marker::PhantomData<M>,
         }
@@ -267,6 +225,20 @@ macro_rules! generate_marker_arbitrary_write_signal {
         }
 
         impl<M: 'static> Copy for $name <M> {}
+
+        impl<M: 'static> std::ops::Deref for $name <M> {
+            type Target = ::leptos::WriteSignal<$ty>;
+
+            fn deref(&self) -> &Self::Target {
+                &self.writer
+            }
+        }
+
+        impl<M: 'static> std::ops::DerefMut for $name <M> {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.writer
+            }
+        }
 
         impl<M: 'static> $name <M> {
             pub fn new(writer: ::leptos::WriteSignal<$ty>) -> Self {

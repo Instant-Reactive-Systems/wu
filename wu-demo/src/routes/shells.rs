@@ -1,14 +1,14 @@
 use crate::components::*;
 use leptos::*;
 
-crate::generate_marker_type!(ShellsExample);
+wu::generate_marker_type!(ShellsExample);
 
 #[component]
 pub fn ShellsRoute() -> impl IntoView {
-    let push_shell_cx = expect_context::<PushShellContext<crate::Main>>();
-    let pop_shell_cx = expect_context::<PopShellContext<crate::Main>>();
+    let push_shell_cx = expect_context::<wu::PushShellContext<crate::Main>>();
+    let pop_shell_cx = expect_context::<wu::PopShellContext<crate::Main>>();
     create_effect(move |_| {
-        push_shell_cx(ShellContext {
+        push_shell_cx(wu::ShellContext {
             header: None,
             left_sidebar: Some(ViewFn::from(move || view! { <div class="bg-surface-600 w-32 h-full h-8"/> })),
             right_sidebar: Some(ViewFn::from(move || view! { <div class="bg-surface-600 w-32 h-full h-8"/> })),
@@ -19,13 +19,13 @@ pub fn ShellsRoute() -> impl IntoView {
 
     view! {
         <div class="overlay">
-            <Shell<ShellsExample>
+            <wu::Shell<ShellsExample>
                 header=move || view! { <div class="bg-blue-600 h-10"/> }
             >
                 <div class="flex center">
                     <p class="bg-surface-800">"content"</p>
                 </div>
-            </Shell<ShellsExample>>
+            </wu::Shell<ShellsExample>>
         </div>
     }
 }

@@ -19,9 +19,9 @@ export default ({ matchUtilities, addUtilities, theme }) => {
 
 	matchUtilities(
 		{
-			'link': (value) => ({
-				textDecorationColor: withAlphaValue(value, 1),
-				color: withAlphaValue(value, 1),
+			'link': (value, options) => ({
+				textDecorationColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
+				color: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
 			}),
 		},
 		{ values: flattenColorPalette(theme('colors')), type: ['color'] },

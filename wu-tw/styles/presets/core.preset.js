@@ -58,7 +58,7 @@ export default {
 				'12': '3rem',
 			},
 			'aria': {
-				'current': 'current',
+				'current': '[aria-current="page"]',
 			},
 		},
 	},

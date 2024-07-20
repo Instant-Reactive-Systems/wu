@@ -3,17 +3,17 @@ use leptos::*;
 
 #[component]
 pub fn Toasts() -> impl IntoView {
-    let create_toast = expect_context::<PushToast<crate::Main>>();
+    let create_toast = expect_context::<wu::PushToast<crate::Main>>();
     let make_text_toast = move |_| {
-        create_toast(Toast {
-            msg: ToastMsg::Text("hello world".into()),
+        create_toast(wu::Toast {
+            msg: wu::ToastMsg::Text("hello world".into()),
             timeout: std::time::Duration::from_secs(5),
             dismissable: true,
         })
     };
     let make_view_toast = move |_| {
-        create_toast(Toast {
-            msg: ToastMsg::View(ViewFn::from(move || {
+        create_toast(wu::Toast {
+            msg: wu::ToastMsg::View(ViewFn::from(move || {
                 view! {
                     <p>"hello world from view"</p>
                 }

@@ -11,8 +11,18 @@
 		overflow: auto;
 	}
 
-	/* enables flexbox elements to properly be scrollable */
-	*:has(.scroll-lock) {
-		min-height: 0;
+
+	:modal {
+		@apply overlay-container;
+ 	}
+
+ 	:modal::backdrop {
+ 		@apply bg-black/25 backdrop-blur-sm;
+ 	}
+	/*
+	*:has(#wu-active-modal) *:not(#wu-active-modal, #wu-active-modal *) {
+		pointer-events: none;
+		overflow: hidden;
 	}
+	*/
 }

@@ -1,5 +1,4 @@
 use crate::utils::ParamViewFn;
-use deref_derive::{Deref, DerefMut};
 use leptos::*;
 
 crate::generate_generic_marker_signal_setter!(
@@ -40,7 +39,7 @@ pub type TabSignal<T> = RwSignal<TabWithId<T>>;
 #[component]
 pub fn Tabs<M: 'static, T: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<(M, T)>,
-    /// List of tab contexts.
+    /// Default list of tab contexts.
     #[prop(default = Vec::default(), into)]
     tabs: Vec<T>,
     /// Corresponds to the 'class' attribute of elements.
@@ -139,7 +138,7 @@ pub fn Tabs<M: 'static, T: 'static>(
                 .iter()
                 .any(|tab| tab.with_untracked(|tab| tab.id == id))
         }) {
-            tracing::error!("SwitchActiveTab: tab with id '{id}' does not exist");
+            log::error!("SwitchActiveTab: tab with id '{id}' does not exist");
         }
         // update the active tab id
         set_active_tab_id.update(move |active_tab_id| *active_tab_id = Some(id))
@@ -155,7 +154,7 @@ pub fn Tabs<M: 'static, T: 'static>(
                     fallback=list_fallback
                 >
                     <For
-                        each=tabs
+                        each=move || tabs.get()
                         key=move |tab| tab.with(|tab| tab.id)
                         let:tab
                     >
@@ -174,12 +173,11 @@ pub fn Tabs<M: 'static, T: 'static>(
 /// A wrapper around a Tab that holds its ID.
 ///
 /// Used for keyed-for.
-#[derive(Clone, Deref, DerefMut)]
+#[derive(Clone)]
 pub struct TabWithId<T> {
     /// Tab's unique ID.
     pub id: u64,
     /// The tab itself.
-    #[deref]
     tab: T,
 }
 
@@ -195,5 +193,19 @@ impl<T: std::fmt::Debug> std::fmt::Debug for TabWithId<T> {
 impl<T> PartialEq for TabWithId<T> {
     fn eq(&self, other: &Self) -> bool {
         self.id == other.id
+    }
+}
+
+impl<T> std::ops::Deref for TabWithId<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.tab
+    }
+}
+
+impl<T> std::ops::DerefMut for TabWithId<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.tab
     }
 }

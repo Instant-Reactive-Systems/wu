@@ -3,8 +3,8 @@ use leptos::*;
 
 #[component]
 pub fn Drawers() -> impl IntoView {
-    let open_drawer = expect_context::<OpenDrawer<crate::Main>>();
-    let close_drawer = expect_context::<CloseDrawer<crate::Main>>();
+    let open_drawer = expect_context::<wu::OpenDrawer<crate::Main>>();
+    let close_drawer = expect_context::<wu::CloseDrawer<crate::Main>>();
 
     view! {
         <div class="h-[1400px] flex center">

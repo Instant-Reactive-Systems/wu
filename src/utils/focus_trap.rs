@@ -22,7 +22,7 @@ pub fn create_focus_trap(
         let target = match document().get_element_by_id(&selector_id) {
             Some(target) => target,
             None => {
-                tracing::warn!(
+                log::warn!(
                     "no element tagged with '{selector_id}' found, will not apply trap focus"
                 );
                 return;
@@ -41,10 +41,9 @@ pub fn create_focus_trap(
         }
 
         // register keyboard handling for the trap focus
-        let unsub = use_event_listener(document(), keydown, move |evt| {
+        set_unsub.set(Some(Rc::new(use_event_listener(document(), keydown, move |evt| {
             focus_trap_event_handler(evt, &children)
-        });
-        set_unsub(Some(Rc::new(unsub)));
+        }))));
 
         // update the state
         set_state.update(move |state| match state {
@@ -65,7 +64,7 @@ pub fn create_focus_trap(
         set_state.update(move |state_opt| {
             if let Some(state) = state_opt {
                 // unsubscribe previous element
-                if let Some(unsub) = unsub() {
+                if let Some(unsub) = unsub.get() {
                     unsub();
                 }
 
@@ -90,10 +89,9 @@ pub fn create_focus_trap(
                 }
 
                 // subscribe to the new target again
-                let unsub = use_event_listener(event.target.clone(), keydown, move |evt| {
+                set_unsub.set(Some(Rc::new(use_event_listener(event.target.clone(), keydown, move |evt| {
                     focus_trap_event_handler(evt, &children)
-                });
-                set_unsub(Some(Rc::new(unsub)));
+                }))));
 
                 // update the target
                 state.active.target = event.target;

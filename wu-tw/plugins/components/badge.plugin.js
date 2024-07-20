@@ -17,7 +17,7 @@ export default ({ addComponents }) => {
 			'@apply rounded-xl': {},
 		},
 		'.badge-icon': {
-			'@apply w-5 h-5 flex justify-center items-center rounded-full': {},
+			'@apply aspect-square flex justify-center items-center rounded-full': {},
 			'@apply font-semibold text-xs': {},
 		},
 	});

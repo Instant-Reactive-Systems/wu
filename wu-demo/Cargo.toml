@@ -1,18 +1,17 @@
 [package]
-name = "wu"
+name = "wu-demo"
 version = "0.1.0"
 edition = "2021"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
+description = "A demo and docs site to show off `wu` features."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 # app
+wu = { path = "../" }
 i18n-web = { git = "https://github.com/Instant-Reactive-Systems/i18n-web.git" }
 # web
-# http = "1.0"
+http = "1.0"
 tailwind_fuse = { version = "0.1" }
 web-sys = { version = "0.3", features = [
 	"Document", 
@@ -24,20 +23,16 @@ web-sys = { version = "0.3", features = [
 	"HtmlSelectElement"
 ]}
 # leptos
-leptos = { version = "0.6" }
+leptos = { version = "0.6", features = ["nightly"] }
 leptos-use = { version = "0.10" }
+leptos_meta = { version = "0.6", features = ["nightly"] }
+leptos_router = { version = "0.6", features = ["nightly"] }
 # logging
 log = "0.4"
 console_error_panic_hook = "0.1"
 console_log = "1.0"
 # common
 thiserror = "1.0"
-
-[features]
-default = ["csr"]
-csr = [
-	"leptos/csr", 
-]
 
 [profile.release]
 codegen-units = 1
@@ -50,3 +45,5 @@ opt-level = 'z'
 lto = true
 codegen-units = 1
 panic = "abort"
+
+[workspace]

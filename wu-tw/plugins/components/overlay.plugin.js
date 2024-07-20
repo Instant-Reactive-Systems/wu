@@ -10,7 +10,7 @@ Used to overlay a new plane over an existing one.
       <p>{some_content}</p>
     </div>
   </div>
-  <div class="overlay-glued overlay-container">
+  <div class="overlay overlay-container">
     <div class="overlay">
       <p>{some_content}</p>
     </div>
@@ -23,7 +23,7 @@ export default ({ addComponents }) => {
 		'.overlay-container': {
 			'display': 'grid',
 			'grid-template-columns': '1fr',
-			'pointer-events': 'none',
+			'pointer-events': 'none !important',
 			'& > *': {
 				'pointer-events': 'auto',
 			},
@@ -31,16 +31,20 @@ export default ({ addComponents }) => {
 		'.overlay': {
 			'grid-row-start': '1',
 			'grid-column-start': '1',
-			'pointer-events': 'none',
+			'pointer-events': 'none !important',
 			'& > *': {
 				'pointer-events': 'auto',
 			},
 		},
-		'.overlay-glued': {
-			'@apply fixed top-0 bottom-0 left-0 right-0': {},
-			'grid-row-start': '1',
-			'grid-column-start': '1',
-			'pointer-events': 'none',
+		'.overlay-viewport-container': {
+			'display': 'grid',
+			'grid-template-columns': '1fr',
+			'pointer-events': 'none !important',
+			'position': 'fixed',
+			'top': '0',
+			'bottom': '0',
+			'right': '0',
+			'left': '0',
 			'& > *': {
 				'pointer-events': 'auto',
 			},

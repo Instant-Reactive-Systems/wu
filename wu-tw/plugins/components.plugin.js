@@ -17,6 +17,7 @@ import stepsPlugin from './components/steps.plugin.js';
 import tabsPlugin from './components/tabs.plugin.js';
 import windowPlugin from './components/window.plugin.js';
 import avatarPlugin from './components/avatar.plugin.js';
+import btnsPlugin from './components/btns.plugin.js';
 
 export default (params) => {
 	alertPlugin(params);
@@ -38,4 +39,5 @@ export default (params) => {
 	tabsPlugin(params);
 	windowPlugin(params);
 	avatarPlugin(params);
+	btnsPlugin(params);
 };

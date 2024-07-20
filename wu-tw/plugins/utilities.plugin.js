@@ -14,6 +14,8 @@ import scrollbarcolorPlugin from './utilities/scroll-color.plugin.js';
 import xPlugin from './utilities/x.plugin.js';
 import verticalPlugin from './utilities/vertical.plugin.js';
 import horizontalPlugin from './utilities/horizontal.plugin.js';
+import highlightPlugin from './utilities/highlight.plugin.js';
+import surfacePlugin from './utilities/surface.plugin.js';
 
 export default (params) => {
 	centerPlugin(params);
@@ -32,4 +34,6 @@ export default (params) => {
 	xPlugin(params);
 	verticalPlugin(params);
 	horizontalPlugin(params);
+	highlightPlugin(params);
+	surfacePlugin(params);
 };

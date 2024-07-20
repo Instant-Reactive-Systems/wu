@@ -1,8 +1,5 @@
-use deref_derive::{Deref, DerefMut};
 use leptos::*;
 use tailwind_fuse::*;
-
-use std::rc::Rc;
 
 crate::generate_marker_signal_setter!(
     /// Pushes a new shell context.
@@ -18,9 +15,6 @@ crate::generate_marker_signal_setter!(
 #[component]
 pub fn Shell<M: 'static>(
     #[prop(optional)] _phant: std::marker::PhantomData<M>,
-    /// Corresponds to the 'class' attribute of elements.
-    #[prop(default = "".into(), into)]
-    class: TextProp,
     /// Header slot.
     #[prop(optional, into)]
     header: ViewFn,
@@ -33,6 +27,11 @@ pub fn Shell<M: 'static>(
     /// Footer slot.
     #[prop(optional, into)]
     footer: ViewFn,
+    /// Corresponds to the 'class' attribute of elements.
+    #[prop(default = "".into(), into)]
+    class: TextProp,
+    /// List of attributes to put on the top-level of the component.
+    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
     /// Children of the component.
     children: Children,
 ) -> impl IntoView {
@@ -45,10 +44,10 @@ pub fn Shell<M: 'static>(
     let main_cx = move || shell_cxs.with(move |cxs| {
         // SAFETY: All of the below unwraps are guaranteed to succeed, given that
         // the initial context is always populated.
-        let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).unwrap().unwrap();
-        let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).unwrap().unwrap();
-        let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).unwrap().unwrap();
-        let footer = cxs.iter().rev().map(|cx| cx.footer.clone()).find(Option::is_some).unwrap().unwrap();
+        let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).flatten().unwrap();
+        let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).flatten().unwrap();
+        let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).flatten().unwrap();
+        let footer = cxs.iter().rev().map(|cx| cx.footer.clone()).find(Option::is_some).flatten().unwrap();
         
         MainShellContext {
             header,
@@ -67,7 +66,7 @@ pub fn Shell<M: 'static>(
     }));
 
     view! {
-        <wu-shell class=move || tw_merge!("overlay flex flex-col", class.get())>
+        <wu-shell {..attrs} class=move || tw_merge!("overlay flex flex-col", class.get())>
             // Header
             {move || main_cx().header.run()}
             // center area

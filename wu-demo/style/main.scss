@@ -1,0 +1,8 @@
+@import '../../wu-tw/webutils.css';
+
+/* set scrollbar */
+* {
+    @apply thin-scrollbar;
+    @apply scroll-light-2 thumb-light-3;
+    @apply dark:scroll-dark-2 dark:thumb-dark-3;
+}

@@ -8,7 +8,7 @@
 
 	/* placeholders */
 	::placeholder {
-		@apply text-surface-500 dark:text-surface-400;
+		@apply text-light-content dark:text-dark-content;
 	}
 
 	/* webkit calendar picker */
@@ -35,17 +35,17 @@
 		webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
-		@apply w-full h-2 overflow-hidden rounded-md;
-		@apply bg-surface-400 dark:bg-surface-500;
+		@apply w-full h-2 overflow-hidden;
+		@apply surface-2;
 	}
 	progress::-webkit-progress-bar {
-		@apply bg-surface-400 dark:bg-surface-500;
+		@apply surface-2;
 	}
 	progress::-webkit-progress-value {
-		@apply bg-surface-900 dark:bg-surface-50;
+		@apply surface-1;
 	}
 	::-moz-progress-bar {
-		@apply bg-surface-900 dark:bg-surface-50;
+		@apply surface-1;
 	}
 	:indeterminate::-moz-progress-bar {
 		width: 0;
@@ -54,17 +54,16 @@
 	/* Range Input */
 	/* https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color */
 	[type='range'] {
-		@apply w-full accent-surface-900 dark:accent-surface-50;
+		@apply w-full accent-dark-1 dark:accent-light-1;
 	}
 
 	input,
 	textarea,
 	select {
 		@apply outline-0 w-full transition duration-100 px-2;
-		@apply bg-surface-200 dark:bg-surface-700 focus:brightness-105 hover:brightness-105;
-		@apply border border-surface-400 dark:border-surface-500 focus-within:border-primary-500;
-		@apply ring-0 focus-within:ring-1 focus-within:ring-primary-500;
-		@apply rounded-md;
+		@apply border surface-1;
+		@apply focus:brightness-105 hover:brightness-105 focus-within:border-primary;
+		@apply ring-0 focus-within:ring-1 focus-within:ring-primary;
 	}
 
 	/* Select (size/multiple) */
@@ -87,7 +86,7 @@
 		@apply mb-3;
 	}
 	select option {
-		@apply bg-surface-200 dark:bg-surface-700 px-4 py-2 cursor-pointer;
+		@apply surface-2 px-4 py-2 cursor-pointer;
 	}
 	select option:checked {
 		/* https://stackoverflow.com/questions/50618602/change-color-of-selected-option-in-select-multiple */
@@ -99,13 +98,13 @@
 	[type='radio'] {
 		@apply w-5 h-5 ring-0 rounded cursor-pointer;
 		/* Background */
-		@apply bg-surface-200 dark:bg-surface-700 focus:brightness-105 hover:brightness-105;
+		@apply border surface-1 focus:brightness-105 hover:brightness-105;
 		/* Border */
-		@apply border border-surface-400 dark:border-surface-500 focus:border-primary-500;
+		@apply focus:border-primary;
 	}
 	[type='checkbox']:checked,
 	[type='radio']:checked {
-		@apply bg-primary-500 hover:bg-primary-500 focus:bg-primary-500 focus:ring-0;
+		@apply bg-primary hover:bg-primary focus:bg-primary focus:ring-0;
 	}
 	[type='radio'] {
 		@apply rounded-md;

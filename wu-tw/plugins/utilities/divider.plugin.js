@@ -1,3 +1,6 @@
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
+import { withAlphaVariable, withAlphaValue } from 'tailwindcss/lib/util/withAlphaVariable';
+
 /*
 Used to separate content vertically or horizontally.
 
@@ -13,13 +16,14 @@ Used to separate content vertically or horizontally.
 <div class="hdivider"/>
 ```
 */
-export default ({ addUtilities }) => {
+export default ({ addUtilities, matchUtilities, theme }) => {
 	addUtilities({
 		'.hdivider': {
 			'@apply flex flex-row items-center self-stretch': {},
 			'&:before, &:after': {
 				'content': '""',
-				'@apply flex-grow h-0.5 w-full bg-surface-400 dark:bg-surface-500 bg-opacity-10': {},
+				'background-color': 'var(--wu-divider-color)',
+				'@apply flex-grow h-0.5 w-full': {},
 			},
 			'&:not(:empty)': {
 				'@apply gap-2': {},
@@ -29,11 +33,21 @@ export default ({ addUtilities }) => {
 			'@apply flex flex-col items-center self-stretch': {},
 			'&:before, &:after': {
 				'content': '""',
-				'@apply flex-grow w-0.5 h-full bg-surface-400 dark:bg-surface-500 bg-opacity-10': {},
+				'background-color': 'var(--wu-divider-color)',
+				'@apply flex-grow w-0.5 h-full': {},
 			},
 			'&:not(:empty)': {
 				'@apply gap-2': {},
 			},
 		},
 	});
+
+	matchUtilities(
+		{
+			'divider': (value, options) => ({
+				'--wu-divider-color': typeof value === 'function' ? value(options) : value,
+			}),
+		},
+		{ values: flattenColorPalette(theme('colors')), type: ['color'] },
+	);
 };

@@ -1,14 +1,12 @@
-mod accordion;
-mod collapse;
 mod drawer;
 mod modals;
 mod shell;
 mod tabs;
 mod toasts;
-pub use accordion::*;
-pub use collapse::*;
+mod stack_context;
 pub use drawer::*;
 pub use modals::*;
 pub use shell::*;
 pub use tabs::*;
 pub use toasts::*;
+pub use stack_context::*;
