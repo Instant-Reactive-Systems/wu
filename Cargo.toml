@@ -25,7 +25,7 @@ web-sys = { version = "0.3", features = [
 ]}
 # leptos
 leptos = { version = "0.6" }
-leptos-use = { version = "0.10" }
+leptos-use = { version = "0.12" }
 # logging
 log = "0.4"
 console_error_panic_hook = "0.1"
