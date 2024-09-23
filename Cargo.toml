@@ -10,7 +10,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # app
-i18n-web = { git = "https://github.com/Instant-Reactive-Systems/i18n-web.git" }
+i18n-web = { git = "ssh://git@github.com/Instant-Reactive-Systems/i18n-web.git" }
 # web
 # http = "1.0"
 tailwind_fuse = { version = "0.1" }

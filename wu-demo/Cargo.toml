@@ -9,7 +9,7 @@ description = "A demo and docs site to show off `wu` features."
 [dependencies]
 # app
 wu = { path = "../" }
-i18n-web = { git = "https://github.com/Instant-Reactive-Systems/i18n-web.git" }
+i18n-web = { git = "ssh://git@github.com/Instant-Reactive-Systems/i18n-web.git" }
 # web
 http = "1.0"
 tailwind_fuse = { version = "0.1" }
