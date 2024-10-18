@@ -129,7 +129,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 				</div>
 			</wu-debug-console-watermark>
 			<wu-debug-console class="contents">
-				<dialog _ref=dialog_ref class="w-full h-full">
+				<dialog _ref=dialog_ref class="w-lvw h-lvh">
 					<div class="overlay-viewport-container p-8">
 						// Watermark overlay when in modal mode
 						<wu-debug-console-watermark class="overlay flex items-end justify-end opacity-75">
@@ -182,7 +182,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 												}
 												prop:value=cmd_text
 											/>
-											<button class="size-12 grid center btn-square bg-primary rounded-r-md" on:click=move |_| submit_cmd()>
+											<button class="size-12 grid center btn-square btn-primary rounded-r-md" on:click=move |_| submit_cmd()>
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stroked size-10">
 													<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
 												</svg>
@@ -196,7 +196,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 										<span class="kbd surface-2">"ESC"</span>
 										<span class="text-xs">"or"</span>
 										<button
-											class="flex center rounded-full hover:bg-light-content/20 hover:dark:bg-dark-content/20 transition-colors motion-safe:transition-none w-fit h-fit p-2"
+											class="flex center btn-circle p-2 focus-within:bg-light-3/20 dark:focus-within:bg-dark-3/20 hover:bg-light-3/20 dark:hover:bg-dark-3/20"
 											on:click=move |_| dialog_ref.get().unwrap().close()
 										>
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">

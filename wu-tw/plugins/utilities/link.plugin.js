@@ -13,7 +13,9 @@ Fancy styling for links.
 export default ({ matchUtilities, addUtilities, theme }) => {
 	addUtilities({
 		'.link': {
-			'@apply cursor-pointer decoration-2 underline-offset-1 no-underline [@media(hover:hover)]:hover:underline': {},
+			'@apply cursor-pointer decoration-2 underline-offset-1': {},
+			'@apply hover:brightness-[1.15] focus:brightness-[1.15]': {},
+			'@apply no-underline [@media(hover:hover)]:hover:underline focus-within:underline': {},
 		},
 	});
 
