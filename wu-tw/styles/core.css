@@ -12,6 +12,10 @@
 	}
 
 
+	:focus-visible {
+		outline: none;
+	}
+
 	:modal {
 		@apply overlay-container;
  	}
