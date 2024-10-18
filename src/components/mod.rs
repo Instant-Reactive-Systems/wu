@@ -1,12 +1,12 @@
 mod drawer;
-mod modals;
+mod modal;
 mod shell;
 mod tabs;
 mod toasts;
 mod stack_context;
 mod debug_console;
 pub use drawer::*;
-pub use modals::*;
+pub use modal::*;
 pub use shell::*;
 pub use tabs::*;
 pub use toasts::*;

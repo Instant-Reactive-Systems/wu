@@ -1,8 +1,8 @@
 mod focus_trap;
-pub use focus_trap::*;
-
-use leptos::*;
 use std::rc::Rc;
+
+pub use focus_trap::*;
+use leptos::*;
 
 /// Position of an element.
 #[derive(Clone, Copy, Default)]
