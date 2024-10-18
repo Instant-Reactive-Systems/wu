@@ -63,7 +63,7 @@
 		@apply outline-0 w-full transition duration-100 px-2;
 		@apply border surface-1;
 		@apply focus:brightness-105 hover:brightness-105 focus-within:border-primary;
-		@apply ring-0 focus-within:ring-1 focus-within:ring-primary;
+		@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-primary;
 	}
 
 	/* Select (size/multiple) */

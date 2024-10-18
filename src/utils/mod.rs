@@ -7,11 +7,11 @@ use std::rc::Rc;
 /// Position of an element.
 #[derive(Clone, Copy, Default)]
 pub enum Position {
-    Left,
-    #[default]
-    Right,
-    Top,
-    Bottom,
+	Left,
+	#[default]
+	Right,
+	Top,
+	Bottom,
 }
 
 /// Generates a newtype for a `Clone,Copy` SignalSetter with a generic marker to
@@ -73,7 +73,6 @@ macro_rules! generate_marker_signal_setter {
         }
     }
 }
-
 
 /// Generates a newtype for a `Clone,Copy` SignalSetter with a generic marker
 /// and active type to allow multiple hooks.
@@ -265,30 +264,30 @@ macro_rules! generate_marker_arbitrary_write_signal {
 pub struct ParamViewFn<T>(Rc<dyn Fn(T) -> View>);
 
 impl<T> Default for ParamViewFn<T> {
-    fn default() -> Self {
-        Self(Rc::new(|_| ().into_view()))
-    }
+	fn default() -> Self {
+		Self(Rc::new(|_| ().into_view()))
+	}
 }
 
 impl<T, F, IV> From<F> for ParamViewFn<T>
 where
-    F: Fn(T) -> IV + 'static,
-    IV: IntoView,
+	F: Fn(T) -> IV + 'static,
+	IV: IntoView,
 {
-    fn from(value: F) -> Self {
-        Self(Rc::new(move |val| value(val).into_view()))
-    }
+	fn from(value: F) -> Self {
+		Self(Rc::new(move |val| value(val).into_view()))
+	}
 }
 
 impl<T> ParamViewFn<T> {
-    /// Execute the wrapped function
-    pub fn run(&self, val: T) -> View {
-        (self.0)(val)
-    }
+	/// Execute the wrapped function
+	pub fn run(&self, val: T) -> View {
+		(self.0)(val)
+	}
 }
 
 impl<T> Clone for ParamViewFn<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
+	fn clone(&self) -> Self {
+		Self(self.0.clone())
+	}
 }
