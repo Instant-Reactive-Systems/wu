@@ -4,55 +4,76 @@ use leptos::*;
 
 use crate::components::Modal;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct DebugCommandParseError {
-	pub what: String,
-	pub span: (usize, usize),
-}
-
-impl std::fmt::Display for DebugCommandParseError {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f)
-	}
-}
-
-impl DebugCommandParseError {
-	/// Creates a new [`DebugCommandParseError`].
-	pub fn new(what: impl AsRef<str>, span: (usize, usize)) -> Self {
-		Self { what: String::from(what.as_ref()), span }
-	}
-}
-
 /// A trait that debugging commands should implement in order to execute their commands.
 pub trait DebugCommand {
 	type State: Clone + Copy;
 
 	/// Parses the command.
-	fn parse(s: &str) -> Result<Self, DebugCommandParseError>
+	fn parse(s: &str) -> Result<Self, ViewFn>
 	where
 		Self: Sized;
 
 	/// Executes the command.
-	fn execute(self, state: &mut Self::State) -> String;
+	fn execute(self, state: &mut Self::State) -> ViewFn;
+}
+
+/// A context type used to set commands on the debug console from the outside.
+pub struct DebugConsoleExternalCommand<M: 'static, T: 'static> {
+	inner: WriteSignal<T>,
+	phantom: std::marker::PhantomData<M>,
+}
+
+impl<M: 'static, T: 'static> DebugConsoleExternalCommand<M, T> {
+	pub fn new(cmd: WriteSignal<T>) -> Self {
+		Self { inner: cmd, phantom: Default::default() }
+	}
+}
+
+impl<M: 'static, T: 'static> Clone for DebugConsoleExternalCommand<M, T> {
+	fn clone(&self) -> Self {
+		Self {
+			inner: self.inner.clone(),
+			phantom: Default::default(),
+		}
+	}
+}
+
+impl<M: 'static, T: 'static> Copy for DebugConsoleExternalCommand<M, T> {}
+
+impl<M: 'static, T: 'static> std::ops::Deref for DebugConsoleExternalCommand<M, T> {
+	type Target = WriteSignal<T>;
+
+	fn deref(&self) -> &Self::Target {
+		&self.inner
+	}
+}
+
+impl<M: 'static, T: 'static> std::ops::DerefMut for DebugConsoleExternalCommand<M, T> {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.inner
+	}
 }
 
 /// Used to provide dynamic modification of arbitrary states.
 #[component]
-pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
+pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 	#[prop(optional)] _phant: std::marker::PhantomData<(M, T)>,
 	/// The key to register for opening the console.
 	#[prop(into)]
 	key: std::borrow::Cow<'static, str>,
 	/// The state to provide to [`DebugCommand`]s.
 	mut state: <T as DebugCommand>::State,
+	/// Additional overlay view to display.
+	#[prop(optional, into)]
+	overlay: ViewFn,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
-	#[derive(Debug, Clone)]
+	#[derive(Clone)]
 	struct LogItem {
 		id: uuid::Uuid,
 		command: String,
-		text: String,
+		output: ViewFn,
 	}
 
 	#[cfg(not(debug_assertions))]
@@ -68,6 +89,9 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 		let open_debug_console = create_rw_signal(());
 		let (cmd_text, set_cmd_text) = create_signal(String::default());
 		let cmd_history: RwSignal<VecDeque<LogItem>> = create_rw_signal(VecDeque::default());
+		let external_cmd: RwSignal<T> = create_rw_signal(T::default());
+
+		provide_context(DebugConsoleExternalCommand::<M, T>::new(external_cmd.write_only()));
 
 		// logic
 		let mut submit_cmd = move || {
@@ -75,12 +99,11 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 			let cmd: T = match T::parse(&cmd_text) {
 				Ok(cmd) => cmd,
 				Err(err) => {
-					log::error!("failed to parse the command: {}", err);
 					cmd_history.update(move |history| {
 						history.push_front(LogItem {
 							id: uuid::Uuid::new_v4(),
 							command: cmd_text,
-							text: err.to_string(),
+							output: err,
 						})
 					});
 					set_cmd_text.update(String::clear);
@@ -89,16 +112,23 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 			};
 
 			let output = cmd.execute(&mut state);
-			log::info!("executed command '{}' with output: {}", cmd_text, output);
 			cmd_history.update(move |history| {
 				history.push_front(LogItem {
 					id: uuid::Uuid::new_v4(),
 					command: cmd_text,
-					text: output,
+					output,
 				})
 			});
 			set_cmd_text.update(String::clear);
 		};
+
+		let external_cmd_watcher_stop = watch(
+			move || external_cmd.get(),
+			move |cmd, _, _| {
+				cmd.clone().execute(&mut state.clone());
+			},
+			false,
+		);
 
 		// - register a global keydown event listener for opening and closing the console
 		let cloned_key = key.clone();
@@ -115,10 +145,17 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 			});
 		});
 
+		on_cleanup(move || {
+			external_cmd_watcher_stop();
+		});
+
 		view! {
 			{children()}
 			// Watermark overlay for debug mode
 			<wu-debug-console-watermark class="overlay-viewport-container p-8 z-[99]">
+				<div class="overlay">
+					{move || overlay.run()}
+				</div>
 				<div class="overlay flex items-end justify-end opacity-75">
 					<div class="horizontal vcenter gap-2 py-2 px-4 rounded-lg border border-2 surface-2">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
@@ -149,7 +186,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + 'static>(
 								>
 									<li class="w-full flex flex-col font-mono border-t surface-border-3 px-2 py-2">
 										<span class="font-semibold"> "> " {cmd.command} </span>
-										<span> {cmd.text} </span>
+										<span> {move || cmd.output.run()} </span>
 									</li>
 								</For>
 							</ul>
