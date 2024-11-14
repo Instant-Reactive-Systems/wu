@@ -1,7 +1,9 @@
 mod focus_trap;
-use std::rc::Rc;
-
+mod errors;
 pub use focus_trap::*;
+pub use errors::{Errors, ReactiveErrors};
+
+use std::rc::Rc;
 use leptos::*;
 
 /// Position of an element.
