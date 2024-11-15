@@ -23,7 +23,7 @@ export default ({ addUtilities, matchUtilities, theme }) => {
 			'&:before, &:after': {
 				'content': '""',
 				'background-color': 'var(--wu-divider-color)',
-				'@apply flex-grow h-0.5 w-full': {},
+				'@apply flex-grow h-px w-full': {},
 			},
 			'&:not(:empty)': {
 				'@apply gap-2': {},
@@ -34,7 +34,7 @@ export default ({ addUtilities, matchUtilities, theme }) => {
 			'&:before, &:after': {
 				'content': '""',
 				'background-color': 'var(--wu-divider-color)',
-				'@apply flex-grow w-0.5 h-full': {},
+				'@apply flex-grow w-px h-full': {},
 			},
 			'&:not(:empty)': {
 				'@apply gap-2': {},
