@@ -1,29 +1,30 @@
 use leptos::*;
-use leptos_use::*;
 use tailwind_fuse::*;
 
-use crate::utils::Position;
+/// All possible drawer positions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DrawerPosition {
+	Left,
+	Right,
+	Top,
+	Bottom,
+}
 
-crate::generate_marker_signal_setter!(
-	/// Opens the drawer.
-	OpenDrawer, ()
-);
-
-crate::generate_marker_signal_setter!(
-	/// Closes the drawer.
-	CloseDrawer, ()
-);
-
-/// Displays an overlay panel that attaches to any side of the screen.
+/// Displays a panel on an arbitrary side of the screen.
 #[component]
-pub fn DrawerHook<M: 'static>(
-	#[prop(optional)] _phant: std::marker::PhantomData<M>,
-	/// The contents of the drawer.
-	#[prop(into)]
-	view: ViewFn,
+pub fn Drawer(
 	/// What side to put the drawer on.
+	#[prop(default = DrawerPosition::Left)]
+	position: DrawerPosition,
+	/// Initial state of the drawer.
+	#[prop(default = false)]
+	open: bool,
+	/// Signal to open the drawer programmatically.
 	#[prop(optional, into)]
-	position: MaybeSignal<Position>,
+	signal_to_open: Signal<()>,
+	/// Size of the drawer in px.
+	#[prop(default = 300)]
+	size: i32,
 	/// Drawer class.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
@@ -33,72 +34,127 @@ pub fn DrawerHook<M: 'static>(
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
-	let (opened, set_opened) = create_signal(false);
-	provide_context(OpenDrawer::<M>::new(move |_| set_opened.set(true)));
-	provide_context(CloseDrawer::<M>::new(move |_| set_opened.set(false)));
+	// vars
+	let offset = create_rw_signal(0.0);
+	let is_dragging = create_rw_signal(false);
+	let is_open = create_rw_signal(open);
+	let dialog_ref = create_node_ref::<html::Dialog>();
 
-	// setup 'close-on-outside-click' functionality
-	let target = create_node_ref::<html::Custom>();
+	// logic
+	_ = watch(move || signal_to_open.get(), move |_, _, _| is_open.set(true), false);
+
 	create_effect(move |_| {
-		target.on_load(move |_| {
-			let _ = on_click_outside(target, move |_| set_opened.set(false));
-		});
+		if let Some(dialog) = dialog_ref.get() {
+			if is_open.get() && !dialog.open() {
+				_ = dialog.show_modal();
+			} else if !is_open.get() && dialog.open() {
+				dialog.close();
+			}
+		}
 	});
 
-	// dynamic drawer classes
-	let drawer_classes = move || {
-		let position_related_classes = match position.get() {
-			Position::Left => {
-				tw_merge!(
-					"h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-start -translate-x-[300px] desktop:-translate-x-[400px]",
-					if opened.get() {
-						"!translate-x-0"
-					} else {
-						"!hidden"
-					}
-				)
-			},
-			Position::Right => {
-				tw_merge!(
-					"h-full max-h-svh w-[300px] desktop:w-[400px] justify-self-end translate-x-[300px] desktop:translate-x-[400px]",
-					if opened.get() {
-						"!translate-x-0"
-					} else {
-						"!hidden"
-					}
-				)
-			},
-			Position::Top => {
-				tw_merge!(
-					"w-full max-w-svw h-[200px] desktop:h-[300px] self-start -translate-y-[200px] desktop:-translate-y-[300px]",
-					if opened.get() {
-						"!translate-y-0"
-					} else {
-						"!hidden"
-					}
-				)
-			},
-			Position::Bottom => {
-				tw_merge!(
-					"w-full max-w-svw h-[200px] desktop:h-[300px] self-end translate-y-[200px] desktop:translate-y-[300px]",
-					if opened.get() {
-						"!translate-y-0"
-					} else {
-						"!hidden"
-					}
-				)
-			},
-		};
+	let get_initial_position = move || -> String {
+		match position {
+			DrawerPosition::Left => format!("left: {}px; top: 0; height: 100%; width: {}px;", -size, size),
+			DrawerPosition::Right => format!("right: {}px; top: 0; height: 100%; width: {}px;", -size, size),
+			DrawerPosition::Top => format!("top: {}px; left: 0; width: 100%; height: {}px;", -size, size),
+			DrawerPosition::Bottom => format!("bottom: {}px; left: 0; width: 100%; height: {}px;", -size, size),
+		}
+	};
 
-		tw_merge!("overlay transition-transform motion-safe:transition-none", position_related_classes, class.get())
+	let get_transform = move || -> String {
+		let translate = match position {
+			DrawerPosition::Left => format!(
+				"translateX({}px)",
+				if is_dragging.get() {
+					offset.get()
+				} else {
+					if is_open.get() {
+						size as f64
+					} else {
+						0.0
+					}
+				}
+			),
+			DrawerPosition::Right => format!(
+				"translateX({}px)",
+				if is_dragging.get() {
+					-offset.get()
+				} else {
+					if is_open.get() {
+						-size as f64
+					} else {
+						0.0
+					}
+				}
+			),
+			DrawerPosition::Top => format!(
+				"translateY({}px)",
+				if is_dragging.get() {
+					offset.get()
+				} else {
+					if is_open.get() {
+						size as f64
+					} else {
+						0.0
+					}
+				}
+			),
+			DrawerPosition::Bottom => format!(
+				"translateY({}px)",
+				if is_dragging.get() {
+					-offset.get()
+				} else {
+					if is_open.get() {
+						-size as f64
+					} else {
+						0.0
+					}
+				}
+			),
+		};
+		translate
 	};
 
 	view! {
-		{children()}
-		<wu-drawer-hook class="overlay-viewport-container">
-			<wu-drawer {..attrs} node_ref=target class=drawer_classes>
-				{move || view.run()}
-			</wu-drawer>
-		</wu-drawer-hook>
+		<wu-drawer class="contents">
+			<dialog node_ref=dialog_ref>
+				<div class="overlay-viewport-container"> //  style="position: fixed; inset: 0; overflow: hidden;"
+					// Content
+					<div
+						{..attrs}
+						class=move || tw_merge!("overlay", class.get())
+						style=move || format!(
+							"position: absolute; \
+							overflow: hidden; \
+							{} \
+							transform: {}; \
+							transition: transform 0.3s ease-out; \
+							transition-behavior: allow-discrete; \
+							box-shadow: 0 0 10px rgba(0,0,0,0.2);",
+							get_initial_position(),
+							get_transform(),
+						)
+					>
+						{children()}
+					</div>
+					// Close button
+					<div class="overlay flex justify-end p-2">
+						<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
+							<span class="hidden desktop:kbd surface-2">"ESC"</span>
+							<span class="hidden desktop:block text-xs">"or"</span>
+							<button
+								class="flex center btn-circle p-2 focus-within:bg-light-3/20 dark:focus-within:bg-dark-3/20 hover:bg-light-3/20 dark:hover:bg-dark-3/20"
+								on:click=move |_| dialog_ref.get().unwrap().close()
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+			</dialog>
+		</wu-drawer>
 	}
 }

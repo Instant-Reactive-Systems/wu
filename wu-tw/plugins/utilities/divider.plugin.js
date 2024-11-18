@@ -19,7 +19,7 @@ Used to separate content vertically or horizontally.
 export default ({ addUtilities, matchUtilities, theme }) => {
 	addUtilities({
 		'.hdivider': {
-			'@apply flex flex-row items-center self-stretch': {},
+			'@apply flex flex-row items-center self-stretch opacity-65': {},
 			'&:before, &:after': {
 				'content': '""',
 				'background-color': 'var(--wu-divider-color)',
@@ -30,7 +30,7 @@ export default ({ addUtilities, matchUtilities, theme }) => {
 			},
 		},
 		'.vdivider': {
-			'@apply flex flex-col items-center self-stretch': {},
+			'@apply flex flex-col items-center self-stretch opacity-65': {},
 			'&:before, &:after': {
 				'content': '""',
 				'background-color': 'var(--wu-divider-color)',

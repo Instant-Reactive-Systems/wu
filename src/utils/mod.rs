@@ -1,7 +1,9 @@
 mod focus_trap;
 mod errors;
+mod show;
 pub use focus_trap::*;
-pub use errors::{Errors, ReactiveErrors};
+pub use errors::{ShowError, Errors, ReactiveErrors};
+pub use show::{ShowOption, ShowWithData};
 
 use std::rc::Rc;
 use leptos::*;

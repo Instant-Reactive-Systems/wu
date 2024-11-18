@@ -39,10 +39,10 @@ pub fn Modal(
 							// Close button
 							<div class="overlay p-4 flex justify-end">
 								<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
-									<span class="kbd surface-2">"ESC"</span>
-									<span class="text-xs">"or"</span>
+									<span class="hidden desktop:kbd surface-2">"ESC"</span>
+									<span class="hidden desktop:block text-xs">"or"</span>
 									<button
-										class="flex center btn-circle p-2 focus-within:bg-light-3/20 dark:focus-within:bg-dark-3/20 hover:bg-light-3/20 dark:hover:bg-dark-3/20"
+										class="flex center btn-circle p-2 highlight"
 										on:click=move |_| dialog_ref.get().unwrap().close()
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">

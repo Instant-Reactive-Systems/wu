@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 
 use leptos::*;
+use tailwind_fuse::*;
 
 use crate::components::Modal;
 
@@ -66,6 +67,9 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 	/// Additional overlay view to display.
 	#[prop(optional, into)]
 	overlay: ViewFn,
+	/// Specifies the default 'class' attribute for the default debug overlay.
+	#[prop(default = "".into(), into)]
+	dbg_overlay_class: TextProp,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
@@ -156,12 +160,19 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 				<div class="overlay">
 					{move || overlay.run()}
 				</div>
-				<div class="overlay flex items-end justify-end opacity-75">
-					<div class="horizontal vcenter gap-2 py-2 px-4 rounded-lg border border-2 surface-2">
+				<div class=move || tw_merge!("overlay flex items-end justify-end opacity-75", dbg_overlay_class.get())>
+					// if mobile
+					<button on:click=move |_| open_debug_console.set(()) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border surface-2">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
-						<span class="text-xl font-bold">"In debug mode -"</span>
-						<span class="kbd">{key.clone()}</span>
-						<span class="text-xl font-bold">"for console"</span>
+						<span class="text-xl font-bold">"In debug mode"</span>
+					</button>
+					// if >mobile
+					<div class="hidden desktop:horizontal vcenter gap-2 py-2 px-4 rounded-lg border surface-2">
+						<span class="text-xl font-bold text-red-600">"⬤"</span>
+						<span class="text-xl font-bold">"In debug mode"</span>
+						<span clasS="hidden desktop:block text-xl font-bold">"-"</span>
+						<span class="hidden desktop:block kbd">{key.clone()}</span>
+						<span class="hidden desktop:block text-xl font-bold">"for console"</span>
 					</div>
 				</div>
 			</wu-debug-console-watermark>
@@ -178,7 +189,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 					<div class="vertical w-full desktop:w-[600px] gap-2">
 						// Text buffer
 						<div class="grow surface-bg-2 rounded-md">
-							<ul class="flex flex-col-reverse w-full h-full min-h-[400px] max-h-[400px] overflow-y-auto">
+							<ul class="flex flex-col-reverse w-full h-full min-h-[250px] max-h-[250px] desktop:min-h-[400px] desktop:max-h-[400px] overflow-y-auto">
 								<For
 									each=move || cmd_history.get()
 									key=move |cmd| cmd.id

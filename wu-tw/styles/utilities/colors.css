@@ -92,7 +92,7 @@
 	}
 	
 	* {
-		@apply text-light-content decoration-light-content divider-light-content dark:divider-dark-content dark:text-dark-content dark:decoration-dark-content;
+		@apply text-light-content decoration-light-content divider-surface-400 dark:divider-surface-600 dark:text-dark-content dark:decoration-dark-content;
 	}
 
 	.filled {

@@ -17,16 +17,10 @@
 	}
 
 	:modal {
-		@apply overlay-container;
- 	}
-
- 	:modal::backdrop {
- 		@apply bg-black/25 backdrop-blur-sm;
- 	}
-	/*
-	*:has(#wu-active-modal) *:not(#wu-active-modal, #wu-active-modal *) {
-		pointer-events: none;
-		overflow: hidden;
+		@apply bg-transparent;
 	}
-	*/
+
+	::backdrop, :modal::backdrop, dialog::backdrop {
+	  @apply blur-sm backdrop-blur-sm bg-black/50;
+	}
 }
