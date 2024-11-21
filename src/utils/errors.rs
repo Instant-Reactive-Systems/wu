@@ -47,7 +47,7 @@ pub fn ShowError(errors: ReactiveErrors, #[prop(into)] id: std::borrow::Cow<'sta
 
 	view! {
 		<crate::ShowOption data=move || errors.get(id.clone()) let:err>
-			<div class="ghost-error border py-1 px-3">
+			<div class="input-error border rounded-md py-1 px-2">
 				{err} // TODO: localize
 			</div>
 		</crate::ShowOption>

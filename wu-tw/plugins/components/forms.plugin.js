@@ -22,9 +22,9 @@ export default ({ addComponents }) => {
 			}
 		},
 		'.input-error': {
-			'@apply bg-error-200 border-error-500 text-error-700 focus-within:ring-error-700 focus:ring': {},
+			'@apply !bg-error-900 !border-error-500 !text-error-content focus-within:!border-error-500 focus-within:!ring-error-500': {},
 			'&::placeholder': {
-				'@apply text-error-700': {},
+				'@apply !text-error-content': {},
 			}
 		},
 	});

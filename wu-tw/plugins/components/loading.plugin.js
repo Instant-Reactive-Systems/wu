@@ -11,7 +11,7 @@ export default ({ addComponents }) => {
 	addComponents({
 		'.loading': {
 			'@apply pointer-events-none w-6 aspect-square inline-block': {},
-			'@apply bg-surface-100 dark:bg-surface-800': {},
+			'@apply bg-light-content dark:bg-dark-content': {},
 			'mask-size': '100%',
 			'mask-repeat': 'no-repeat',
 			'mask-position': 'center',
