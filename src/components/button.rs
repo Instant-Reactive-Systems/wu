@@ -25,7 +25,8 @@ pub fn ActionButton<I: 'static, O: 'static>(
 	/// Action to dispatch and to await.
 	action: Action<I, O>,
 	/// Input to the action.
-	input: Box<dyn Fn() -> I + 'static>,
+	#[prop(into)]
+	input: Callback<(), I>,
 	/// View to display during idle state.
 	#[prop(optional, into)]
 	idle_view: ViewFn,
@@ -35,6 +36,9 @@ pub fn ActionButton<I: 'static, O: 'static>(
 	/// View to display during finished state.
 	#[prop(optional, into)]
 	finished_view: ViewFn,
+	/// Logic to run after the finished state.
+	#[prop(default = (|_| ()).into(), into)]
+	on_finish: Callback<(), ()>,
 	/// How long the finished state will last for.
 	#[prop(into)]
 	finished_lasts_for: f64,
@@ -55,7 +59,13 @@ pub fn ActionButton<I: 'static, O: 'static>(
 
 	// vars
 	let state = create_rw_signal(State::Idle);
-	let leptos_use::UseTimeoutFnReturn { start, stop, is_pending, .. } = leptos_use::use_timeout_fn(move |_| state.update(move |state| *state = State::Idle), finished_lasts_for);
+	let leptos_use::UseTimeoutFnReturn { start, stop, is_pending, .. } = leptos_use::use_timeout_fn(
+		move |_| {
+			on_finish.call(());
+			state.update(move |state| *state = State::Idle);
+		},
+		finished_lasts_for,
+	);
 
 	// logic
 	_ = watch(
@@ -85,7 +95,7 @@ pub fn ActionButton<I: 'static, O: 'static>(
 		<button
 			{..attrs}
 			type=r#type
-			on:click=move |_| action.dispatch(input())
+			on:click=move |_| action.dispatch(input.call(()))
 			disabled=move || state.get() != State::Idle
 			class=class
 		>
