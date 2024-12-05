@@ -7,9 +7,9 @@ pub fn Modal(
 	/// Specifies the default 'class' attribute for all modals.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
-	/// Signal that opens the modal.
+	/// Signal that opens or closes the modal.
 	#[prop(into)]
-	signal_to_open: Signal<()>,
+	toggle: Signal<bool>,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
@@ -19,9 +19,11 @@ pub fn Modal(
 
 	// logic
 	_ = watch(
-		move || signal_to_open.get(),
-		move |_, _, _| {
-			_ = dialog_ref.get().unwrap().show_modal();
+		move || toggle.get(),
+		move |curr, prev, _| match (prev.cloned().unwrap_or(false), curr.clone()) {
+			(false, true) => _ = dialog_ref.get_untracked().unwrap().show_modal(),
+			(true, false) => _ = dialog_ref.get_untracked().unwrap().close(),
+			_ => {},
 		},
 		false,
 	);
@@ -43,7 +45,7 @@ pub fn Modal(
 									<span class="hidden desktop:block text-xs">"or"</span>
 									<button
 										class="flex center btn-circle p-2 highlight"
-										on:click=move |_| dialog_ref.get().unwrap().close()
+										on:click=move |_| dialog_ref.get_untracked().unwrap().close()
 									>
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />

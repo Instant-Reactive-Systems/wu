@@ -64,7 +64,7 @@ pub fn ToastHook<M: 'static>(
 		{children()}
 		<wu-toast-hook class="overlay-viewport-container overflow-clip">
 			<div class="overlay flex justify-end">
-				<wu-toasts class="h-fit divide-y divide-light-2 border border-light-2 dark:x-[divide-dark-2,border-dark-2] rounded-bl-lg shadow-lg">
+				<wu-toasts class="h-fit divide-y border surface-2 rounded-bl-lg shadow-lg">
 					<For
 						each=move || toasts.get()
 						key=move |toast| toast.id
@@ -73,11 +73,11 @@ pub fn ToastHook<M: 'static>(
 							let timeout_handle = toast.timeout_handle;
 							let class = {
 								let class = class.clone();
-								move || tw_merge!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-light-1 dark:bg-dark-1 last:rounded-bl-md", class.get())
+								move || tw_merge!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 surface-bg-1 last:rounded-bl-md", class.get())
 							};
 							let dismiss_btn_class = {
 								let class = dismiss_btn_class.clone();
-								move || tw_merge!("flex center text-sm font-thin rounded-full hover:bg-light-2 hover:dark:bg-dark-2 text-light-content dark:text-dark-content p-2", class.get())
+								move || tw_merge!("flex center text-sm font-thin rounded-full highlight p-2", class.get())
 							};
 
 							view! {

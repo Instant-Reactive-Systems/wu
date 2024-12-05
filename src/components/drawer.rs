@@ -16,12 +16,9 @@ pub fn Drawer(
 	/// What side to put the drawer on.
 	#[prop(default = DrawerPosition::Left)]
 	position: DrawerPosition,
-	/// Initial state of the drawer.
-	#[prop(default = false)]
-	open: bool,
-	/// Signal to open the drawer programmatically.
+	/// Signal to open or close the drawer programmatically.
 	#[prop(optional, into)]
-	signal_to_open: Signal<()>,
+	toggle: RwSignal<bool>,
 	/// Size of the drawer in px.
 	#[prop(default = 300)]
 	size: i32,
@@ -35,23 +32,19 @@ pub fn Drawer(
 	children: Children,
 ) -> impl IntoView {
 	// vars
-	let offset = create_rw_signal(0.0);
-	let is_dragging = create_rw_signal(false);
-	let is_open = create_rw_signal(open);
 	let dialog_ref = create_node_ref::<html::Dialog>();
 
 	// logic
-	_ = watch(move || signal_to_open.get(), move |_, _, _| is_open.set(true), false);
-
-	create_effect(move |_| {
-		if let Some(dialog) = dialog_ref.get() {
-			if is_open.get() && !dialog.open() {
-				_ = dialog.show_modal();
-			} else if !is_open.get() && dialog.open() {
-				dialog.close();
-			}
-		}
-	});
+	_ = watch(
+		move || toggle.get(),
+		move |curr, prev, _| match (prev.cloned().unwrap_or(false), curr.clone()) {
+			(false, true) => _ = dialog_ref.get_untracked().unwrap().show_modal(),
+			(true, false) => _ = dialog_ref.get_untracked().unwrap().close(),
+			(false, false) => {},
+			_ => unreachable!("impossible state"),
+		},
+		true,
+	);
 
 	let get_initial_position = move || -> String {
 		match position {
@@ -64,54 +57,10 @@ pub fn Drawer(
 
 	let get_transform = move || -> String {
 		let translate = match position {
-			DrawerPosition::Left => format!(
-				"translateX({}px)",
-				if is_dragging.get() {
-					offset.get()
-				} else {
-					if is_open.get() {
-						size as f64
-					} else {
-						0.0
-					}
-				}
-			),
-			DrawerPosition::Right => format!(
-				"translateX({}px)",
-				if is_dragging.get() {
-					-offset.get()
-				} else {
-					if is_open.get() {
-						-size as f64
-					} else {
-						0.0
-					}
-				}
-			),
-			DrawerPosition::Top => format!(
-				"translateY({}px)",
-				if is_dragging.get() {
-					offset.get()
-				} else {
-					if is_open.get() {
-						size as f64
-					} else {
-						0.0
-					}
-				}
-			),
-			DrawerPosition::Bottom => format!(
-				"translateY({}px)",
-				if is_dragging.get() {
-					-offset.get()
-				} else {
-					if is_open.get() {
-						-size as f64
-					} else {
-						0.0
-					}
-				}
-			),
+			DrawerPosition::Left => format!("translateX({}px)", if toggle.get() { size as f64 } else { 0.0 }),
+			DrawerPosition::Right => format!("translateX({}px)", if toggle.get() { -size as f64 } else { 0.0 }),
+			DrawerPosition::Top => format!("translateY({}px)", if toggle.get() { size as f64 } else { 0.0 }),
+			DrawerPosition::Bottom => format!("translateY({}px)", if toggle.get() { -size as f64 } else { 0.0 }),
 		};
 		translate
 	};
@@ -119,7 +68,7 @@ pub fn Drawer(
 	view! {
 		<wu-drawer class="contents">
 			<dialog node_ref=dialog_ref>
-				<div class="overlay-viewport-container"> //  style="position: fixed; inset: 0; overflow: hidden;"
+				<div class="overlay-viewport-container">
 					// Content
 					<div
 						{..attrs}
@@ -144,8 +93,8 @@ pub fn Drawer(
 							<span class="hidden desktop:kbd surface-2">"ESC"</span>
 							<span class="hidden desktop:block text-xs">"or"</span>
 							<button
-								class="flex center btn-circle p-2 focus-within:bg-light-3/20 dark:focus-within:bg-dark-3/20 hover:bg-light-3/20 dark:hover:bg-dark-3/20"
-								on:click=move |_| dialog_ref.get().unwrap().close()
+								class="flex center btn-circle p-2 highlight"
+								on:click=move |_| dialog_ref.get_untracked().unwrap().close()
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />

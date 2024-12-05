@@ -62,15 +62,14 @@ where
 /// # use leptos_macro::*;
 /// # use leptos_dom::*; use leptos::*;
 /// # let runtime = create_runtime();
-/// let (data, set_data) = create_signal(0);
+/// let (data, set_data) = create_signal(None);
 ///
 /// view! {
 ///   <ShowOption data
-/// 	data=move |data| value.get() < 5
-/// 	fallback=|| view! { "Big number!" }
+/// 	fallback=|| view! { "No data" }
 /// 	let:data
 ///   >
-/// 	"Small number: " {data} "!"
+/// 	"Data: " {data} "!"
 ///   </ShowOption>
 /// }
 /// # ;

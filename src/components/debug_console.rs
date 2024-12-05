@@ -90,7 +90,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 	#[cfg(debug_assertions)]
 	{
 		// vars
-		let open_debug_console = create_rw_signal(());
+		let toggle_debug_console = create_rw_signal(false);
 		let (cmd_text, set_cmd_text) = create_signal(String::default());
 		let cmd_history: RwSignal<VecDeque<LogItem>> = create_rw_signal(VecDeque::default());
 		let external_cmd: RwSignal<T> = create_rw_signal(T::default());
@@ -140,7 +140,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 			let key = cloned_key.clone();
 			let unsub = leptos_use::use_event_listener(document(), ev::keydown, move |evt| {
 				if evt.key() == key {
-					open_debug_console.set(());
+					toggle_debug_console.set(true);
 				}
 			});
 
@@ -162,7 +162,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 				</div>
 				<div class=move || tw_merge!("overlay flex items-end justify-end opacity-75", dbg_overlay_class.get())>
 					// if mobile
-					<button on:click=move |_| open_debug_console.set(()) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border surface-2">
+					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border surface-2">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
 					</button>
@@ -177,7 +177,7 @@ pub fn DebugConsole<M: 'static, T: DebugCommand + Clone + Default + 'static>(
 				</div>
 			</wu-debug-console-watermark>
 			<wu-debug-console class="contents">
-				<Modal class="vertical gap-2 surface-1 border shadow-lg rounded-md" signal_to_open=open_debug_console>
+				<Modal class="vertical gap-2 surface-1 border shadow-lg rounded-md" toggle=toggle_debug_console>
 					<h1 class="text-2xl font-bold text-center">
 						"Debugger"
 					</h1>
