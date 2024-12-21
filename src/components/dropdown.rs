@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 /// A wrapper around a `<select>` and `<option>` that automatically
 /// interactivity automatically.
@@ -14,24 +14,19 @@ use leptos::*;
 ///  />
 /// ```
 #[component]
-pub fn Dropdown<T: serde::Serialize + serde::de::DeserializeOwned + std::fmt::Display + Clone + 'static>(
+pub fn Dropdown<T>(
 	/// Signal used for getting/setting the value.
 	#[prop(into)]
 	value: RwSignal<T>,
 	/// Possible items to choose from.
 	#[prop(into)]
 	items: Vec<T>,
-	/// Specifies the default 'class' attribute for all modals.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
-) -> impl IntoView {
+) -> impl IntoView
+where
+	T: Send + Sync + serde::Serialize + serde::de::DeserializeOwned + std::fmt::Display + Clone + 'static,
+{
 	view! {
 		<select
-			{..attrs}
-			class=class
 			on:change=move |ev| {
 				let new_value: T = match serde_json::from_str(&event_target_value(&ev)) {
 					Ok(val) => val,

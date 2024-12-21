@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::prelude::*;
 
 /// A typedef over a [`std::collections::HashMap`].
 pub type Errors = std::collections::HashMap<std::borrow::Cow<'static, str>, String>;
@@ -31,9 +31,7 @@ impl ReactiveErrors {
 
 impl Default for ReactiveErrors {
 	fn default() -> Self {
-		Self {
-			errors: create_rw_signal(Default::default()),
-		}
+		Self { errors: RwSignal::default() }
 	}
 }
 

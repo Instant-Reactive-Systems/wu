@@ -60,7 +60,7 @@ export default ({ addComponents }) => {
 			'@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-primary': {},
 		},
 		'.btn-primary': {
-			'@apply bg-primary-500 border-primary-600 text-primary-content': {},
+			'@apply bg-primary-500 border-primary-600 text-primary-content [&_.icon]:icon-primary-content': {},
 		},
 		'.btn-secondary': {
 			'@apply ghost-primary-500': {},

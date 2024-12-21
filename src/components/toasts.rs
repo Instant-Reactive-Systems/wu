@@ -1,6 +1,6 @@
 use std::{borrow::Cow, time::Duration};
 
-use leptos::{leptos_dom::helpers::TimeoutHandle, *};
+use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
 
 /// A toast message.
@@ -10,8 +10,79 @@ use tailwind_fuse::*;
 pub enum ToastMsg {
 	/// Simple text payload.
 	Text(Cow<'static, str>),
+	/// Info message.
+	Info(Cow<'static, str>),
+	/// Warn message.
+	Warn(Cow<'static, str>),
+	/// Error message.
+	Error(Cow<'static, str>),
 	/// Complex view.
 	View(ViewFn),
+	/// Info message with an additional complex view.
+	InfoView(ViewFn),
+	/// Warn message with an additional complex view.
+	WarnView(ViewFn),
+	/// Error message with an additional complex view.
+	ErrorView(ViewFn),
+}
+
+impl IntoRender for ToastMsg {
+	type Output = AnyView;
+
+	fn into_render(self) -> Self::Output {
+		match self {
+			ToastMsg::Text(text) => view! {
+				<p class="overflow-hidden grow">{text}</p>
+			}
+			.into_any(),
+			ToastMsg::Info(text) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-info-circle"/>
+					<p class="overflow-hidden grow">{text}</p>
+				</div>
+			}
+			.into_any(),
+			ToastMsg::Warn(text) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-exclamation-circle icon-warning"/>
+					<p class="overflow-hidden grow">{text}</p>
+				</div>
+			}
+			.into_any(),
+			ToastMsg::Error(text) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-exclamation-triangle icon-error"/>
+					<p class="overflow-hidden grow">{text}</p>
+				</div>
+			}
+			.into_any(),
+			ToastMsg::View(vw) => view! {
+				<div class="overflow-hidden grow">{vw.run()}</div>
+			}
+			.into_any(),
+			ToastMsg::InfoView(vw) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-info-circle"/>
+					<p class="overflow-hidden grow">{vw.run()}</p>
+				</div>
+			}
+			.into_any(),
+			ToastMsg::WarnView(vw) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-exclamation-circle icon-warning"/>
+					<p class="overflow-hidden grow">{vw.run()}</p>
+				</div>
+			}
+			.into_any(),
+			ToastMsg::ErrorView(vw) => view! {
+				<div class="horizontal hcenter gap-4">
+					<span class="icon i-o-exclamation-triangle icon-error"/>
+					<p class="overflow-hidden grow">{vw.run()}</p>
+				</div>
+			}
+			.into_any(),
+		}
+	}
 }
 
 /// A message to display for a set amount of time.
@@ -25,14 +96,30 @@ pub struct Toast {
 	pub dismissable: bool,
 }
 
-crate::generate_marker_signal_setter!(
-	/// Pushes a toast onto the hook.
-	PushToast, Toast
+impl Default for Toast {
+	fn default() -> Self {
+		Self {
+			msg: ToastMsg::Warn("No message specified, default toast created".into()),
+			timeout: Duration::from_secs(3),
+			dismissable: true,
+		}
+	}
+}
+
+#[doc(hidden)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToastMarker<M>(std::marker::PhantomData<M>);
+
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	PushToastMarker
 );
+
+pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, Callback<Toast>>;
 
 /// Simple notifications utilizing a dynamic queue system.
 #[component]
-pub fn ToastHook<M: 'static>(
+pub fn ToastHook<M>(
 	#[prop(optional)] _phant: std::marker::PhantomData<M>,
 	/// Toast class.
 	#[prop(default = "".into(), into)]
@@ -42,13 +129,16 @@ pub fn ToastHook<M: 'static>(
 	dismiss_btn_class: TextProp,
 	/// Children of the component.
 	children: Children,
-) -> impl IntoView {
+) -> impl IntoView
+where
+	M: Send + Sync + 'static,
+{
 	// toast creation
-	let (toast_id, set_toast_id) = create_signal(0u64);
-	let (toasts, set_toasts) = create_signal(Vec::default());
-	provide_context(PushToast::<M>::new(move |toast| {
+	let toast_id = RwSignal::new(0u64);
+	let toasts = RwSignal::new(Vec::default());
+	provide_context(PushToast::<M>::new(Callback::new(move |toast: Toast| {
 		let id = toast_id.get_untracked();
-		let timeout_handle = set_timeout_with_handle(move || set_toasts.update(move |toasts| toasts.retain(|toast: &ToastWithId| toast.id != id)), toast.timeout);
+		let timeout_handle = set_timeout_with_handle(move || toasts.update(move |toasts| toasts.retain(|toast: &ToastWithId| toast.id != id)), toast.timeout);
 		let timeout_handle = if let Ok(timeout_handle) = timeout_handle {
 			timeout_handle
 		} else {
@@ -56,9 +146,9 @@ pub fn ToastHook<M: 'static>(
 			return;
 		};
 
-		set_toasts.update(move |toasts| toasts.push(ToastWithId { id, toast, timeout_handle }));
-		set_toast_id.update(|n| *n = n.overflowing_add(1).0);
-	}));
+		toasts.update(move |toasts| toasts.push(ToastWithId { id, toast, timeout_handle }));
+		toast_id.update(|n| *n = n.overflowing_add(1).0);
+	})));
 
 	view! {
 		{children()}
@@ -83,29 +173,17 @@ pub fn ToastHook<M: 'static>(
 							view! {
 								<wu-toast class=class>
 									// content
-									{
-										let msg = toast.msg.clone();
-										move || match msg.clone() {
-											ToastMsg::Text(text) => view! {
-												<p class="overflow-hidden grow">{text}</p>
-											}.into_view(),
-											ToastMsg::View(vw) => view! {
-												<div class="overflow-hidden grow">{vw.run()}</div>
-											}.into_view(),
-										}
-									}
+									{toast.msg.clone()}
 									// close
 									{toast.dismissable.then(move || view! {
 										<button
 											class=dismiss_btn_class
 											on:click=move |_| {
 												timeout_handle.clear();
-												set_toasts.update(|toasts| toasts.retain(|toast| toast.id != id));
+												toasts.update(|toasts| toasts.retain(|toast| toast.id != id));
 											}
 										>
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-												<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-											</svg>
+											<span class="icon i-o-x-mark"/>
 										</button>
 									})}
 								</wu-toast>

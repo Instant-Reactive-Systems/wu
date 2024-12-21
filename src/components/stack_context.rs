@@ -1,31 +1,39 @@
-use leptos::*;
+use leptos::prelude::*;
 
-crate::generate_generic_marker_signal_setter!(
-	/// Pushes a new stack context.
-	PushStackContext, T, T
+#[doc(hidden)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StackMarker<M>(std::marker::PhantomData<M>);
+
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	PushStackCtxMarker
 );
 
-crate::generate_marker_signal_setter!(
-	/// Pops current stack context.
-	PopStackContext, ()
-);
+/// Pushes a new stack context.
+pub type PushStackCtx<M, T> = crate::utils::Marked<StackMarker<(M, PushStackCtxMarker)>, Callback<T>>;
+/// Pops current stack context.
+pub type PopStackCtx<M> = crate::utils::Marked<StackMarker<(M, PushStackCtxMarker)>, Callback<()>>;
 
 /// Used to provide a scoped generic stack to all its children.
 #[component]
-pub fn StackContext<M: 'static, T: Clone + 'static>(
+pub fn StackContext<M, T>(
 	#[prop(optional)] _phant: std::marker::PhantomData<(M, T)>,
 	/// Children of the component.
 	children: Children,
-) -> impl IntoView {
-	let (stack_cxs, set_stack_cxs) = create_signal::<Vec<T>>(Default::default());
+) -> impl IntoView
+where
+	M: Send + Sync + 'static,
+	T: Send + Sync + Clone + 'static,
+{
+	let stack_cxs = RwSignal::<Vec<T>>::new(Default::default());
 	let active_cx = Signal::derive(move || stack_cxs.with(move |cxs| { !cxs.is_empty() }.then(move || cxs[cxs.len() - 1].clone())));
-	provide_context(PushStackContext::<M, T>::new(move |cx| {
-		set_stack_cxs.update(move |cxs| cxs.push(cx));
-	}));
-	provide_context(PopStackContext::<M>::new(move |_| {
-		set_stack_cxs.update(move |cxs| _ = cxs.pop());
-	}));
-	provide_context(ActiveStackContext::<M, T> {
+	provide_context(PushStackCtx::<M, T>::new(Callback::new(move |cx| {
+		stack_cxs.update(move |cxs| cxs.push(cx));
+	})));
+	provide_context(PopStackCtx::<M>::new(Callback::new(move |_| {
+		stack_cxs.update(move |cxs| _ = cxs.pop());
+	})));
+	provide_context(ActiveStackCtx::<M, T> {
 		cx: active_cx,
 		_phant: Default::default(),
 	});
@@ -36,15 +44,18 @@ pub fn StackContext<M: 'static, T: Clone + 'static>(
 }
 
 /// Currently active stack context.
-pub struct ActiveStackContext<M: 'static, T: 'static> {
+pub struct ActiveStackCtx<M: Send + Sync + 'static, T: Send + Sync + Clone + 'static> {
 	pub cx: Signal<Option<T>>,
 	_phant: std::marker::PhantomData<M>,
 }
 
-impl<M: 'static, T: 'static> Clone for ActiveStackContext<M, T> {
+impl<M: Send + Sync + 'static, T: Send + Sync + Clone + 'static> Clone for ActiveStackCtx<M, T> {
 	fn clone(&self) -> Self {
-		*self
+		Self {
+			cx: self.cx.clone(),
+			_phant: Default::default(),
+		}
 	}
 }
 
-impl<M: 'static, T: 'static> Copy for ActiveStackContext<M, T> {}
+impl<M: Send + Sync + 'static, T: Send + Sync + Clone + 'static> Copy for ActiveStackCtx<M, T> {}

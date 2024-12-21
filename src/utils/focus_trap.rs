@@ -1,17 +1,21 @@
 use std::{borrow::Cow, rc::Rc};
 
-use leptos::{ev::*, *};
+use leptos::{prelude::*, ev::*};
 use leptos_use::*;
-use wasm_bindgen::JsCast;
-use web_sys::{Element, Node};
+use web_sys::{wasm_bindgen::JsCast, Element, Node};
 
 /// Creates a focus trap signal.
-pub fn create_focus_trap(selector_id: impl Into<Cow<'static, str>>) -> (SignalSetter<()>, SignalSetter<()>) {
+///
+/// # Example
+/// ```rust,ignore
+/// let (push_trap, pop_trap) = wu::create_focus_trap("UNIQUE_MODAL_ID");
+/// ```
+pub fn create_focus_trap(selector_id: impl Into<Cow<'static, str>>) -> (Callback<()>, Callback<()>) {
 	let selector_id: Cow<'static, str> = selector_id.into();
-	let (_, set_state) = create_signal(None::<State>);
-	let (unsub, set_unsub) = create_signal(None::<Rc<dyn Fn()>>);
+	let (_, set_state) = signal_local(None::<State>);
+	let (unsub, set_unsub) = signal_local(None::<Rc<dyn Fn()>>);
 
-	let add_trap = SignalSetter::map(move |_: ()| {
+	let add_trap = Callback::new(move |_| {
 		// find the origin if there exists one
 		// (it might not exist if the trap focus
 		// was caused programmatically)
@@ -55,7 +59,7 @@ pub fn create_focus_trap(selector_id: impl Into<Cow<'static, str>>) -> (SignalSe
 		});
 	});
 
-	let pop_trap = SignalSetter::map(move |_: ()| {
+	let pop_trap = Callback::new(move |_| {
 		set_state.update(move |state_opt| {
 			if let Some(state) = state_opt {
 				// unsubscribe previous element

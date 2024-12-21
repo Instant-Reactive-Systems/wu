@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::{prelude::*, text_prop::TextProp, html};
 use tailwind_fuse::*;
 
 /// All possible drawer positions.
@@ -14,7 +14,7 @@ pub enum DrawerPosition {
 #[component]
 pub fn Drawer(
 	/// What side to put the drawer on.
-	#[prop(default = DrawerPosition::Left)]
+	#[prop(default = DrawerPosition::Right)]
 	position: DrawerPosition,
 	/// Signal to open or close the drawer programmatically.
 	#[prop(optional, into)]
@@ -25,25 +25,22 @@ pub fn Drawer(
 	/// Drawer class.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
 	// vars
-	let dialog_ref = create_node_ref::<html::Dialog>();
+	let dialog_ref = NodeRef::<html::Dialog>::new();
+	let is_open = RwSignal::new(false);
 
 	// logic
-	_ = watch(
-		move || toggle.get(),
-		move |curr, prev, _| match (prev.cloned().unwrap_or(false), curr.clone()) {
-			(false, true) => _ = dialog_ref.get_untracked().unwrap().show_modal(),
-			(true, false) => _ = dialog_ref.get_untracked().unwrap().close(),
-			(false, false) => {},
-			_ => unreachable!("impossible state"),
+	_ = Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
+	_ = Effect::watch(
+		move || is_open.get(),
+		move |curr, _, _| match curr {
+			true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
+			false => _ = dialog_ref.get_untracked().unwrap().close(),
 		},
-		true,
+		false,
 	);
 
 	let get_initial_position = move || -> String {
@@ -57,21 +54,21 @@ pub fn Drawer(
 
 	let get_transform = move || -> String {
 		let translate = match position {
-			DrawerPosition::Left => format!("translateX({}px)", if toggle.get() { size as f64 } else { 0.0 }),
-			DrawerPosition::Right => format!("translateX({}px)", if toggle.get() { -size as f64 } else { 0.0 }),
-			DrawerPosition::Top => format!("translateY({}px)", if toggle.get() { size as f64 } else { 0.0 }),
-			DrawerPosition::Bottom => format!("translateY({}px)", if toggle.get() { -size as f64 } else { 0.0 }),
+			DrawerPosition::Left => format!("translateX({}px)", if is_open.get() { size as f64 } else { 0.0 }),
+			DrawerPosition::Right => format!("translateX({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
+			DrawerPosition::Top => format!("translateY({}px)", if is_open.get() { size as f64 } else { 0.0 }),
+			DrawerPosition::Bottom => format!("translateY({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
 		};
 		translate
 	};
 
+	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<wu-drawer class="contents">
 			<dialog node_ref=dialog_ref>
 				<div class="overlay-viewport-container">
 					// Content
 					<div
-						{..attrs}
 						class=move || tw_merge!("overlay", class.get())
 						style=move || format!(
 							"position: absolute; \
@@ -94,7 +91,7 @@ pub fn Drawer(
 							<span class="hidden desktop:block text-xs">"or"</span>
 							<button
 								class="flex center btn-circle p-2 highlight"
-								on:click=move |_| dialog_ref.get_untracked().unwrap().close()
+								on:click=move |_| is_open.set(false)
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />

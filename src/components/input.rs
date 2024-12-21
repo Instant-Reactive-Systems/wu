@@ -1,35 +1,5 @@
-use leptos::*;
+use leptos::{prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
-
-/// A wrapper around a `<input>` with a `String` value that handles reactive
-/// interactivity automatically.
-///
-/// # Example
-/// ```rust,ignore
-/// let name = create_rw_signal(String::default());
-/// <Input attr:type="password" value=name />
-/// ```
-#[component]
-pub fn Input(
-	/// Signal used for getting/setting the value.
-	#[prop(into)]
-	value: RwSignal<String>,
-	/// Specifies the default 'class' attribute for all modals.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
-) -> impl IntoView {
-	view! {
-		<input
-			{..attrs}
-			on:input=move |ev| value.set(event_target_value(&ev))
-			prop:value=value
-			class=class
-		/>
-	}
-}
 
 /// A wrapper around a `<input>` with a `String` value that handles reactive
 /// interactivity automatically and displays an error if error occurs.
@@ -49,13 +19,20 @@ pub fn FallibleReactiveInput(
 	/// Error ID of the field.
 	#[prop(into)]
 	error_id: std::borrow::Cow<'static, str>,
+	/// Specifies the `type` attribute on the element.
+	#[prop(default = "".into(), into)]
+	r#type: TextProp,
+	/// Specifies the `placeholder` attribute on the element.
+	#[prop(default = "".into(), into)]
+	placeholder: TextProp,
+	/// Specifies the `required` attribute on the element.
+	#[prop(optional, into)]
+	required: Signal<bool>,
 	/// Specifies the default 'class' attribute for all modals.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
 ) -> impl IntoView {
+	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<div class="relative vertical">
 			// if mobile
@@ -103,13 +80,15 @@ pub fn FallibleReactiveInput(
 			</div>
 
 			// all
-			<Input
-				{..attrs}
-				value=value
+			<input
+				type=move || r#type.get()
+				bind:value=value
 				class={
 					let error_id = error_id.clone();
 					move || tw_merge!(class.get(), errors.get(error_id.clone()).map(move |_| "input-error"))
 				}
+				placeholder=move || placeholder.get()
+				required=move || required.get()
 			/>
 		</div>
 	}
@@ -142,28 +121,29 @@ pub fn InputCode(
 	/// How huge is one field input of the code.
 	#[prop(into)]
 	field_thickness: i32,
+	/// Specifies the `placeholder` attribute on the element.
+	#[prop(default = "".into(), into)]
+	placeholder: TextProp,
+	/// Specifies the `required` attribute on the element.
+	#[prop(optional, into)]
+	required: Signal<bool>,
 	/// Specifies the default 'class' attribute for all modals.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
 ) -> impl IntoView {
 	// vars
 	let half_field_size = field_size / 2;
 	let total_field_size = code_length * field_size;
 
+	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<div class="overflow-hidden" style=format!("max-width: {total_field_size}px")> // prevents scroll-past-last-character behaviour
 			<div class="sticky left-0"> // necessary because it hard-fixes the input field not to scroll
 				<input
-					{..attrs}
 					type="text"
-					on:input=move |ev| value.set(event_target_value(&ev))
-					prop:value=value
+					bind:value=value
 					maxlength=code_length
 					inputmode="numeric"
-					class=class
 					style=format!("
 						--tw-ring-inset: 0;
 						font-family: monospace;
@@ -182,6 +162,7 @@ pub fn InputCode(
 						max-width: calc({total_field_size}px + {field_size}px);
 						outline: none;
 					")
+					class=move || class.get()
 				/>
 			</div>
 		</div>

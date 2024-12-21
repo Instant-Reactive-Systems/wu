@@ -1,19 +1,25 @@
-use leptos::*;
+use leptos::{prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
 
-crate::generate_marker_signal_setter!(
-	/// Pushes a new shell context.
-	PushShellContext, ShellContext
+#[doc(hidden)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ShellMarker<M>(std::marker::PhantomData<M>);
+
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	PushShellMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	PopShellMarker
 );
 
-crate::generate_marker_signal_setter!(
-	/// Pops current shell context.
-	PopShellContext, ()
-);
+pub type PushShell<M> = crate::utils::Marked<ShellMarker<(M, PushShellMarker)>, Callback<ShellCtx>>;
+pub type PopShell<M> = crate::utils::Marked<ShellMarker<(M, PushShellMarker)>, Callback<()>>;
 
 /// Used to specify a composable common layout.
 #[component]
-pub fn Shell<M: 'static>(
+pub fn Shell<M>(
 	#[prop(optional)] _phant: std::marker::PhantomData<M>,
 	/// Header slot.
 	#[prop(optional, into)]
@@ -30,70 +36,68 @@ pub fn Shell<M: 'static>(
 	/// Corresponds to the 'class' attribute of elements.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
-	/// List of attributes to put on the top-level of the component.
-	#[prop(attrs)]
-	attrs: Vec<(&'static str, Attribute)>,
 	/// Children of the component.
 	children: Children,
-) -> impl IntoView {
-	let (shell_cxs, set_shell_cxs) = create_signal::<Vec<ShellContext>>(vec![ShellContext {
+) -> impl IntoView
+where
+	M: Send + Sync + 'static,
+{
+	let shell_cxs = RwSignal::<Vec<ShellCtx>>::new(vec![ShellCtx {
 		header: Some(header.clone()),
 		left_sidebar: Some(left_sidebar.clone()),
 		right_sidebar: Some(right_sidebar.clone()),
 		footer: Some(footer.clone()),
 	}]);
-	let main_cx = move || {
-		shell_cxs.with(move |cxs| {
-			// SAFETY: All of the below unwraps are guaranteed to succeed, given that
-			// the initial context is always populated.
-			let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).flatten().unwrap();
-			let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).flatten().unwrap();
-			let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).flatten().unwrap();
-			let footer = cxs.iter().rev().map(|cx| cx.footer.clone()).find(Option::is_some).flatten().unwrap();
-
-			MainShellContext {
-				header,
-				left_sidebar,
-				right_sidebar,
-				footer,
-			}
-		})
-	};
-	provide_context(PushShellContext::<M>::new(move |cx| {
-		set_shell_cxs.update(move |cxs| cxs.push(cx));
-	}));
-	provide_context(PopShellContext::<M>::new(move |_| {
-		let last_one = shell_cxs.with_untracked(move |cxs| cxs.len() == 1);
+	let main_cx = Signal::derive(move || {
+		// SAFETY: All of the below unwraps are guaranteed to succeed, given that
+		// the initial context is always populated.
+		let cxs = shell_cxs.read();
+		let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).flatten().unwrap();
+		let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).flatten().unwrap();
+		let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).flatten().unwrap();
+		let footer = cxs.iter().rev().map(|cx| cx.footer.clone()).find(Option::is_some).flatten().unwrap();
+		MainShellContext {
+			header,
+			left_sidebar,
+			right_sidebar,
+			footer,
+		}
+	});
+	provide_context(PushShell::<M>::new(Callback::new(move |cx| {
+		shell_cxs.update(move |cxs| cxs.push(cx));
+	})));
+	provide_context(PopShell::<M>::new(Callback::new(move |_| {
+		let last_one = shell_cxs.read_untracked().len() == 1;
 		if last_one {
 			return;
 		} // must not pop first shell context
-		set_shell_cxs.update(move |cxs| _ = cxs.pop());
-	}));
+		shell_cxs.update(move |cxs| _ = cxs.pop());
+	})));
 
 	view! {
-		<wu-shell {..attrs} class=move || tw_merge!("overlay flex flex-col", class.get())>
+		<wu-shell class=move || tw_merge!("overlay flex flex-col", class.get())>
 			// Header
-			{move || main_cx().header.run()}
+			{move || main_cx.read().header.run()}
 			// center area
 			<div class="grow flex flex-row">
 				// LeftSidebar
-				{move || main_cx().left_sidebar.run()}
+				{move || main_cx.read().left_sidebar.run()}
 				// Main content area
 				<div class="grow overlay-container">
 					{children()}
 				</div>
 				// RightSidebar
-				{move || main_cx().right_sidebar.run()}
+				{move || main_cx.read().right_sidebar.run()}
 			</div>
 			// Footer
-			{move || main_cx().footer.run()}
+			{move || main_cx.read().footer.run()}
 		</wu-shell>
 	}
 }
 
 /// Holds all slots for a context.
 #[derive(Clone)]
-pub struct ShellContext {
+pub struct ShellCtx {
 	/// Header slot.
 	pub header: Option<ViewFn>,
 	/// Left sidebar slot.

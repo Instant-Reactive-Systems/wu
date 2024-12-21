@@ -1,44 +1,46 @@
-use leptos::*;
+use leptos::{prelude::*, text_prop::TextProp};
 
-use crate::utils::ParamViewFn;
+#[doc(hidden)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TabMarker<M>(std::marker::PhantomData<M>);
 
-crate::generate_generic_marker_signal_setter!(
-	/// Adds a tab.
-	AddTab, T, T
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	AddTabMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	RemoveTabMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	ModifyTabMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	RemoveTabsMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	RemoveOtherTabsMarker
+);
+crate::generate_marker_type!(
+	#[doc(hidden)]
+	SwitchActiveTabMarker
 );
 
-crate::generate_marker_signal_setter!(
-	/// Removes a tab.
-	RemoveTab, TabId
-);
-
-crate::generate_generic_marker_signal_setter!(
-	/// Modify a tab.
-	ModifyTab, (TabId, T), T
-);
-
-crate::generate_marker_signal_setter!(
-	/// Removes several tabs.
-	RemoveTabs, Vec<TabId>
-);
-
-crate::generate_marker_signal_setter!(
-	/// Removes all other tabs.
-	RemoveOtherTabs, TabId
-);
-
-crate::generate_marker_signal_setter!(
-	/// Switches the active tab.
-	SwitchActiveTab, TabId
-);
-
-/// Type alias for the tab ID.
 pub type TabId = u64;
 pub type TabSignal<T> = RwSignal<TabWithId<T>>;
+pub type AddTab<M, T> = crate::utils::Marked<TabMarker<(M, AddTabMarker)>, Callback<T>>;
+pub type RemoveTab<M> = crate::utils::Marked<TabMarker<(M, RemoveTabMarker)>, Callback<TabId>>;
+pub type ModifyTab<M, T> = crate::utils::Marked<TabMarker<(M, ModifyTabMarker)>, Callback<(TabId, T)>>;
+pub type RemoveTabs<M> = crate::utils::Marked<TabMarker<(M, RemoveTabsMarker)>, Callback<Vec<TabId>>>;
+pub type RemoveOtherTabs<M> = crate::utils::Marked<TabMarker<(M, RemoveOtherTabsMarker)>, Callback<TabId>>;
+pub type SwitchActiveTab<M> = crate::utils::Marked<TabMarker<(M, SwitchActiveTabMarker)>, Callback<TabId>>;
 
 /// Use tabs to quickly switch between different views and pages.
 #[component]
-pub fn Tabs<M: 'static, T: 'static>(
+pub fn Tabs<M: Send + Sync + 'static, T: Send + Sync + 'static>(
 	#[prop(optional)] _phant: std::marker::PhantomData<(M, T)>,
 	/// Default list of tab contexts.
 	#[prop(default = Vec::default(), into)]
@@ -50,11 +52,11 @@ pub fn Tabs<M: 'static, T: 'static>(
 	#[prop(default = "".into(), into)]
 	list_class: TextProp,
 	/// List item slot.
-	#[prop(optional, into)]
-	item: ParamViewFn<TabSignal<T>>,
+	#[prop(into)]
+	item: Callback<TabSignal<T>, AnyView>,
 	/// Content slot.
-	#[prop(optional, into)]
-	content: ParamViewFn<TabSignal<T>>,
+	#[prop(into)]
+	content: Callback<TabSignal<T>, AnyView>,
 	/// List fallback.
 	#[prop(optional, into)]
 	list_fallback: ViewFn,
@@ -63,21 +65,25 @@ pub fn Tabs<M: 'static, T: 'static>(
 	content_fallback: ViewFn,
 ) -> impl IntoView {
 	let is_default_full = !tabs.is_empty();
-	let (tab_id, set_tab_id) = create_signal::<TabId>(tabs.len() as TabId);
-	let (tabs, set_tabs) = create_signal::<Vec<TabSignal<T>>>(
+	let (tab_id, set_tab_id) = signal::<TabId>(tabs.len() as TabId);
+	let (tabs, set_tabs) = signal::<Vec<TabSignal<T>>>(
 		tabs.into_iter()
 			.enumerate()
 			.map(|(id, tab)| TabWithId { id: id as u64, tab })
-			.map(|tab| create_rw_signal(tab))
+			.map(|tab| RwSignal::new(tab))
 			.collect(),
 	);
-	let (active_tab_id, set_active_tab_id) = create_signal::<Option<TabId>>(is_default_full.then_some(0));
-	let active_tab = move || with!(|tabs, active_tab_id| { active_tab_id.and_then(|active_tab_id| { tabs.iter().find(|tab| tab.with(|tab| tab.id == active_tab_id)).cloned() }) });
+	let (active_tab_id, set_active_tab_id) = signal::<Option<TabId>>(is_default_full.then_some(0));
+	let active_tab = Signal::derive(move || {
+		active_tab_id
+			.read()
+			.and_then(move |active_tab_id| tabs.read().iter().find(|tab| tab.with(|tab| tab.id == active_tab_id)).cloned())
+	});
 
-	provide_context(AddTab::<M, T>::new(move |tab| {
+	provide_context(AddTab::<M, T>::new(Callback::new(move |tab| {
 		// add to tabs
 		let id = tab_id.get_untracked();
-		let tab = create_rw_signal(TabWithId { id, tab });
+		let tab = RwSignal::new(TabWithId { id, tab });
 		set_tabs.update(move |tabs| tabs.push(tab));
 		// autoincrement tab id
 		set_tab_id.update(move |tab_id| *tab_id += 1);
@@ -85,12 +91,12 @@ pub fn Tabs<M: 'static, T: 'static>(
 		if active_tab_id.get_untracked().is_none() {
 			set_active_tab_id.update(move |active_tab_id| *active_tab_id = Some(0))
 		}
-	}));
-	provide_context(RemoveTab::<M>::new(move |id| {
+	})));
+	provide_context(RemoveTab::<M>::new(Callback::new(move |id| {
 		set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id != id)));
 		set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
-	}));
-	provide_context(ModifyTab::<M, T>::new(move |(id, new_tab)| {
+	})));
+	provide_context(ModifyTab::<M, T>::new(Callback::new(move |(id, new_tab)| {
 		let new_tab = TabWithId { id, tab: new_tab };
 		tabs.with(move |tabs| {
 			let tab = tabs.iter().find(|tab| tab.with_untracked(|tab| tab.id == id));
@@ -98,46 +104,47 @@ pub fn Tabs<M: 'static, T: 'static>(
 				tab.update(move |tab| *tab = new_tab)
 			}
 		});
-	}));
-	provide_context(RemoveTabs::<M>::new(move |tab_ids| {
+	})));
+	provide_context(RemoveTabs::<M>::new(Callback::new(move |tab_ids: Vec<TabId>| {
 		set_tabs.update(move |tabs| tabs.retain(|tab| !tab_ids.contains(&tab.with_untracked(|tab| tab.id))));
 		set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
-	}));
-	provide_context(RemoveOtherTabs::<M>::new(move |id| {
+	})));
+	provide_context(RemoveOtherTabs::<M>::new(Callback::new(move |id| {
 		set_tabs.update(move |tabs| tabs.retain(|tab| tab.with_untracked(|tab| tab.id == id)));
 		set_active_tab_id.update(move |active_tab_id| *active_tab_id = tabs.with_untracked(|tabs| (!tabs.is_empty()).then_some(tabs[0].with_untracked(|tab| tab.id))));
-	}));
-	provide_context(SwitchActiveTab::<T>::new(move |id| {
+	})));
+	provide_context(SwitchActiveTab::<T>::new(Callback::new(move |id| {
 		// find if the tab exists
 		if tabs.with(move |tabs| !tabs.iter().any(|tab| tab.with_untracked(|tab| tab.id == id))) {
 			log::error!("SwitchActiveTab: tab with id '{id}' does not exist");
 		}
 		// update the active tab id
 		set_active_tab_id.update(move |active_tab_id| *active_tab_id = Some(id))
-	}));
-
-	let item = store_value(item);
+	})));
 
 	view! {
-		<wu-tabs class=class>
-			<ul class=list_class>
+		<wu-tabs class=move || class.get()>
+			<ul class=move || list_class.get()>
 				<Show
-					when=move || tabs.with(|tabs| !tabs.is_empty())
+					when=move || !tabs.read().is_empty()
 					fallback=list_fallback
 				>
 					<For
 						each=move || tabs.get()
-						key=move |tab| tab.with(|tab| tab.id)
+						key=move |tab| tab.read().id
 						let:tab
 					>
-						{move || item.get_value().run(tab)}
+						{move || item.run(tab)}
 					</For>
 				</Show>
 			</ul>
-			{move || match active_tab() {
-				Some(tab) => content.run(tab),
-				None => content_fallback.run(),
-			}}
+			<crate::ShowOption
+				data=move || active_tab.get()
+				fallback=content_fallback
+				let:tab
+			>
+				{content.run(tab)}
+			</crate::ShowOption>
 		</wu-tabs>
 	}
 }
