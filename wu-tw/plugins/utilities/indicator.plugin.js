@@ -1,11 +1,11 @@
 /*
-Used to place an element on the corner of another element. (Only useful on box elements)
+Used to place an element on the corner of another element.
 
 # Usage
 
 ```html
 <div class="indicator">
-  <span class="w-4 h-4 indicator-item"/>
+  <span class="w-4 h-4 indicator-item indicator-tr"/>
   <p>{content}</p>
 </div>
 ```
@@ -13,27 +13,21 @@ Used to place an element on the corner of another element. (Only useful on box e
 export default ({ addUtilities }) => {
 	addUtilities({
 		'.indicator': {
-			'@apply relative': {},
+			'@apply overlay-container': {},
 			'& :where(.indicator-item)': {
-				'@apply absolute right-0 left-auto top-0 bottom-auto translate-x-1/2 -translate-y-1/2': {},
+				'@apply grid overlay': {},
 			},
-			'& :where(.indicator-item.indicator-left)': {
-				'@apply right-auto left-0 -translate-x-1/2': {},
+			'& :where(.indicator-item.indicator-tl)': {
+				'@apply justify-self-start self-start -translate-x-1/2 -translate-y-1/2': {},
 			},
-			'& :where(.indicator-item.indicator-xcenter)': {
-				'@apply right-1/2 left-1/2 -translate-x-1/2': {},
+			'& :where(.indicator-item.indicator-tr)': {
+				'@apply justify-self-end self-start translate-x-1/2 -translate-y-1/2': {},
 			},
-			'& :where(.indicator-item.indicator-right)': {
-				'@apply right-0 left-auto translate-x-1/2': {},
+			'& :where(.indicator-item.indicator-bl)': {
+				'@apply justify-self-start self-end -translate-x-1/2 translate-y-1/2': {},
 			},
-			'& :where(.indicator-item.indicator-bottom)': {
-				'@apply top-auto bottom-0 translate-y-1/2': {},
-			},
-			'& :where(.indicator-item.indicator-ycenter)': {
-				'@apply top-1/2 bottom-1/2 -translate-y-1/2': {},
-			},
-			'& :where(.indicator-item.indicator-top)': {
-				'@apply top-0 bottom-auto -translate-y-1/2': {},
+			'& :where(.indicator-item.indicator-br)': {
+				'@apply justify-self-end self-end translate-x-1/2 translate-y-1/2': {},
 			},
 		},
 	});
