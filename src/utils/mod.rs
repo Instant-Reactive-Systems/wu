@@ -1,9 +1,12 @@
 mod focus_trap;
 mod errors;
-mod show;
+mod states;
+mod websocket;
 pub use focus_trap::*;
-pub use errors::{ShowError, Errors, ReactiveErrors};
-pub use show::ShowOption;
+pub use errors::{Errors, ReactiveErrors, ShowError};
+use leptos_router::NavigateOptions;
+pub use states::*;
+pub use websocket::*;
 use leptos::prelude::*;
 
 /// Wrapper around a `T` that allows specifying a generic to denote different types.
@@ -65,4 +68,10 @@ macro_rules! generate_marker_type {
         #[derive(Debug, Clone, Copy, PartialEq, Eq)]
         pub struct $name;
     };
+}
+
+/// Creates a copyable version of `use_navigate()`.
+pub fn use_copy_navigate() -> Callback<(String, NavigateOptions)> {
+	let navigate = leptos_router::hooks::use_navigate();
+	Callback::new(move |(url, opts): (String, NavigateOptions)| navigate(&url, opts))
 }

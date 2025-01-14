@@ -1,4 +1,4 @@
-use leptos::{prelude::*, text_prop::TextProp};
+use leptos::{prelude::*, text_prop::TextProp, either::*};
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -76,8 +76,8 @@ pub fn Tabs<M: Send + Sync + 'static, T: Send + Sync + 'static>(
 	let (active_tab_id, set_active_tab_id) = signal::<Option<TabId>>(is_default_full.then_some(0));
 	let active_tab = Signal::derive(move || {
 		active_tab_id
-			.read()
-			.and_then(move |active_tab_id| tabs.read().iter().find(|tab| tab.with(|tab| tab.id == active_tab_id)).cloned())
+			.get()
+			.and_then(move |active_tab_id| tabs.get().iter().find(|tab| tab.with(|tab| tab.id == active_tab_id)).cloned())
 	});
 
 	provide_context(AddTab::<M, T>::new(Callback::new(move |tab| {
@@ -126,7 +126,7 @@ pub fn Tabs<M: Send + Sync + 'static, T: Send + Sync + 'static>(
 		<wu-tabs class=move || class.get()>
 			<ul class=move || list_class.get()>
 				<Show
-					when=move || !tabs.read().is_empty()
+					when=move || !tabs.get().is_empty()
 					fallback=list_fallback
 				>
 					<For
@@ -138,13 +138,10 @@ pub fn Tabs<M: Send + Sync + 'static, T: Send + Sync + 'static>(
 					</For>
 				</Show>
 			</ul>
-			<crate::ShowOption
-				data=move || active_tab.get()
-				fallback=content_fallback
-				let:tab
-			>
-				{content.run(tab)}
-			</crate::ShowOption>
+			{move || match active_tab.get() {
+				None => Either::Left(content_fallback.run()),
+				Some(tab) => Either::Right(content.run(tab)),
+			}}
 		</wu-tabs>
 	}
 }

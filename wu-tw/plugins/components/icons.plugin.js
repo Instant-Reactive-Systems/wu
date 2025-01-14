@@ -1,3 +1,6 @@
+import { withAlphaVariable, withAlphaValue } from 'tailwindcss/lib/util/withAlphaVariable';
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
+
 /*
 Shows an animation to indicate that something is loading.
 
@@ -13,7 +16,7 @@ Shows an animation to indicate that something is loading.
 <span class="loading <the-type-of-anim-you-want>"/>
 ```
 */
-export default ({ addComponents }) => {
+export default ({ addComponents, matchComponents, theme }) => {
 	addComponents({
 		'.icon': {
 			'@apply pointer-events-none w-6 aspect-square inline-block': {},
@@ -105,13 +108,15 @@ export default ({ addComponents }) => {
 		},
 	});
 
-	matchUtilities(
+	matchComponents(
 		{
-			'icon': (value, options) => ({
-				textDecorationColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
-				color: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
-				backgroundColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
-			}),
+			'icon': (value, options) => {
+				return ({
+					textDecorationColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
+					color: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
+					backgroundColor: withAlphaValue(typeof value === 'function' ? value(options) : value, 1),
+				})
+			},
 		},
 		{ values: flattenColorPalette(theme('colors')), type: ['color'] },
 	);

@@ -1,4 +1,4 @@
-use leptos::{prelude::*, text_prop::TextProp, html};
+use leptos::{html, prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
 
 /// All possible drawer positions.
@@ -33,8 +33,8 @@ pub fn Drawer(
 	let is_open = RwSignal::new(false);
 
 	// logic
-	_ = Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
-	_ = Effect::watch(
+	Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
+	Effect::watch(
 		move || is_open.get(),
 		move |curr, _, _| match curr {
 			true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
@@ -52,7 +52,7 @@ pub fn Drawer(
 		}
 	};
 
-	let get_transform = move || -> String {
+	let get_transform = Signal::derive(move || -> String {
 		let translate = match position {
 			DrawerPosition::Left => format!("translateX({}px)", if is_open.get() { size as f64 } else { 0.0 }),
 			DrawerPosition::Right => format!("translateX({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
@@ -60,7 +60,7 @@ pub fn Drawer(
 			DrawerPosition::Bottom => format!("translateY({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
 		};
 		translate
-	};
+	});
 
 	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
@@ -79,7 +79,7 @@ pub fn Drawer(
 							transition-behavior: allow-discrete; \
 							box-shadow: 0 0 10px rgba(0,0,0,0.2);",
 							get_initial_position(),
-							get_transform(),
+							get_transform.get(),
 						)
 					>
 						{children()}

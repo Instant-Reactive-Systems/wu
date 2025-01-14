@@ -51,7 +51,7 @@ where
 	let main_cx = Signal::derive(move || {
 		// SAFETY: All of the below unwraps are guaranteed to succeed, given that
 		// the initial context is always populated.
-		let cxs = shell_cxs.read();
+		let cxs = shell_cxs.get();
 		let header = cxs.iter().rev().map(|cx| cx.header.clone()).find(Option::is_some).flatten().unwrap();
 		let left_sidebar = cxs.iter().rev().map(|cx| cx.left_sidebar.clone()).find(Option::is_some).flatten().unwrap();
 		let right_sidebar = cxs.iter().rev().map(|cx| cx.right_sidebar.clone()).find(Option::is_some).flatten().unwrap();
@@ -77,20 +77,20 @@ where
 	view! {
 		<wu-shell class=move || tw_merge!("overlay flex flex-col", class.get())>
 			// Header
-			{move || main_cx.read().header.run()}
+			{move || main_cx.get().header.run()}
 			// center area
 			<div class="grow flex flex-row">
 				// LeftSidebar
-				{move || main_cx.read().left_sidebar.run()}
+				{move || main_cx.get().left_sidebar.run()}
 				// Main content area
 				<div class="grow overlay-container">
 					{children()}
 				</div>
 				// RightSidebar
-				{move || main_cx.read().right_sidebar.run()}
+				{move || main_cx.get().right_sidebar.run()}
 			</div>
 			// Footer
-			{move || main_cx.read().footer.run()}
+			{move || main_cx.get().footer.run()}
 		</wu-shell>
 	}
 }

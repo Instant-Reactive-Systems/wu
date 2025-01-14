@@ -64,7 +64,7 @@ where
 	);
 
 	// logic
-	_ = Effect::watch(
+	Effect::watch(
 		move || action.pending().get(),
 		move |curr, past, _| {
 			if is_pending.get_untracked() {

@@ -1,13 +1,13 @@
 use std::collections::VecDeque;
 
-use leptos::{prelude::*, ev, text_prop::TextProp};
+use leptos::{ev, prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
 
 use crate::components::Modal;
 
 /// A trait that debugging commands should implement in order to execute their commands.
 pub trait DebugCommand {
-	type State: Clone + Copy;
+	type State: Clone;
 
 	/// Parses the command.
 	fn parse(s: &str) -> Result<Self, ViewFn>
@@ -15,7 +15,7 @@ pub trait DebugCommand {
 		Self: Sized;
 
 	/// Executes the command.
-	fn execute(self, state: &mut Self::State) -> ViewFn;
+	fn execute(self, state: Self::State) -> ViewFn;
 }
 
 /// A context type used to set commands on the debug console from the outside.
@@ -63,7 +63,7 @@ pub fn DebugConsole<M, T>(
 	#[prop(into)]
 	key: std::borrow::Cow<'static, str>,
 	/// The state to provide to [`DebugCommand`]s.
-	mut state: <T as DebugCommand>::State,
+	state: <T as DebugCommand>::State,
 	/// Additional overlay view to display.
 	#[prop(optional, into)]
 	overlay: ViewFn,
@@ -103,38 +103,44 @@ where
 		provide_context(DebugConsoleExternalCommand::<M, T>::new(external_cmd.write_only()));
 
 		// logic
-		let mut submit_cmd = move || {
-			let cmd = cmd_text.get();
-			let exe: T = match T::parse(&cmd) {
-				Ok(cmd) => cmd,
-				Err(err) => {
-					cmd_history.update(move |history| {
-						history.push_front(LogItem {
-							id: uuid::Uuid::new_v4(),
-							command: cmd,
-							output: err,
-						})
-					});
-					cmd_text.update(String::clear);
-					return;
-				},
-			};
+		let mut submit_cmd = Callback::new({
+			let state = state.clone();
+			move |_| {
+				let cmd = cmd_text.get();
+				let exe: T = match T::parse(&cmd) {
+					Ok(cmd) => cmd,
+					Err(err) => {
+						cmd_history.update(move |history| {
+							history.push_front(LogItem {
+								id: uuid::Uuid::new_v4(),
+								command: cmd,
+								output: err,
+							})
+						});
+						cmd_text.update(String::clear);
+						return;
+					},
+				};
 
-			let output = exe.execute(&mut state);
-			cmd_history.update(move |history| {
-				history.push_front(LogItem {
-					id: uuid::Uuid::new_v4(),
-					command: cmd,
-					output,
-				})
-			});
-			cmd_text.update(String::clear);
-		};
+				let output = exe.execute(state.clone());
+				cmd_history.update(move |history| {
+					history.push_front(LogItem {
+						id: uuid::Uuid::new_v4(),
+						command: cmd,
+						output,
+					})
+				});
+				cmd_text.update(String::clear);
+			}
+		});
 
-		_ = Effect::watch(
+		Effect::watch(
 			move || external_cmd.get(),
-			move |cmd, _, _| {
-				cmd.clone().execute(&mut state.clone());
+			{
+				let state = state.clone();
+				move |cmd: &T, _, _| {
+					cmd.clone().execute(state.clone());
+				}
 			},
 			false,
 		);
@@ -202,7 +208,7 @@ where
 							</ul>
 						</div>
 						// Input
-						<form class="shrink flex flex-row vcenter">
+						<div class="shrink flex flex-row vcenter">
 							<input
 								class="grow min-h-12 surface-bg-2 surface-2 border rounded-l-md"
 								type="text"
@@ -210,15 +216,15 @@ where
 								on:input=move |ev| cmd_text.set(event_target_value(&ev))
 								on:keyup=move |ev| {
 									if ev.key() == "Enter" {
-										submit_cmd();
+										submit_cmd.run(());
 									}
 								}
 								prop:value=cmd_text
 							/>
-							<button class="size-12 grid center btn-square btn-primary rounded-r-md" on:click=move |_| submit_cmd()>
+							<button class="size-12 grid center btn-square btn-primary rounded-r-md" on:click=move |_| submit_cmd.run(())>
 								<span class="icon i-o-cog icon-primary-content"/>
 							</button>
-						</form>
+						</div>
 					</div>
 				</Modal>
 			</wu-debug-console>

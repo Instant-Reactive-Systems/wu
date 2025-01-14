@@ -23,7 +23,9 @@ web-sys = { version = "0.3", features = [
 ]}
 # leptos
 leptos = { version = "0.7" }
+leptos_router = { version = "0.7" }
 leptos-use = { version = "0.14" }
+reactive_stores = { version = "0.1" }
 # logging
 log = "0.4"
 console_error_panic_hook = "0.1"

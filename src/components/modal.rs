@@ -1,4 +1,4 @@
-use leptos::{prelude::*, text_prop::TextProp, html};
+use leptos::{html, prelude::*, text_prop::TextProp};
 use tailwind_fuse::*;
 
 /// A modal that provides an ergonomic wrapper around `<dialog>`.
@@ -14,13 +14,13 @@ pub fn Modal(
 	children: Children,
 ) -> impl IntoView {
 	// vars
-	let class = move || tw_merge!("overlay p-4", class.get());
+	let class = Signal::derive(move || tw_merge!("overlay p-4", class.get()));
 	let dialog_ref = NodeRef::<html::Dialog>::new();
 	let is_open = RwSignal::new(false);
 
 	// logic
-	_ = Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
-	_ = Effect::watch(
+	Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
+	Effect::watch(
 		move || is_open.get(),
 		move |curr, _, _| match curr {
 			true => _ = dialog_ref.get_untracked().unwrap().show_modal(),

@@ -18,7 +18,7 @@ pub fn FallibleReactiveInput(
 	errors: crate::ReactiveErrors,
 	/// Error ID of the field.
 	#[prop(into)]
-	error_id: std::borrow::Cow<'static, str>,
+	error_id: TextProp,
 	/// Specifies the `type` attribute on the element.
 	#[prop(default = "".into(), into)]
 	r#type: TextProp,
@@ -37,13 +37,7 @@ pub fn FallibleReactiveInput(
 		<div class="relative vertical">
 			// if mobile
 			<div class="flex desktop:hidden relative">
-				<crate::ShowOption
-					data={
-						let error_id = error_id.clone();
-						move || errors.get(error_id.clone())
-					}
-					let:err
-				>
+				{let error_id = error_id.clone(); move || errors.get(error_id.get()).map(move |err| view! {
 					<div
 						class=
 						"
@@ -54,18 +48,12 @@ pub fn FallibleReactiveInput(
 					>
 						{err}
 					</div>
-				</crate::ShowOption>
+				})}
 			</div>
 
 			// if >mobile
 			<div class="hidden desktop:flex relative">
-				<crate::ShowOption
-					data={
-						let error_id = error_id.clone();
-						move || errors.get(error_id.clone())
-					}
-					let:err
-				>
+				{let error_id = error_id.clone(); move || errors.get(error_id.get()).map(move |err| view! {
 					<div
 						class=
 						"
@@ -76,7 +64,7 @@ pub fn FallibleReactiveInput(
 					>
 						{err}
 					</div>
-				</crate::ShowOption>
+				})}
 			</div>
 
 			// all
@@ -85,7 +73,7 @@ pub fn FallibleReactiveInput(
 				bind:value=value
 				class={
 					let error_id = error_id.clone();
-					move || tw_merge!(class.get(), errors.get(error_id.clone()).map(move |_| "input-error"))
+					move || tw_merge!(class.get(), errors.get(error_id.get()).map(move |_| "input-error"))
 				}
 				placeholder=move || placeholder.get()
 				required=move || required.get()
@@ -163,6 +151,8 @@ pub fn InputCode(
 						outline: none;
 					")
 					class=move || class.get()
+					placeholder=move || placeholder.get()
+					required=move || required.get()
 				/>
 			</div>
 		</div>

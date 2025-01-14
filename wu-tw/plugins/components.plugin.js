@@ -18,6 +18,7 @@ import tabsPlugin from './components/tabs.plugin.js';
 import windowPlugin from './components/window.plugin.js';
 import avatarPlugin from './components/avatar.plugin.js';
 import btnsPlugin from './components/btns.plugin.js';
+import iconsPlugin from './components/icons.plugin.js';
 
 export default (params) => {
 	alertPlugin(params);
@@ -40,4 +41,5 @@ export default (params) => {
 	windowPlugin(params);
 	avatarPlugin(params);
 	btnsPlugin(params);
+	iconsPlugin(params);
 };
