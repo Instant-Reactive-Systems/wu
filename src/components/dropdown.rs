@@ -23,7 +23,7 @@ pub fn Dropdown<T>(
 	items: Vec<T>,
 ) -> impl IntoView
 where
-	T: Send + Sync + serde::Serialize + serde::de::DeserializeOwned + std::fmt::Display + Clone + 'static,
+	T: PartialEq + Send + Sync + serde::Serialize + serde::de::DeserializeOwned + std::fmt::Display + Clone + 'static,
 {
 	view! {
 		<select
@@ -43,7 +43,7 @@ where
 				items
 					.into_iter()
 					.map(|item| view! {
-						<option value=serde_json::to_string(&item).expect("should be valid, check your input data")>
+						<option value=serde_json::to_string(&item).expect("should be valid, check your input data") selected=move || value.get() == item>
 							{item.to_string()}
 						</option>
 					})
