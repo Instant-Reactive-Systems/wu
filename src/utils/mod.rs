@@ -1,12 +1,10 @@
 mod focus_trap;
 mod errors;
 mod states;
-mod websocket;
 pub use focus_trap::*;
 pub use errors::{Errors, ReactiveErrors, ShowError};
 use leptos_router::NavigateOptions;
 pub use states::*;
-pub use websocket::*;
 use leptos::prelude::*;
 
 /// Wrapper around a `T` that allows specifying a generic to denote different types.
