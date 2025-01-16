@@ -19,15 +19,13 @@ pub fn Modal(
 	let is_open = RwSignal::new(false);
 
 	// logic
-	Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
-	Effect::watch(
-		move || is_open.get(),
-		move |curr, _, _| match curr {
-			true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
-			false => _ = dialog_ref.get_untracked().unwrap().close(),
-		},
-		false,
-	);
+	Effect::new(move |_| {
+		is_open.set(toggle.get());
+	});
+	Effect::new(move |_| match is_open.get() {
+		true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
+		false => _ = dialog_ref.get_untracked().unwrap().close(),
+	});
 
 	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {

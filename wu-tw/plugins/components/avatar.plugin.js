@@ -20,7 +20,7 @@ export default ({ addComponents, matchUtilities, theme }) => {
 			'@apply rounded-full overlay-container': {},
 
 			'& .avatar-slot-1, & .avatar-slot-2, & .avatar-slot-3, & .avatar-slot-4, & .avatar-slot-5, & .avatar-slot-6, & .avatar-slot-7, & .avatar-slot-8': {
-				'@apply overlay w-fit h-fit justify-self-center self-center': {},
+				'@apply overlay justify-self-center self-center': {},
 				'transform': 'translate(calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-cos)), calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-sin)))',
 			},
 		},
