@@ -23,8 +23,16 @@ pub fn Modal(
 		is_open.set(toggle.get());
 	});
 	Effect::new(move |_| match is_open.get() {
-		true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
-		false => _ = dialog_ref.get_untracked().unwrap().close(),
+		true => {
+			if let Some(dialog) = dialog_ref.get() {
+				_ = dialog.show_modal();
+			}
+		},
+		false => {
+			if let Some(dialog) = dialog_ref.get() {
+				dialog.close();
+			}
+		},
 	});
 
 	// TODO: wait for AttributeInterceptor to pass it to the inner input

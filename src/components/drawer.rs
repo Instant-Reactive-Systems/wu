@@ -18,7 +18,7 @@ pub fn Drawer(
 	position: DrawerPosition,
 	/// Signal to open or close the drawer programmatically.
 	#[prop(optional, into)]
-	toggle: RwSignal<bool>,
+	toggle: Signal<bool>,
 	/// Size of the drawer in px.
 	#[prop(default = 300)]
 	size: i32,
@@ -33,15 +33,19 @@ pub fn Drawer(
 	let is_open = RwSignal::new(false);
 
 	// logic
-	Effect::watch(move || toggle.get(), move |curr, _, _| is_open.set(*curr), false);
-	Effect::watch(
-		move || is_open.get(),
-		move |curr, _, _| match curr {
-			true => _ = dialog_ref.get_untracked().unwrap().show_modal(),
-			false => _ = dialog_ref.get_untracked().unwrap().close(),
+	Effect::new(move |_| is_open.set(toggle.get()));
+	Effect::new(move |_| match is_open.get() {
+		true => {
+			if let Some(dialog) = dialog_ref.get() {
+				_ = dialog.show_modal();
+			}
 		},
-		false,
-	);
+		false => {
+			if let Some(dialog) = dialog_ref.get() {
+				dialog.close();
+			}
+		},
+	});
 
 	let get_initial_position = move || -> String {
 		match position {
