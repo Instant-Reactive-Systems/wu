@@ -46,6 +46,7 @@ pub fn Drawer(
 			}
 		},
 	});
+	_ = leptos_use::use_event_listener(dialog_ref, leptos::ev::close, move |_| is_open.set(false));
 
 	let get_initial_position = move || -> String {
 		match position {
