@@ -41,7 +41,7 @@ pub fn Modal(
 			<dialog node_ref=dialog_ref class="w-lvw h-lvh">
 				<div class="overlay-viewport-container">
 					<div class="overlay flex center">
-						<div class="overlay-container w-lvw desktop:w-fit max-w-lvw p-4 tablet:p-8">
+						<div class="overlay-container max-w-lvw p-4 tablet:p-8">
 							// Content
 							<div class=class>
 								{children()}

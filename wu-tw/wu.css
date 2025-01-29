@@ -1010,4 +1010,21 @@ Styling for elements that provide the user to take an action.
   }
 }
 
+/* wu.component.btns
+Styling for elements that provide the user to take an action.
 
+# Usage
+
+```html
+<div class="btns">
+	<button class="btn">{text}</button>
+	<button class="btn">{text}</button>
+	<button class="btn">{text}</button>
+</btns>
+```
+*/
+@layer components {
+  .hbtns {
+    @apply flex flex-row;
+  }
+}

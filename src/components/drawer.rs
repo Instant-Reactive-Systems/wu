@@ -29,6 +29,7 @@ pub fn Drawer(
 	children: Children,
 ) -> impl IntoView {
 	// vars
+	let location = leptos_router::hooks::use_location();
 	let dialog_ref = NodeRef::<html::Dialog>::new();
 	let is_open = RwSignal::new(false);
 
@@ -47,6 +48,10 @@ pub fn Drawer(
 		},
 	});
 	_ = leptos_use::use_event_listener(dialog_ref, leptos::ev::close, move |_| is_open.set(false));
+	Effect::new(move |_| {
+		location.pathname.track();
+		is_open.set(false);
+	});
 
 	let get_initial_position = move || -> String {
 		match position {
