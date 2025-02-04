@@ -16,11 +16,11 @@
 		outline: none;
 	}
 
-	:modal {
-		@apply bg-transparent;
-	}
+	/* :modal { */
+		/* @apply bg-transparent; */
+	/* } */
 
-	::backdrop, :modal::backdrop, dialog::backdrop {
-	  @apply blur-sm backdrop-blur-sm bg-black/50;
-	}
+	/* ::backdrop, :modal::backdrop, dialog::backdrop { */
+	  /* @apply blur-sm backdrop-blur-sm bg-black/50; */
+	/* } */
 }
