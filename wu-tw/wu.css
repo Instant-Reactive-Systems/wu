@@ -608,7 +608,7 @@ Styles the colors for a scrollbar cross-browser.
 # Usage
 
 ```html
-<div class="scroll-light-1 thumb-light-2"/>
+<div class="track-light-1 thumb-light-2"/>
 ```
 */
 @utility track-* {
@@ -891,42 +891,54 @@ Avatar component with optional slots on its circumference at 8 points.
   .avatar {
     height: var(--wu-avatar-size);
     width: var(--wu-avatar-size);
-    @apply rounded-full overlay-container;
+    display: grid;
+    grid-template-columns: 1fr;
+    pointer-events: none !important;
+    & > * {
+      pointer-events: auto;
+    }
+    @apply rounded-full;
 
     & .avatar-slot-1, & .avatar-slot-2, & .avatar-slot-3, & .avatar-slot-4, & .avatar-slot-5, & .avatar-slot-6, & .avatar-slot-7, & .avatar-slot-8 {
-      @apply overlay justify-self-center self-center;
+      @apply justify-self-center self-center;
+      grid-row-start: 1;
+      grid-column-start: 1;
+      pointer-events: none !important;
+      & > * {
+        pointer-events: auto;
+      }
       transform: translate(calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-cos)), calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-sin)));
     }
   }
-	.avatar-slot-1': {
+	.avatar-slot-1 {
 		--wu-avatar-cos: 0;
 		--wu-avatar-sin: -1;
 	}
-	.avatar-slot-2': {
+	.avatar-slot-2 {
 		--wu-avatar-cos: 0.70710678118;
 		--wu-avatar-sin: -0.70710678118;
 	}
-	.avatar-slot-3': {
+	.avatar-slot-3 {
 		--wu-avatar-cos: 1;
 		--wu-avatar-sin: 0;
 	}
-	.avatar-slot-4': {
+	.avatar-slot-4 {
 		--wu-avatar-cos: 0.70710678118;
 		--wu-avatar-sin: 0.70710678118;
 	}
-	.avatar-slot-5': {
+	.avatar-slot-5 {
 		--wu-avatar-cos: 0;
 		--wu-avatar-sin: 1;
 	}
-	.avatar-slot-6': {
+	.avatar-slot-6 {
 		--wu-avatar-cos: -0.70710678118;
 		--wu-avatar-sin: 0.70710678118;
 	}
-	.avatar-slot-7': {
+	.avatar-slot-7 {
 		--wu-avatar-cos: -1;
 		--wu-avatar-sin: 0;
 	}
-	.avatar-slot-8': {
+	.avatar-slot-8 {
 		--wu-avatar-cos: -0.70710678118;
 		--wu-avatar-sin: -0.70710678118;
 	}
@@ -997,6 +1009,7 @@ Styling for elements that provide the user to take an action.
 <button class="btn-wide">{text}</button>
 <button class="btn-circle">{text}</button>
 ```
+TODO: flesh out properly
 */
 @layer components {
   .btn {
@@ -1022,9 +1035,815 @@ Styling for elements that provide the user to take an action.
 	<button class="btn">{text}</button>
 </btns>
 ```
+TODO: flesh out properly
 */
 @layer components {
   .hbtns {
     @apply flex flex-row;
   }
+}
+
+/* wu.component.card
+Used to group and display content in a way that is easily readable.
+
+# Usage
+
+```html
+<div class="card w-96 shadow-xl">
+  <figure><img .../></figure>
+  <div class="card-body">
+    <h2 class="card-title">{title}</h2>
+    <p>{desc}</p>
+    <div class="card-actions justify-end">
+      <button>{text}</button>
+    </div>
+  </div>
+</div>
+```
+*/
+@layer components {
+  .card {
+    @apply relative flex flex-col gap-2;
+
+    &:focus {
+      @apply outline-none;
+    }
+
+    & figure {
+      @apply center;
+    }
+
+    &.image-full {
+      @apply grid;
+      &:before {
+        @apply relative content-[""] z-1 opacity-75;
+      }
+
+      &:before, & > * {
+        @apply col-start-1 row-start-1;
+      }
+
+      & > figure img {
+        @apply h-full object-cover;
+      }
+
+      &:where(figure) {
+        @apply overflow-hidden;
+        border-radius: "inherit";
+      }
+    }
+
+    &.image-full > .card-body {
+      @apply relative z-2 center;
+    }
+
+    &:where(figure:first-child) {
+      @apply overflow-hidden;
+			border-start-start-radius: "inherit";
+			border-start-end-radius: "inherit";
+			border-end-start-radius: "unset";
+			border-end-end-radius: "unset";
+    }
+
+    &:where(figure:last-child) {
+      @apply overflow-hidden;
+			border-start-start-radius: "unset";
+			border-start-end-radius: "unset";
+			border-end-start-radius: "inherit";
+			border-end-end-radius: "inherit";
+    }
+  }
+
+  .card-body {
+    @apply flex flex-auto flex-col gap-2 p-4 pt-0;
+
+    :where(p) {
+      @apply flex-grow;
+    }
+  }
+
+  .card-title {
+    @apply hcenter gap-2 text-xl font-semibold;
+  }
+
+  .card-actions {
+    @apply flex flex-wrap items-start gap-2;
+  }
+}
+
+/* wu.component.carousel
+Shows images or content in a scrollable area.
+
+# Usage
+
+## Horizontal carousel
+```html
+<div class="carousel rounded-lg">
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+</div>
+```
+
+## Vertical carousel
+```html
+<div class="vcarousel rounded-lg">
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+</div>
+```
+
+## Carousel with snap-to-center
+```html
+<div class="carousel carousel-snap-center rounded-lg">
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+</div>
+```
+
+## Carousel with snap-to-end
+```html
+<div class="carousel carousel-snap-end rounded-lg">
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+  <div class="carousel-item">
+    <img .../>
+  </div>
+</div>
+```
+*/
+@layer components {
+  .carousel {
+    @apply inline-flex overflow-x-scroll snap-x snap-mandatory scroll-smooth hide-scrollbar;
+  }
+
+  .vcarousel {
+    @apply inline-flex flex-col overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar;
+  }
+
+  .carousel-item {
+    @apply box-content flex flex-none snap-start;
+  }
+
+  .carousel-snap-start {
+    & .carousel-item {
+      @apply snap-start;
+    }
+  }
+
+  .carousel-snap-center {
+    & .carousel-item {
+      @apply snap-center;
+    }
+  }
+
+  .carousel-snap-end {
+    & .carousel-item {
+      @apply snap-end;
+    }
+  }
+}
+
+/* wu.component.chip 
+Styling of small interactive elements for actions, selection, or filtering.
+
+# Usage
+
+```html
+<span class="chip">{tag}</span>
+```
+*/
+@layer components {
+  .chip {
+    @apply px-3 py-1 whitespace-nowrap cursor-pointer;
+    @apply text-xs text-center;
+    @apply rounded-md inline-flex justify-center items-center gap-2;
+    @apply hover:brightness-[1.15];
+    @apply transition-all;
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
+  }
+}
+
+/* wu.component.code
+Used to show a block of code in a box that looks like a code editor.
+
+# Usage
+
+## Code with no line numbers
+```html
+<div class="code">
+  <pre>{code}</pre>
+  <pre>{code}</pre>
+  <pre data-prefix=">">{code}</pre>
+</div>
+```
+
+## Code with line numbers
+```html
+<div class="code code-numbered">
+  <pre>{code}</pre>
+  <pre>{code}</pre>
+  <pre>{code}</pre>
+</div>
+```
+*/
+@layer components {
+  .code {
+    @apply relative overflow-hidden overflow-x-auto;
+    @apply w-full py-5 rounded-md;
+    pre {
+      @apply pr-5;
+      &:before {
+        @apply mr-[2ch] inline-block text-right;
+      }
+    }
+
+    pre[data-prefix] {
+      content: attr(data-prefix);
+      @apply w-8 opacity-50;
+    }
+  }
+}
+
+@utility code-numbered-* {
+  --wu-code-start: --value(integer);
+  counter-reset: line calc(var(--code-start) - 1);
+  & pre {
+    &:before {
+      content: counter(line);
+      counter-increment: line;
+      @apply w-8 opacity-50 mr-4;
+    }
+  }
+}
+
+/* wu.component.footer
+Contains logo, copyright notice, and links to other pages.
+
+# Usage
+
+## Normal footer
+```html
+<footer class="footer-table">
+  <aside>
+    {logo}
+    <p>{summary}</p>
+  </aside>
+  <nav>
+    <h6 class="footer-table-title">{title}</h6>
+    <ul>
+      <li><a href="#">{link}</a></li>
+      <li><a href="#">{link}</a></li>
+      <li><a href="#">{link}</a></li>
+    </ul>
+  </nav>
+</footer>
+```
+
+## Centered footer
+```html
+<footer class="footer-table footer-table-center">
+  <nav>
+    <h6 class="footer-table-title">{title}</h6>
+    <ul>
+      <li><a href="#">{link}</a></li>
+      <li><a href="#">{link}</a></li>
+      <li><a href="#">{link}</a></li>
+    </ul>
+  </nav>
+</footer>
+```
+*/
+@layer components {
+  .footer-table {
+    @apply grid w-full place-items-start grid-flow-row tablet:grid-flow-col gap-y-10 gap-x-4 text-sm;
+
+    & > * {
+      @apply grid place-items-start gap-2;
+    }
+  }
+
+  .footer-table-center {
+    @apply place-items-center text-center tablet:grid-flow-row-dense;
+    & > * {
+      @apply place-items-center;
+    }
+  }
+
+  .footer-table-title {
+    @apply mb-2 font-bold uppercase opacity-50;
+  }
+}
+
+/* wu.component.forms
+Styling of form elements.
+
+# Usage
+
+```html
+<input type="text" class=move || ok.then_some("input-success").unwrap_or("input-error")/>
+```
+*/
+@layer components {
+  .input-success {
+    @apply bg-success-200 border-success-500 text-success-700 focus-within:ring-success-500 focus:ring;
+    &::placeholder {
+      @apply text-success-content;
+    }
+  }
+
+  .input-warning {
+    @apply bg-warning-200 border-warning-500 text-warning-700 focus-within:ring-warning-500 focus:ring;
+    &::placeholder {
+      @apply text-warning-content;
+    }
+  }
+
+  .input-error {
+    @apply bg-error-200 border-error-500 text-error-700 focus-within:ring-error-500 focus:ring;
+    &::placeholder {
+      @apply text-error-content;
+    }
+  }
+}
+
+/* wu.component.kbd
+Used to display keyboard shortcuts.
+
+# Usage
+
+```html
+<kbd class="kbd">Ctrl + L</kbd>
+```
+*/
+@layer components {
+  .kbd {
+    @apply inline-flex justify-center items-center border border-b-4 min-h-[2.2em] min-w-[2.2em] px-2 rounded-lg;
+  }
+}
+
+/* wu.component.loading
+Shows an animation to indicate that something is loading.
+
+# Usage
+
+```html
+<span class="loading <the-type-of-anim-you-want>"/>
+```
+*/
+@theme {
+  --wu-loading-spinner: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='%23000' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_V8m1%7Btransform-origin:center;animation:spinner_zKoa 2s linear infinite%7D.spinner_V8m1 circle%7Bstroke-linecap:round;animation:spinner_YpZS 1.5s ease-in-out infinite%7D%40keyframes spinner_zKoa%7B100%25%7Btransform:rotate(360deg)%7D%7D%40keyframes spinner_YpZS%7B0%25%7Bstroke-dasharray:0 150;stroke-dashoffset:0%7D47.5%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-16%7D95%25%2C100%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-59%7D%7D%3C%2Fstyle%3E%3Cg class='spinner_V8m1'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3'%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --wu-loading-dots: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_qM83%7Banimation:spinner_8HQG 1.05s infinite%7D.spinner_oXPr%7Banimation-delay:.1s%7D.spinner_ZTLf%7Banimation-delay:.2s%7D@keyframes spinner_8HQG%7B0%25,57.14%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)%7D28.57%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)%7D100%25%7Btransform:translate(0)%7D%7D%3C/style%3E%3Ccircle class='spinner_qM83' cx='4' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_oXPr' cx='12' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_ZTLf' cx='20' cy='12' r='3'/%3E%3C/svg%3E");
+  --wu-loading-ring: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg' stroke='%23fff'%3E%3Cg fill='none' fill-rule='evenodd' stroke-width='2'%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='0s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='0s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='-0.9s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='-0.9s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+  --wu-loading-bars: url("data:image/svg+xml,%0A%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_rXNP%7Banimation:spinner_YeBj .8s infinite%7D@keyframes spinner_YeBj%7B0%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);cy:5px%7D46.875%25%7Bcy:20px;rx:4px;ry:4px%7D50%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);cy:20.5px;rx:4.8px;ry:3px%7D53.125%25%7Brx:4px;ry:4px%7D100%25%7Bcy:5px%7D%7D%3C/style%3E%3Cellipse class='spinner_rXNP' cx='12' cy='5' rx='4' ry='4'/%3E%3C/svg%3E");
+  --wu-loading-infinity: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='shape-rendering: auto;' width='200px' height='200px' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Cpath fill='none' stroke='%230a0a0a' stroke-width='10' stroke-dasharray='205.271142578125 51.317785644531256' d='M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z' stroke-linecap='round' style='transform:scale(0.8);transform-origin:50px 50px'%3E%3Canimate attributeName='stroke-dashoffset' repeatCount='indefinite' dur='2s' keyTimes='0;1' values='0;256.58892822265625'%3E%3C/animate%3E%3C/path%3E%3C/svg%3E");
+}
+
+@layer components {
+  .loading {
+    @apply pointer-events-none w-6 aspect-square inline-block bg-light-content dark:bg-dark-content;
+    mask-size: 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-image: var(--wu-loading-spinner);
+  }
+}
+
+@utility loading-* {
+  mask-image: --value(--wu-loading-*);
+}
+
+/* wu.component.overlay
+Used to overlay a new plane over an existing one.
+
+# Usage
+
+```html
+<div class="overlay-container">
+  <div class="overlay overlay-container">
+    <div class="overlay">
+      <p>{some_content}</p>
+    </div>
+  </div>
+  <div class="overlay overlay-container">
+    <div class="overlay">
+      <p>{some_content}</p>
+    </div>
+  </div>
+</div>
+```
+*/
+@layer components {
+  .overlay-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    pointer-events: none !important;
+    & > * {
+      pointer-events: auto;
+    }
+  }
+
+  .overlay {
+    grid-row-start: 1;
+    grid-column-start: 1;
+    pointer-events: none !important;
+    & > * {
+      pointer-events: auto;
+    }
+  }
+
+  .overlay-viewport-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    pointer-events: none !important;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    & > * {
+      pointer-events: auto;
+    }
+  }
+}
+
+/* wu.component.placeholder
+Used as placeholders while actual content is loading in the background.
+
+# Usage
+
+```html
+<section class="card w-full">
+	<div class="p-4 space-y-4">
+		<div class="placeholder-circle" />
+		<div class="grid grid-cols-3 gap-8">
+			<div class="placeholder" />
+			<div class="placeholder" />
+			<div class="placeholder" />
+		</div>
+		<div class="grid grid-cols-4 gap-4">
+			<div class="placeholder" />
+			<div class="placeholder" />
+			<div class="placeholder" />
+			<div class="placeholder" />
+		</div>
+	</div>
+</section>
+```
+*/
+@layer components {
+  .placeholder {
+    @apply bg-light-content/10 dark:bg-dark-content/10 h-5 rounded-full animate-pulse;
+  }
+
+  .placeholder-circle {
+    @apply bg-light-content/10 dark:bg-dark-content/10 aspect-square rounded-full animate-pulse;
+  }
+}
+
+/* wu.component.progress
+Used to show the progress of a task or to show the passing of time.
+
+# Usage
+
+```html
+<div class="radial radial-size-4" style:('--wu-radial-value', perc)>{perc}</div>
+```
+*/
+@layer components {
+  .radial {
+    --wu-radial-value: 0;
+    --wu-radial-size: 5rem;
+    --wu-radial-thickness: calc(var(--wu-radial-size) / 10);
+    width: var(--wu-radial-size);
+    height: var(--wu-radial-size);
+    @apply bg-transparent rounded-full place-content-center inline-grid relative align-middle box-content;
+
+    &::-moz-progress-bar {
+      @apply bg-transparent appearance-none;
+    }
+
+    &::-webkit-progress-value {
+      @apply bg-transparent appearance-none;
+    }
+
+    &::-webkit-progress-bar {
+      @apply bg-transparent appearance-none;
+    }
+
+    &:before, &:after {
+      @apply absolute rounded-full content-[""];
+    }
+
+    &:before {
+      @apply inset-0;
+  		background: radial-gradient(farthest-side, currentColor 98%, #0000) top/var(--wu-radial-thickness) var(--wu-radial-thickness) no-repeat, conic-gradient(currentColor calc(var(--wu-radial-value) * 1%), #0000 0);
+  		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+  		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+    }
+
+    &:after {
+      background-color: currentColor;
+      inset: calc(50% - var(--wu-radial-thickness) / 2);
+      transform: rotate(calc(var(--wu-radial-value) * 3.6deg - 90deg)) translate(calc(var(--wu-radial-size) / 2 - 50%));
+    }
+  }
+}
+
+@utility radial-size-* {
+  --wu-radial-size: calc(--var(--spacing) * --value([length]));
+}
+
+@utility radial-thickness-* {
+  --wu-radial-thickness: calc(--var(--spacing) * --value([length]));
+}
+
+/* wu.component.steps
+Used to show a list of steps in a process.
+
+# Usage
+
+## Horizontal steps
+```html
+<ul class="hsteps">
+  <li class="step step-primary">Register</li>
+  <li class="step step-primary">Choose plan</li>
+  <li class="step">Purchase</li>
+  <li class="step">Receive Product</li>
+</ul>
+```
+
+## Vertical steps
+```html
+<ul class="vsteps">
+  <li class="step step-primary">Register</li>
+  <li class="step step-primary">Choose plan</li>
+  <li class="step">Purchase</li>
+  <li class="step">Receive Product</li>
+</ul>
+```
+*/
+@layer components {
+  .hsteps {
+    @apply inline-grid grid-flow-col overflow-hidden overflow-x-auto;
+    grid-auto-columns: 1fr;
+    counter-reset: step;
+    .step {
+      @apply grid grid-cols-1 grid-rows-2 place-items-center text-center;
+      grid-template-rows: 40px 1fr;
+      grid-template-columns: auto;
+      min-width: 4rem;
+      &:before {
+        @apply h-2 w-full top-0 col-start-1 row-start-1 transform translate-x-0 translate-y-0 rtl:translate-x-0;
+        margin-inline-start: -100%;
+      }
+    }
+  }
+
+  .vsteps {
+    @apply inline-grid grid-flow-row overflow-y-auto;
+    grid-auto-rows: 1fr;
+    counter-reset: step;
+    .step {
+      @apply grid grid-cols-2 grid-rows-1;
+      gap: 0.5rem;
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: auto;
+      min-height: 4rem;
+      justify-items: start;
+      &:before {
+        @apply w-2 h-full top-0 col-start-1 row-start-1 transform -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2;
+        margin-inline-start: 50%;
+      }
+    }
+  }
+
+  .step {
+    &:before {
+      content: "";
+    }
+    &:after {
+      content: counter(step);
+      counter-increment: step;
+      z-index: 1;
+      @apply relative col-start-1 row-start-1 grid size-8 place-items-center place-self-center rounded-full;
+    }
+    &:first-child:before {
+      content: none;
+    }
+    &[data-content]:after {
+      content: attr(data-content);
+    }
+  }
+}
+
+@utility step-* {
+  &:before {
+    background-color: --value(--color-*);
+  }
+
+  &:after {
+    background-color: --value(--color-*);
+  }
+}
+
+/* wu.component.tabs
+Used to show a list of links in a tabbed format.
+
+# Usage
+
+```html
+<div role="tablist" class="tabs">
+  <a role="tab" class="tab">Tab 1</a>
+  <a role="tab" class="tab tab-active">Tab 2</a>
+  <a role="tab" class="tab">Tab 3</a>
+</div>
+```
+*/
+@layer components {
+  .tabs {
+    @apply flex flex-wrap items-end;
+    & > .tab {
+      @apply border-surface-400 dark:border-surface-500;
+    }
+  }
+
+  .tab {
+    @apply text-surface-content/50 px-4 py-2 cursor-pointer;
+    &.tab-active:not(.tab-disabled, [disabled]) {
+      @apply border-surface-400/100 dark:border-surface-500/100 text-surface-content/100;
+    }
+    &:not(.tab-active, .tab-disabled, [disabled]) {
+      @media(hover: hover) {
+        @apply hover:text-surface-content/75;
+      }
+    }
+    &:focus {
+      @apply outline-none;
+    }
+    &:focus-visible {
+      @apply outline outline-2 outline-current outline-offset-[-3px];
+    }
+    &[disabled] {
+      @apply text-surface-content/25 cursor-not-allowed;
+    }
+    @media (hover: hover) {
+      &[disabled], &[disabled]:hover {
+        @apply text-surface-content/25 cursor-not-allowed;
+      }
+    }
+  }
+
+  .tab-disabled {
+    @apply text-surface-content/25 cursor-not-allowed;
+  }
+
+  .tabs-bordered > .tab {
+    @apply border-b-2 border-surface-400/20 dark:border-surface-500/20;
+  }
+
+  .tabs-lifted > .tab {
+    @apply border-b-2;
+    &.tab-active:not(.tab-disabled, [disabled]) {
+      @apply border-2 border-b-0 rounded-t-lg;
+    }
+  }
+
+  .tabs-boxed {
+    @apply bg-surface-400/20 dark:bg-surface-500/20;
+    &.tab-active:not(.tab-disabled, [disabled]) {
+      @apply bg-primary-500;
+    }
+  }
+}
+
+/* wu.component.window
+Shows a box that looks like an operating system window.
+
+# Usage
+
+```html
+<div class="window border border-base-300">
+  <div class="flex justify-center px-4 py-16 border-t border-base-300">Hello!</div>
+</div>
+```
+*/
+@layer components {
+  .window {
+    @apply relative overflow-hidden overflow-x-auto pt-5 rounded-md;
+    &:before {
+      @apply content-[""] mb-4 block size-3 rounded-full opacity-100;
+      box-shadow: 1.4em 0 rgba(225, 0, 11, 0.8), 2.8em 0 rgba(222, 172, 10, 0.8), 4.2em 0 rgba(71, 172, 7, 0.8);
+    }
+  }
+
+  .window-grayscale {
+    @apply relative overflow-hidden overflow-x-auto pt-5 rounded-md;
+    &:before {
+      @apply content-[""] mb-4 block size-3 rounded-full opacity-20;
+      box-shadow: 1.4em 0, 2.8em 0, 4.2em 0;
+    }
+  }
+}
+
+/* wu.component.icons
+Shows an animation to indicate that something is loading.
+
+# Categorization
+- o - outline
+- s - solid
+- m - mini
+- u - micro
+
+# Usage
+
+```html
+<span class="loading <the-type-of-anim-you-want>"/>
+```
+*/
+@theme {
+  /* outline icons */
+  --wu-icon-outline-info-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-exclamation-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-exclamation-triangle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-exclamation-shield: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-arrow-right-end-on-rect: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25'/%3E%3C/svg%3E");
+  --wu-icon-outline-bars-3: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'/%3E%3C/svg%3E");
+  --wu-icon-outline-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+  --wu-icon-outline-cog-6: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-cog: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495'/%3E%3C/svg%3E");
+  --wu-icon-outline-console: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-eye: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5'/%3E%3C/svg%3E");
+  --wu-icon-outline-lock-closed: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-lock-open: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-moon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-no-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636'/%3E%3C/svg%3E");
+  --wu-icon-outline-book-open: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25'/%3E%3C/svg%3E");
+  --wu-icon-outline-question-mark-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-paper-airplane: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5'/%3E%3C/svg%3E");
+  --wu-icon-outline-sun: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-user: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-user-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-wrench: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4.867 19.125h.008v.008h-.008v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-wrench-screwdriver: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-x-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 18 18 6M6 6l12 12'/%3E%3C/svg%3E");
+  --wu-icon-outline-x-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'/%3E%3C/svg%3E");
+  --wu-icon-outline-plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 4.5v15m7.5-7.5h-15'/%3E%3C/svg%3E");
+  --wu-icon-outline-arrow-path: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99'/%3E%3C/svg%3E");
+  --wu-icon-outline-arrow-top-right-on-square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25'/%3E%3C/svg%3E");
+  --wu-icon-outline-adjustment-horizontal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75'/%3E%3C/svg%3E");
+  --wu-icon-outline-boot-kick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='currentColor' d='m364.2 78.46l-61.7 74.74l-18.7-56.06l-20.6 56.06c2.4 1.3 4.8 2.7 7.2 4c-15.9 1.1-32.2 5.8-48.3 14.7c142.1 0 224.3 149.5 119.6 261.6c17.1-11.6 30.8-24.5 41.5-38.1c-.1.3-.2.5-.3.8l54.2 18.6l-26.2-56h67.3L424 321.4l69.1-37.4l-71-18.7l67.3-74.7l-89.7 18.7l46.7-93.5l-91.6 56.1zM139 102.7c-1.6 0-3.4.7-6 2.2l-2 1.1h-2.3c-38.05 0-78.77 16.3-109.11 68.8c-2.93 24.6 3.45 35 11.59 48.5c7.41 12.4 16.35 27.4 16.85 51.8c22.72-.4 52.37-3.6 82.27-31.7l-20.7-115l71.7 67.2c4.2-5.1 8.6-8.8 11.9-11.7s5.5-5 7-8c-19.1-12.4-30-34.4-40.1-50.8c-5.6-9.1-11-16.5-15.2-19.7c-2.2-1.6-3.6-2.6-5.3-2.7zm-2.4 75.3l12.9 71.6l-3.3 3.3C127 272.1 107 282 88.73 287.2L138 358.8l28.1 56c10.1 4.6 27.7 3.5 48.4-1.5l-3.6-35.8l33.3 26.6c59.1-21.7 126.1-65.4 123.7-101.4c-24.3-51.9-86.9-103.8-139.1-51.9c-14.2 16.5-22.3 34.9-30.5 67.4c1.7-32.8 1.9-51.3 12-67.9l-17-41.2c-.9 1.2-1.7 2.6-2.5 4.2l-5.3 10.6z'/%3E%3C/svg%3E");
+  --wu-icon-outline-hammer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-1.5 -1.5 24 24'%3E%3Cpath fill='currentColor' d='m2.536 8.9l2.828 2.828l6.364-6.364l-2.829-2.828zm12.727 5.656l-4.95-4.95l-.706.708l4.95 4.95zm1.415 1.415l-.707.707l1.767 1.767a.5.5 0 0 0 .707-.707zM6.01 2.596L7.485 1.12a2 2 0 0 1 2.829 0l2.828 2.829a2 2 0 0 1 0 2.828l-1.414 1.414l8.132 8.132a2.5 2.5 0 1 1-3.536 3.536l-8.132-8.132l-1.414 1.414a2 2 0 0 1-2.828 0l-2.83-2.827a2 2 0 0 1 0-2.829l1.475-1.474a1.5 1.5 0 0 1 .293-1.708L4.303 2.89a1.5 1.5 0 0 1 1.708-.293z'/%3E%3C/svg%3E");
+
+  /* solid icons */
+
+  /* mini icons */
+
+  /* micro icons */
+}
+
+@layer components {
+  .icon {
+    @apply pointer-events-none w-6 aspect-square inline-block bg-light-content dark:bg-dark-content;
+    mask-size: 100%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+@utility icon-* {
+  text-decoration-color: --value(--color-*);
+  color: --value(--color-*);
+  background-color: --value(--color-*);
+}
+
+@utility i-o-* {
+  mask-image: --value(--wu-icon-outline-*);
 }
