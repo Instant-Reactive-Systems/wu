@@ -188,7 +188,7 @@ where
 					<h1 class="text-2xl font-bold text-center">
 						"Debugger"
 					</h1>
-					<div class="hdivider">
+					<div class="hdivider divider-bg-2">
 						<span class="icon i-o-console"/>
 					</div>
 					<div class="vertical w-full desktop:w-[600px] gap-2">
@@ -221,7 +221,10 @@ where
 								}
 								prop:value=cmd_text
 							/>
-							<button class="size-12 grid center btn-square btn-primary rounded-r-md" on:click=move |_| submit_cmd.run(())>
+							<button
+								style="--wu-btn-icon-border-radius: 0 0 var(--radius-md) 0"
+								class="size-12 grid center btn-icon btn-primary" on:click=move |_| submit_cmd.run(())
+							>
 								<span class="icon i-o-cog icon-primary-content"/>
 							</button>
 						</div>

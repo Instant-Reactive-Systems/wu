@@ -1,19 +1,29 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 @theme {
 	/* wu.theme */
-	/* surface | #495a8f */
-	--color-surface-50: 228 230 238; /* ⬅ #e4e6ee */
-	--color-surface-100: 219 222 233; /* ⬅ #dbdee9 */
-	--color-surface-200: 210 214 227; /* ⬅ #d2d6e3 */
-	--color-surface-300: 182 189 210; /* ⬅ #b6bdd2 */
-	--color-surface-400: 128 140 177; /* ⬅ #808cb1 */
-	--color-surface-500: 73 90 143; /* ⬅ #495a8f */
-	--color-surface-600: 66 81 129; /* ⬅ #425181 */
-	--color-surface-700: 55 68 107; /* ⬅ #37446b */
-	--color-surface-800: 44 54 86; /* ⬅ #2c3656 */
-	--color-surface-900: 36 44 70; /* ⬅ #242c46 */
-	--color-surface-content: 255 255 255;
+	/* surface */
+	--color-surface-50: oklch(0.9257 0.011 274.89);
+	--color-surface-100: oklch(0.9015 0.015 273.83);
+	--color-surface-200: oklch(0.8769 0.018 272.29);
+	--color-surface-300: oklch(0.7995 0.031 271.01);
+	--color-surface-400: oklch(0.6439 0.057 270.73);
+	--color-surface-500: oklch(0.4780 0.088 269.38);
+	--color-surface-600: oklch(0.4448 0.081 269.72);
+	--color-surface-700: oklch(0.3939 0.068 269.1);
+	--color-surface-800: oklch(0.3395 0.058 269.92);
+	--color-surface-900: oklch(0.2986 0.049 270.23);
+	--color-surface-content: var(--color-white);
 	--color-light-1: var(--color-surface-100);
 	--color-light-2: var(--color-surface-200);
 	--color-light-3: var(--color-surface-300);
@@ -22,84 +32,92 @@
 	--color-dark-2: var(--color-surface-800);
 	--color-dark-3: var(--color-surface-700);
 	--color-dark-content: var(--color-surface-100);
-	/* primary | #0FBA81 */
-	--color-primary-50: 219 245 236; /* ⬅ #dbf5ec */
-	--color-primary-100: 207 241 230; /* ⬅ #cff1e6 */
-	--color-primary-200: 195 238 224; /* ⬅ #c3eee0 */
-	--color-primary-300: 159 227 205; /* ⬅ #9fe3cd */
-	--color-primary-400: 87 207 167; /* ⬅ #57cfa7 */
-	--color-primary-500: 15 186 129; /* ⬅ #0FBA81 */
-	--color-primary-600: 14 167 116; /* ⬅ #0ea774 */
-	--color-primary-700: 11 140 97; /* ⬅ #0b8c61 */
-	--color-primary-800: 9 112 77; /* ⬅ #09704d */
-	--color-primary-900: 7 91 63; /* ⬅ #075b3f */
+	--color-fg: light-dark(var(--color-dark-1), var(--color-light-1));
+	--color-bg-1: light-dark(var(--color-light-1), var(--color-dark-1));
+	--color-bg-2: light-dark(var(--color-light-2), var(--color-dark-2));
+	--color-bg-3: light-dark(var(--color-light-3), var(--color-dark-3));
+	/* primary */
+	--color-primary-50: oklch(0.9487 0.03 172.86);
+	--color-primary-100: oklch(0.9307 0.038 173.93);
+	--color-primary-200: oklch(0.9149 0.048 173.42);
+	--color-primary-300: oklch(0.8643 0.075 172.32);
+	--color-primary-400: oklch(0.7753 0.123 168.14);
+	--color-primary-500: oklch(0.6984 0.15 162.22);
+	--color-primary-600: oklch(0.6451 0.138 162.43);
+	--color-primary-700: oklch(0.5671 0.121 162.6);
+	--color-primary-800: oklch(0.4833 0.102 162.59);
+	--color-primary-900: oklch(0.4182 0.087 163.43);
 	--color-primary-content: var(--color-light-content);
 	--color-highlight: var(--color-primary-500); /* TODO: rework */
-	/* secondary | #4F46E5 */
-	--color-secondary-50: 229 227 251; /* ⬅ #e5e3fb */
-	--color-secondary-100: 220 218 250; /* ⬅ #dcdafa */
-	--color-secondary-200: 211 209 249; /* ⬅ #d3d1f9 */
-	--color-secondary-300: 185 181 245; /* ⬅ #b9b5f5 */
-	--color-secondary-400: 132 126 237; /* ⬅ #847eed */
-	--color-secondary-500: 79 70 229; /* ⬅ #4F46E5 */
-	--color-secondary-600: 71 63 206; /* ⬅ #473fce */
-	--color-secondary-700: 59 53 172; /* ⬅ #3b35ac */
-	--color-secondary-800: 47 42 137; /* ⬅ #2f2a89 */
-	--color-secondary-900: 39 34 112; /* ⬅ #272270 */
+	--color-highlight-content: var(--color-dark-1); /* TODO: rework */
+	/* secondary */
+	--color-secondary-50: oklch(0.9246 0.032 289.58);
+	--color-secondary-100: oklch(0.8999 0.044 288.36);
+	--color-secondary-200: oklch(0.8751 0.055 287.5);
+	--color-secondary-300: oklch(0.7991 0.09 287.03);
+	--color-secondary-400: oklch(0.6496 0.162 283.37);
+	--color-secondary-500: oklch(0.5106 0.23 276.97);
+	--color-secondary-600: oklch(0.4735 0.211 277.11);
+	--color-secondary-700: oklch(0.4178 0.182 277.24);
+	--color-secondary-800: oklch(0.3576 0.152 277.76);
+	--color-secondary-900: oklch(0.3133 0.129 278.71);
 	--color-secondary-content: var(--color-dark-content);
-	/* tertiary | #0EA5E9 */
-	--color-tertiary-50: 219 242 252; /* ⬅ #dbf2fc */
-	--color-tertiary-100: 207 237 251; /* ⬅ #cfedfb */
-	--color-tertiary-200: 195 233 250; /* ⬅ #c3e9fa */
-	--color-tertiary-300: 159 219 246; /* ⬅ #9fdbf6 */
-	--color-tertiary-400: 86 192 240; /* ⬅ #56c0f0 */
-	--color-tertiary-500: 14 165 233; /* ⬅ #0EA5E9 */
-	--color-tertiary-600: 13 149 210; /* ⬅ #0d95d2 */
-	--color-tertiary-700: 11 124 175; /* ⬅ #0b7caf */
-	--color-tertiary-800: 8 99 140; /* ⬅ #08638c */
-	--color-tertiary-900: 7 81 114; /* ⬅ #075172 */
+	/* tertiary */
+	--color-tertiary-50: oklch(0.9473 0.028 225.69);
+	--color-tertiary-100: oklch(0.9287 0.037 227.59);
+	--color-tertiary-200: oklch(0.9123 0.046 226.73);
+	--color-tertiary-300: oklch(0.8598 0.072 227.6);
+	--color-tertiary-400: oklch(0.7649 0.119 230.74);
+	--color-tertiary-500: oklch(0.6847 0.148 237.32);
+	--color-tertiary-600: oklch(0.6349 0.136 236.99);
+	--color-tertiary-700: oklch(0.5556 0.118 236.77);
+	--color-tertiary-800: oklch(0.4732 0.1 236.38);
+	--color-tertiary-900: oklch(0.4113 0.085 235.45);
 	--color-tertiary-content: var(--color-light-content);
-	/* success | #84cc16 */
-	--color-success-50: 237 247 220; /* ⬅ #edf7dc */
-	--color-success-100: 230 245 208; /* ⬅ #e6f5d0 */
-	--color-success-200: 224 242 197; /* ⬅ #e0f2c5 */
-	--color-success-300: 206 235 162; /* ⬅ #ceeba2 */
-	--color-success-400: 169 219 92; /* ⬅ #a9db5c */
-	--color-success-500: 132 204 22; /* ⬅ #84cc16 */
-	--color-success-600: 119 184 20; /* ⬅ #77b814 */
-	--color-success-700: 99 153 17; /* ⬅ #639911 */
-	--color-success-800: 79 122 13; /* ⬅ #4f7a0d */
-	--color-success-900: 65 100 11; /* ⬅ #41640b */
+	/* success */
+	--color-success-50: oklch(0.9615 0.037 123.68);
+	--color-success-100: oklch(0.9494 0.051 125.35);
+	--color-success-200: oklch(0.9363 0.062 125.32);
+	--color-success-300: oklch(0.9015 0.1 125.93);
+	--color-success-400: oklch(0.8306 0.165 127.66);
+	--color-success-500: oklch(0.7681 0.204 130.85);
+	--color-success-600: oklch(0.7115 0.189 130.79);
+	--color-success-700: oklch(0.6215 0.164 130.64);
+	--color-success-800: oklch(0.5280 0.138 130.38);
+	--color-success-900: oklch(0.4593 0.118 130.07);
 	--color-success-content: var(--color-dark-content);
-	/* warning | #EAB308 */
-	--color-warning-50: 252 244 218; /* ⬅ #fcf4da */
-	--color-warning-100: 251 240 206; /* ⬅ #fbf0ce */
-	--color-warning-200: 250 236 193; /* ⬅ #faecc1 */
-	--color-warning-300: 247 225 156; /* ⬅ #f7e19c */
-	--color-warning-400: 240 202 82; /* ⬅ #f0ca52 */
-	--color-warning-500: 234 179 8; /* ⬅ #EAB308 */
-	--color-warning-600: 211 161 7; /* ⬅ #d3a107 */
-	--color-warning-700: 176 134 6; /* ⬅ #b08606 */
-	--color-warning-800: 140 107 5; /* ⬅ #8c6b05 */
-	--color-warning-900: 115 88 4; /* ⬅ #735804 */
+	/* warning */
+	--color-warning-50: oklch(0.9666 0.035 92.82);
+	--color-warning-100: oklch(0.9551 0.046 92.18);
+	--color-warning-200: oklch(0.9435 0.058 92.14);
+	--color-warning-300: oklch(0.9120 0.09 92.46);
+	--color-warning-400: oklch(0.8502 0.142 91.37);
+	--color-warning-500: oklch(0.7952 0.162 86.05);
+	--color-warning-600: oklch(0.7355 0.149 85.97);
+	--color-warning-700: oklch(0.6429 0.13 86.07);
+	--color-warning-800: oklch(0.5458 0.11 86.87);
+	--color-warning-900: oklch(0.4751 0.096 87.46);
 	--color-warning-content: var(--color-light-content);
-	/* error | #D41976 */
-	--color-error-50: 249 221 234; /* ⬅ #f9ddea */
-	--color-error-100: 246 209 228; /* ⬅ #f6d1e4 */
-	--color-error-200: 244 198 221; /* ⬅ #f4c6dd */
-	--color-error-300: 238 163 200; /* ⬅ #eea3c8 */
-	--color-error-400: 225 94 159; /* ⬅ #e15e9f */
-	--color-error-500: 212 25 118; /* ⬅ #D41976 */
-	--color-error-600: 191 23 106; /* ⬅ #bf176a */
-	--color-error-700: 159 19 89; /* ⬅ #9f1359 */
-	--color-error-800: 127 15 71; /* ⬅ #7f0f47 */
-	--color-error-900: 104 12 58; /* ⬅ #680c3a */
+	/* error */
+	--color-error-50: oklch(0.9242 0.035 348.04);
+	--color-error-100: oklch(0.8974 0.048 345.77);
+	--color-error-200: oklch(0.8732 0.06 346.85);
+	--color-error-300: oklch(0.7988 0.1 348.56);
+	--color-error-400: oklch(0.6656 0.176 352.05);
+	--color-error-500: oklch(0.5722 0.222 358.6);
+	--color-error-600: oklch(0.5300 0.204 358.58);
+	--color-error-700: oklch(0.4642 0.178 357.85);
+	--color-error-800: oklch(0.3956 0.15 357.41);
+	--color-error-900: oklch(0.3445 0.129 356.99);
 	--color-error-content: var(--color-dark-content);
 
 	/* wu.screens */
 	--breakpoint-tablet: 768px;
 	--breakpoint-desktop: 1280px;
 	--breakpoint-wide: 2560px;
+	--container-tablet: 768px;
+	--container-desktop: 1280px;
+	--container-wide: 2560px;
 
 	/* wu.shadow */
 	--shadow-left: -1px 0 3px 0 rgba(0 0 0 / 0.1), -1px 0 2px -1px rgb(0 0 0 / 0.1);
@@ -120,10 +138,16 @@
 	--shadow-top-lg: 0 -10px 15px -3px rgb(0 0 0 / 0.1), 0 -4px 6px -4px rgb(0 0 0 / 0.1);
 	--shadow-top-xl: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
 	--shadow-top-2xl: 0 -25px 50px -12px rgb(0 0 0 / 0.25);
+
+	/* wu.generic-colors */
+	--wu-fg-color: light-dark(var(--color-dark-1), var(--color-light-1));
+	--wu-bg-color: light-dark(var(--color-light-1), var(--color-dark-1));
 }
 
+/* wu.preflight
+Additional preflight styles.
+*/
 @layer base {
-	/* wu.core.preflight */
 	html {
 		-webkit-tap-highlight-color: rgba(128, 128, 128 / 0.5);
 	}
@@ -148,57 +172,75 @@
 	}
 
 	*, .default {
-		color: var(--color-light-content);
-		text-decoration-color: var(--color-light-content);
-		--wu-divider-color: var(--color-surface-400);
-		--wu-step-color: var(--color-light-2);
-
-		@variant dark {
-			color: var(--color-dark-content);
-			text-decoration-color: var(--color-light-content);
-			--wu-divider-color: var(--color-surface-600);
-			--wu-step-color: var(--color-dark-2);
-		}
+		color: var(--wu-fg-color);
+		text-decoration-color: var(--wu-fg-color);
+		--wu-divider-color: var(--wu-fg-color);
 	}
 
 	.filled {
-		fill: var(--color-light-content);
-
-		@variant dark {
-			fill: var(--color-dark-content);
-		}
+		fill: var(--wu-fg-color);
 	}
 
 	.stroked {
-		stroke: var(--color-light-content);
-
-		@variant dark {
-			stroke: var(--color-dark-content);
-		}
+		stroke: var(--wu-fg-color);
 	}
 
-	/* wu.core.forms */
 	/* resets */
 	fieldset,
 	legend,
 	label {
 		display: block;
 	}
+}
 
-	/* placeholders */
-	::placeholder {
-		color: var(--color-light-content);
+/* wu.forms.input
+Custom styling for input form elements.
+*/
+@theme inline {
+  --wu-forms-input-padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
+  --wu-forms-input-border-width: 1px;
+  --wu-forms-input-border-radius: var(--radius-md);
+  --wu-forms-input-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-forms-input-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
+  --wu-forms-input-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
+}
 
-		@variant dark {
-			color: var(--color-dark-content);
-		}
-	}
-
-	/* webkit calendar picker */
+@layer base {
+	/* - webkit calendar picker */
 	input::-webkit-calendar-picker-indicator {
 		@variant dark {
 			filter: invert(100%);
 		}
+	}
+
+	input::placeholder,
+	textarea::placeholder {
+		color: var(--wu-forms-input-text-color);
+	}
+
+	input,
+	textarea {
+		@apply outline-0 w-full transition duration-100;
+		@apply brightness-90 focus:brightness-95 hover:brightness-95 focus-within:brightness-95;
+		@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+		padding: var(--wu-forms-input-padding);
+		border-width: var(--wu-forms-input-border-width);
+		border-radius: var(--wu-forms-input-border-radius);
+		background-color: var(--wu-forms-input-bg-color);
+		border-color: var(--wu-forms-input-border-color);
+		color: var(--wu-forms-input-text-color);
+	}
+
+
+	/* states */
+	input[readonly],
+	textarea[readonly] {
+		@apply border-0 cursor-not-allowed hover:brightness-100;
+	}
+
+	input:disabled,
+	textarea:disabled {
+		@apply opacity-50 cursor-not-allowed hover:brightness-100;
 	}
 
 	/* webkit search input cancel button */
@@ -222,8 +264,20 @@
 			filter: invert(100%);
 		}
 	}
-	
-	/* Progress Bar */
+}
+
+/* wu.forms.progress
+Custom styling for the progress form element.
+*/
+@theme inline {
+  --wu-forms-progress-border-width: --spacing(1);
+  --wu-forms-progress-border-radius: var(--radius-md);
+  --wu-forms-progress-border-color: light-dark(var(--color-dark-3), var(--color-light-3));
+  --wu-forms-progress-bar-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-forms-progress-fill-color: light-dark(var(--color-dark-3), var(--color-light-3));
+}
+
+@layer base {
 	progress {
 		webkit-appearance: none;
 		-moz-appearance: none;
@@ -231,46 +285,73 @@
 		width: 100%;
 		height: --spacing(2);
 		overflow: hidden;
+    border-width: var(--wu-forms-progress-border-width);
+    border-radius: var(--wu-forms-progress-border-radius);
+    border-color: var(--wu-forms-progress-border-color);
 
 		&::-webkit-progress-bar {
-			/* @apply surface-1; */
+		  background-color: var(--wu-forms-progress-bar-color);
 		}
 		&::-webkit-progress-value {
-			/* @apply surface-1; */
+		  background-color: var(--wu-forms-progress-fill-color);
 		}
 	}
 	::-moz-progress-bar {
-		/* @apply surface-1; */
+	  background-color: var(--wu-forms-progress-bar-color);
 	}
 	:indeterminate::-moz-progress-bar {
 		width: 0;
 	}
-	
-	/* Range Input */
+}
+
+/* wu.forms.range
+Custom styling for the range input element.
+*/
+@theme inline {
+  --wu-forms-range-accent-color: var(--color-highlight);
+}
+
+@layer base {
 	/* https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color */
 	[type='range'] {
 		width: 100%;
-		accent-color: var(--color-dark-1);
-
-		@variant dark {
-			accent-color: var(--color-light-1);
-		}
+		accent-color: var(--wu-forms-range-accent-color);
 	}
+}
 
-	input,
-	textarea,
-	select {
-		@apply outline-0 w-full transition duration-100 px-2 py-1 border rounded-md;
-		@apply brightness-90 focus:brightness-100 hover:brightness-100 focus-within:brightness-100;
-		@apply border ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
-	}
+/* wu.forms.select
+Custom styling for the select form element.
+*/
+@theme inline {
+  --wu-forms-select-padding: --spacing(2) --spacing(8) --spacing(2) --spacing(2);
+  --wu-forms-select-border-width: 1px;
+  --wu-forms-select-border-radius: var(--radius-md);
+  --wu-forms-select-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-forms-select-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
+  --wu-forms-select-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
 
-	/* Select (size/multiple) */
+  --wu-forms-select-option-padding: --spacing(2) --spacing(4);
+  --wu-forms-select-option-border-width: 1px;
+  --wu-forms-select-option-border-radius: var(--radius-md);
+  --wu-forms-select-option-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-forms-select-option-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
+  --wu-forms-select-option-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
+}
+
+@layer base {	
 	select {
-		@apply p-2 pr-8 space-y-1;
+		@apply outline-0 w-full transition duration-100 space-y-1;
+		@apply brightness-90 focus:brightness-95 hover:brightness-95 focus-within:brightness-95;
+		@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+		padding: var(--wu-forms-select-padding);
+		border-width: var(--wu-forms-select-border-width);
+		border-radius: var(--wu-forms-select-border-radius);
+		background-color: var(--wu-forms-select-bg-color);
+		border-color: var(--wu-forms-select-border-color);
+		color: var(--wu-forms-select-text-color);
 	}
 	select[size] {
-		@apply bg-none;
+		--wu-select-bg-color: transparent;
 	}
 	select optgroup {
 		@apply space-y-1 font-bold;
@@ -285,37 +366,54 @@
 		@apply mb-3;
 	}
 	select option {
-		@apply surface-2 px-4 py-2 cursor-pointer;
+		padding: var(--wu-forms-select-option-padding);
+		border-width: var(--wu-forms-select-option-border-width);
+		border-radius: var(--wu-forms-select-option-border-radius);
+		background-color: var(--wu-forms-select-option-bg-color);
+		border-color: var(--wu-forms-select-option-border-color);
+		color: var(--wu-forms-select-option-text-color);
+	  cursor: pointer;
 	}
 	select option:checked {
 		/* https://stackoverflow.com/questions/50618602/change-color-of-selected-option-in-select-multiple */
-		background: rgb(var(--color-highlight-500)) linear-gradient(0deg, rgb(var(--color-highlight-500)) 0%, rgb(var(--color-highlight-500)) 100%);
+		background: rgb(var(--color-highlight)) linear-gradient(0deg, rgb(var(--color-highlight)) 0%, rgb(var(--color-highlight)) 100%);
+		color: var(--color-highlight-content);
 	}
+	select:disabled {
+		@apply opacity-50 cursor-not-allowed hover:brightness-100;
+	}
+	select[readonly] {
+		@apply border-0 cursor-not-allowed hover:brightness-100;
+	}
+}
 
-	/* Checkbox & Radio */
+/* wu.forms.radio
+Custom styling for the radio and checkbox element.
+*/
+@theme inline {
+  --wu-forms-radio-size: --spacing(5);
+  --wu-forms-radio-accent-color: var(--color-highlight);
+}
+
+@layer base {
 	[type='checkbox'],
 	[type='radio'] {
-		@apply w-5 h-5 ring-0 rounded cursor-pointer;
-		@apply border surface-1 focus:brightness-100 hover:brightness-100;
-		@apply focus:border-highlight;
-	}
-	[type='checkbox']:checked,
-	[type='radio']:checked {
-		@apply bg-highlight hover:bg-highlight focus:bg-highlight focus:ring-0;
-	}
-	[type='radio'] {
-		@apply rounded-md;
-	}
+	  width: var(--wu-forms-radio-size);
+	  height: var(--wu-forms-radio-size);
+		accent-color: var(--wu-forms-radio-accent-color);
+		cursor: pointer;
 
-	/* File Inputs */
-	[type='file'] {
-		@apply p-1;
+		@apply ring-0 brightness-80 focus:brightness-100 hover:brightness-100;
 	}
+}
 
-	/* Color Picker */
+/* wu.forms.color
+Custom styling for a color picker element.
+*/
+@layer base {
 	/* https://stackoverflow.com/questions/11167281/webkit-css-to-control-the-box-around-the-color-in-an-inputtype-color */
 	[type='color'] {
-		@apply border-none w-10 h-10 overflow-hidden rounded-md cursor-pointer;
+		@apply w-10 h-10 overflow-hidden cursor-pointer;
 		-webkit-appearance: none; /* WebKit Only */
 	}
 	[type='color']::-webkit-color-swatch-wrapper {
@@ -327,19 +425,126 @@
 	[type='color']::-moz-color-swatch {
 		@apply border-none;
 	}
+}
 
-	/* === States === */
-	input:disabled,
-	textarea:disabled,
-	select:disabled {
-		@apply opacity-50 cursor-not-allowed hover:brightness-100;
-	}
+/* wu.variant.hocus
+Applies a class on hover, focus or focus-within.
+*/
+@custom-variant hocus (&:is(:hover, :focus, :focus-within));
 
-	input[readonly],
-	textarea[readonly],
-	select[readonly] {
-		@apply border-0 cursor-not-allowed hover:brightness-100;
-	}
+/* wu.utility.anchor
+Positions an element at the sides of a parent element.
+*/
+@utility anchor {
+  position: relative;
+}
+
+@utility anchor-t {
+  position: absolute;
+  transform: translateX(-50%);
+  top: auto;
+  left: 50%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-tl {
+  position: absolute;
+  transform: translateX(0%);
+  top: auto;
+  left: 0%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-tr {
+  position: absolute;
+  transform: translateX(-100%);
+  top: auto;
+  left: 100%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-b {
+  position: absolute;
+  transform: translateX(-50%);
+  top: 100%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-bl {
+  position: absolute;
+  transform: translateX(0%);
+  top: 100%;
+  left: 0%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-br {
+  position: absolute;
+  transform: translateX(-100%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-l {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-lt {
+  position: absolute;
+  transform: translateY(0%);
+  top: 0%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-lb {
+  position: absolute;
+  transform: translateY(-100%);
+  top: 100%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-r {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-rt {
+  position: absolute;
+  transform: translateY(0%);
+  top: 0%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-rb {
+  position: absolute;
+  transform: translateY(-100%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
 }
 
 /* wu.utility.bgi
@@ -448,7 +653,6 @@ Used to separate content vertically or horizontally.
   flex-direction: row;
   align-items: center;
   align-self: stretch;
-  opacity: 65%;
 
   &:before, &:after {
     content: "";
@@ -468,7 +672,6 @@ Used to separate content vertically or horizontally.
   flex-direction: column;
   align-items: center;
   align-self: stretch;
-  opacity: 65%;
 
   &:before, &:after {
     content: "";
@@ -528,16 +731,32 @@ A button style that highlights the surrounding area on hover.
 ```
 */
 @utility highlight {
-  --wu-highlight-color: --alpha(var(--color-light-content) / 5%);
-
-  @variant dark {
-    --wu-highlight-color: --alpha(var(--color-dark-content) / 5%);
-  }
+  --wu-highlight-border-color: --alpha(var(--wu-fg-color) / 10%);
+  --wu-highlight-bg-color: --alpha(var(--wu-fg-color) / 20%);
+  border-width: 1px;
+  box-sizing: border-box;
+  --wu-divider-color: var(--wu-highlight-border-color);
   
   @variant hover {
-    @variant focus-within {
-      background-color: var(--wu-highlight-color);
-    }
+    background-color: var(--wu-highlight-bg-color);
+    border-color: var(--wu-highlight-border-color);
+  }
+
+  @variant focus-within {
+    background-color: var(--wu-highlight-bg-color);
+    border-color: var(--wu-highlight-border-color);
+  }
+}
+
+@utility highlight-bright {
+  filter: brightness(90%);
+  
+  @variant hover {
+    filter: brightness(100%);
+  }
+
+  @variant focus-within {
+    filter: brightness(100%);
   }
 }
 
@@ -555,13 +774,26 @@ Fancy styling for links.
   text-decoration-thickness: 2px;
   text-underline-offset: 1px;
   text-decoration-line: none;
+  text-decoration-color: currentColor;
 
   @variant hover {
-    @variant focus {
-      filter: brightness(115%);
-      text-decoration-line: underline;
-    }
+    filter: brightness(115%);
+    text-decoration-line: underline;
   }
+
+  @variant focus {
+    filter: brightness(115%);
+    text-decoration-line: underline;
+  }
+
+  &[aria-current="page"] {
+    filter: brightness(115%);
+    text-decoration-line: underline;
+  }
+}
+
+@utility link-* {
+  text-decoration-color: --value(--color-*);
 }
 
 /* wu.utility.mask
@@ -695,11 +927,11 @@ Styling for surfaces.
 }
 
 @utility surface-1 {
-  @apply bg-light-1 dark:bg-dark-1 border-light-1 dark:border-dark-1 divide-light-1 dark:divide-dark-1;
+  @apply bg-light-1 dark:bg-dark-1 border-light-2 dark:border-dark-2 divide-light-2 dark:divide-dark-2;
 }
 
 @utility surface-2 {
-  @apply bg-light-2 dark:bg-dark-2 border-light-2 dark:border-dark-2 divide-light-2 dark:divide-dark-2;
+  @apply bg-light-2 dark:bg-dark-2 border-light-3 dark:border-dark-3 divide-light-3 dark:divide-dark-3;
 }
 
 @utility surface-3 {
@@ -797,7 +1029,8 @@ Adds outline to text.
 <h1 class="text-outline-8 text-outline-primary">{title}</h1>
 */
 @utility text-outline-* {
-  -webkit-text-stroke-width: calc(--var(--spacing) * --value([length]));
+  -webkit-text-stroke-width: --value([length]);
+  -webkit-text-stroke-width: calc(var(--spacing) * --value(integer));
   -webkit-text-stroke-color: --value(--color-*);
 }
 
@@ -843,16 +1076,14 @@ Basically just `flex flex-row` and `flex flex-col`.
 </ul>
 ```
 */
-@layer components {
-  .horizontal {
-    display: flex;
-    flex-direction: row;
-  }
+@utility horizontal {
+  display: flex;
+  flex-direction: row;
+}
 
-  .vertical {
-    display: flex;
-    flex-direction: column;
-  }
+@utility vertical {
+  display: flex;
+  flex-direction: column;
 }
 
 /* wu.component.alert
@@ -879,7 +1110,7 @@ Avatar component with optional slots on its circumference at 8 points.
 # Usage
 
 ```html
-<img src="my-avatar.png" class="avatar avatar-size-16 [&>*]:avatar-slot">
+<img src="my-avatar.png" class="avatar avatar-size-16">
 	<span class="avatar-slot-1"/>
 	<span class="avatar-slot-3"/>
 	<span class="avatar-slot-5"/>
@@ -889,8 +1120,8 @@ Avatar component with optional slots on its circumference at 8 points.
 */
 @layer components {
   .avatar {
-    height: var(--wu-avatar-size);
-    width: var(--wu-avatar-size);
+    height: var(--wu-avatar-height);
+    width: var(--wu-avatar-width);
     display: grid;
     grid-template-columns: 1fr;
     pointer-events: none !important;
@@ -907,7 +1138,7 @@ Avatar component with optional slots on its circumference at 8 points.
       & > * {
         pointer-events: auto;
       }
-      transform: translate(calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-cos)), calc(var(--wu-avatar-size) * 0.5 * var(--wu-avatar-sin)));
+      transform: translate(calc(var(--wu-avatar-width) * 0.5 * var(--wu-avatar-cos)), calc(var(--wu-avatar-height) * 0.5 * var(--wu-avatar-sin)));
     }
   }
 	.avatar-slot-1 {
@@ -945,7 +1176,20 @@ Avatar component with optional slots on its circumference at 8 points.
 }
 
 @utility avatar-size-* {
-  --wu-avatar-size: calc(--var(--spacing) * --value([length]));
+  --wu-avatar-width: --value([length]);
+  --wu-avatar-height: --value([length]);
+  --wu-avatar-width: calc(var(--spacing) * --value(integer));
+  --wu-avatar-height: calc(var(--spacing) * --value(integer));
+}
+
+@utility avatar-w-* {
+  --wu-avatar-width: --value([length]);
+  --wu-avatar-width: calc(var(--spacing) * --value(integer));
+}
+
+@utility avatar-h-* {
+  --wu-avatar-height: --value([length]);
+  --wu-avatar-height: calc(var(--spacing) * --value(integer));
 }
 
 /* wu.component.badge
@@ -1011,14 +1255,54 @@ Styling for elements that provide the user to take an action.
 ```
 TODO: flesh out properly
 */
+@theme inline {
+  --wu-btn-padding: --spacing(2) --spacing(3);
+  --wu-btn-border-width: 0;
+  --wu-btn-border-radius: 0;
+  --wu-btn-bg-color: transparent;
+  --wu-btn-border-color: transparent;
+  --wu-btn-text-color: light-dark(var(--color-dark-1), var(--color-light-1));
+
+  --wu-btn-icon-padding: --spacing(1);
+  --wu-btn-icon-border-width: 0;
+  --wu-btn-icon-border-radius: calc(infinity * 1px);
+  --wu-btn-icon-bg-color: transparent;
+  --wu-btn-icon-border-color: transparent;
+  --wu-btn-icon-text-color: light-dark(var(--color-dark-1), var(--color-light-1));
+
+  --wu-fg-color: var(--wu-btn-text-color);
+}
+
 @layer components {
   .btn {
-    @apply whitespace-nowrap text-nowrap inline-flex justify-center items-center;
+    @apply whitespace-nowrap text-nowrap inline-flex justify-center items-center cursor-pointer;
     @apply hover:brightness-[1.15] focus:brightness-[1.15];
     @apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+    background-color: var(--wu-btn-bg-color);
+    border-color: var(--wu-btn-border-color);
+    color: var(--wu-btn-text-color);
+    padding: var(--wu-btn-padding);
+    border-width: var(--wu-btn-border-width);
+    border-radius: var(--wu-btn-border-radius);
 
     &:disabled {
-      opacity-50 cursor-not-allowed hover:brightness-100;
+      @apply opacity-50 cursor-not-allowed hover:brightness-100;
+    }
+  }
+
+  .btn-icon {
+    @apply whitespace-nowrap text-nowrap inline-flex justify-center items-center cursor-pointer aspect-square;
+    @apply hover:brightness-[1.15] focus:brightness-[1.15];
+    @apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+    background-color: var(--wu-btn-icon-bg-color);
+    border-color: var(--wu-btn-icon-border-color);
+    color: var(--wu-btn-icon-text-color);
+    padding: var(--wu-btn-icon-padding);
+    border-width: var(--wu-btn-icon-border-width);
+    border-radius: var(--wu-btn-icon-border-radius);
+
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed hover:brightness-100;
     }
   }
 }
@@ -1037,9 +1321,85 @@ Styling for elements that provide the user to take an action.
 ```
 TODO: flesh out properly
 */
+@theme inline {
+  --wu-btns-padding: 2px;
+  --wu-btns-border-radius: 0;
+  --wu-btns-border-width: 0;
+  --wu-btns-bg-color: transparent;
+  --wu-btns-border-color: transparent;
+}
+
 @layer components {
   .hbtns {
-    @apply flex flex-row;
+    @apply flex flex-row w-fit h-fit;
+    padding: var(--wu-btns-padding);
+    border-width: var(--wu-btns-border-width);
+    border-radius: var(--wu-btns-border-radius);
+    border-color: var(--wu-btns-border-color);
+    background-color: var(--wu-btns-bg-color);
+
+    &:has(> :first-child.btn-icon) {
+      --wu-btns-border-radius: var(--wu-btn-icon-border-radius);
+    }
+
+    &:has(> :first-child.btn) {
+      --wu-btns-border-radius: var(--wu-btn-border-radius);
+    }
+
+    & > .btn:not(:first-child, :last-child),
+    & > .btn-icon:not(:first-child, :last-child) {
+      border-radius: 0;
+      border-left-width: 0;
+      border-right-width: 0;
+    }
+
+    & > .btn:first-child,
+    & > .btn-icon:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    & > .btn:last-child,
+    & > .btn-icon:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .vbtns {
+    @apply flex flex-col w-fit h-fit;
+    padding: var(--wu-btns-padding);
+    border-width: var(--wu-btns-border-width);
+    border-radius: var(--wu-btns-border-radius);
+    border-color: var(--wu-btns-border-color);
+    background-color: var(--wu-btns-bg-color);
+
+    &:has(> :first-child.btn-icon) {
+      --wu-btns-border-radius: var(--wu-btn-icon-border-radius);
+    }
+
+    &:has(> :first-child.btn) {
+      --wu-btns-border-radius: var(--wu-btn-border-radius);
+    }
+
+    & > .btn:not(:first-child, :last-child),
+    & > .btn-icon:not(:first-child, :last-child) {
+      border-radius: 0;
+      border-top-width: 0;
+      border-bottom-width: 0;
+    }
+
+    & > .btn:first-child,
+    & > .btn-icon:first-child {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    & > .btn:last-child,
+    & > .btn-icon:last-child {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 }
 
@@ -1370,26 +1730,24 @@ Styling of form elements.
 <input type="text" class=move || ok.then_some("input-success").unwrap_or("input-error")/>
 ```
 */
-@layer components {
-  .input-success {
-    @apply bg-success-200 border-success-500 text-success-700 focus-within:ring-success-500 focus:ring;
-    &::placeholder {
-      @apply text-success-content;
-    }
+@utility input-success {
+  @apply bg-success-200 border-success-500 text-success-700 focus-within:ring-success-500 focus:ring;
+  &::placeholder {
+    @apply text-success-content;
   }
+}
 
-  .input-warning {
-    @apply bg-warning-200 border-warning-500 text-warning-700 focus-within:ring-warning-500 focus:ring;
-    &::placeholder {
-      @apply text-warning-content;
-    }
+@utility input-warning {
+  @apply bg-warning-200 border-warning-500 text-warning-700 focus-within:ring-warning-500 focus:ring;
+  &::placeholder {
+    @apply text-warning-content;
   }
+}
 
-  .input-error {
-    @apply bg-error-200 border-error-500 text-error-700 focus-within:ring-error-500 focus:ring;
-    &::placeholder {
-      @apply text-error-content;
-    }
+@utility input-error {
+  @apply bg-error-200 border-error-500 text-error-700 focus-within:ring-error-500 focus:ring;
+  &::placeholder {
+    @apply text-error-content;
   }
 }
 
@@ -1402,9 +1760,16 @@ Used to display keyboard shortcuts.
 <kbd class="kbd">Ctrl + L</kbd>
 ```
 */
+@theme inline {
+  --wu-kbd-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-kbd-border-color: light-dark(var(--color-light-3), var(--color-dark-3));
+}
+
 @layer components {
   .kbd {
     @apply inline-flex justify-center items-center border border-b-4 min-h-[2.2em] min-w-[2.2em] px-2 rounded-lg;
+    background-color: var(--wu-kbd-bg-color);
+    border-color: var(--wu-kbd-border-color);
   }
 }
 
@@ -1558,7 +1923,7 @@ Used to show the progress of a task or to show the passing of time.
     }
 
     &:before, &:after {
-      @apply absolute rounded-full content-[""];
+      @apply absolute rounded-full content-[""] z-10;
     }
 
     &:before {
@@ -1577,11 +1942,13 @@ Used to show the progress of a task or to show the passing of time.
 }
 
 @utility radial-size-* {
-  --wu-radial-size: calc(--var(--spacing) * --value([length]));
+  --wu-radial-size: --value([length]);
+  --wu-radial-size: calc(var(--spacing) * --value(integer));
 }
 
 @utility radial-thickness-* {
-  --wu-radial-thickness: calc(--var(--spacing) * --value([length]));
+  --wu-radial-thickness: --value([length]);
+  --wu-radial-thickness: calc(var(--spacing) * --value(integer));
 }
 
 /* wu.component.steps
@@ -1592,8 +1959,8 @@ Used to show a list of steps in a process.
 ## Horizontal steps
 ```html
 <ul class="hsteps">
-  <li class="step step-primary">Register</li>
-  <li class="step step-primary">Choose plan</li>
+  <li class="step step-active">Register</li>
+  <li class="step step-active">Choose plan</li>
   <li class="step">Purchase</li>
   <li class="step">Receive Product</li>
 </ul>
@@ -1602,13 +1969,22 @@ Used to show a list of steps in a process.
 ## Vertical steps
 ```html
 <ul class="vsteps">
-  <li class="step step-primary">Register</li>
-  <li class="step step-primary">Choose plan</li>
+  <li class="step step-active">Register</li>
+  <li class="step step-active">Choose plan</li>
   <li class="step">Purchase</li>
   <li class="step">Receive Product</li>
 </ul>
 ```
 */
+@theme inline {
+  --wu-steps-inactive-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
+  --wu-steps-inactive-fg-color: light-dark(var(--color-dark-2), var(--color-light-2));
+  --wu-steps-active-bg-color: var(--color-highlight);
+  --wu-steps-active-fg-color: var(--color-highlight-content);
+  --wu-steps-current-bg-color: var(--wu-steps-inactive-bg-color);
+  --wu-steps-current-fg-color: var(--wu-steps-inactive-fg-color);
+}
+
 @layer components {
   .hsteps {
     @apply inline-grid grid-flow-col overflow-hidden overflow-x-auto;
@@ -1622,6 +1998,10 @@ Used to show a list of steps in a process.
       &:before {
         @apply h-2 w-full top-0 col-start-1 row-start-1 transform translate-x-0 translate-y-0 rtl:translate-x-0;
         margin-inline-start: -100%;
+        border-block-width: 1px;
+      }
+      &:after {
+        border-width: 1px;
       }
     }
   }
@@ -1637,9 +2017,14 @@ Used to show a list of steps in a process.
       grid-template-rows: auto;
       min-height: 4rem;
       justify-items: start;
+      border-inline-width: 1px;
       &:before {
         @apply w-2 h-full top-0 col-start-1 row-start-1 transform -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2;
         margin-inline-start: 50%;
+        border-inline-width: 1px;
+      }
+      &:after {
+        border-width: 1px;
       }
     }
   }
@@ -1647,11 +2032,15 @@ Used to show a list of steps in a process.
   .step {
     &:before {
       content: "";
+      background-color: var(--wu-steps-inactive-bg-color);
+      border-color: --alpha(var(--wu-steps-inactive-fg-color) / 25%);
     }
     &:after {
       content: counter(step);
       counter-increment: step;
       z-index: 1;
+      background-color: var(--wu-steps-inactive-bg-color);
+      border-color: --alpha(var(--wu-steps-inactive-fg-color) / 25%);
       @apply relative col-start-1 row-start-1 grid size-8 place-items-center place-self-center rounded-full;
     }
     &:first-child:before {
@@ -1659,17 +2048,36 @@ Used to show a list of steps in a process.
     }
     &[data-content]:after {
       content: attr(data-content);
+      color: var(--wu-steps-inactive-fg-color);
     }
   }
-}
 
-@utility step-* {
-  &:before {
-    background-color: --value(--color-*);
+  .step-active {
+    &:before {
+      background-color: var(--wu-steps-active-bg-color);
+      border-color: --alpha(var(--wu-steps-active-fg-color) / 25%);
+    }
+    &:after {
+      background-color: var(--wu-steps-active-bg-color);
+      border-color: --alpha(var(--wu-steps-active-fg-color) / 25%);
+    }
+    &[data-content]:after {
+      color: var(--wu-steps-active-fg-color);
+    }
   }
 
-  &:after {
-    background-color: --value(--color-*);
+  .step-current {
+    &:before {
+      background-color: var(--wu-steps-current-bg-color);
+      border-color: --alpha(var(--wu-steps-current-fg-color) / 25%);
+    }
+    &:after {
+      background-color: var(--wu-steps-current-bg-color);
+      border-color: --alpha(var(--wu-steps-current-fg-color) / 25%);
+    }
+    &[data-content]:after {
+      color: var(--wu-steps-current-fg-color);
+    }
   }
 }
 
@@ -1831,10 +2239,13 @@ Shows an animation to indicate that something is loading.
 
 @layer components {
   .icon {
-    @apply pointer-events-none w-6 aspect-square inline-block bg-light-content dark:bg-dark-content;
+    @apply pointer-events-none w-6 aspect-square inline-block;
     mask-size: 100%;
     mask-repeat: no-repeat;
     mask-position: center;
+    text-decoration-color: var(--wu-fg-color);
+    color: var(--wu-fg-color);
+    background-color: var(--wu-fg-color);
   }
 }
 

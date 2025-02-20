@@ -20,6 +20,8 @@ web-sys = { version = "0.3", features = [
 	"EventTarget", 
 	"KeyboardEvent", 
 	"HtmlSelectElement",
+	"CustomEvent",
+	"CustomEventInit",
 ]}
 # leptos
 leptos = { version = "0.7" }

@@ -97,15 +97,15 @@ pub fn Drawer(
 					// Close button
 					<div class="overlay flex justify-end p-2">
 						<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
-							<span class="hidden desktop:kbd surface-2">"ESC"</span>
-							<span class="hidden desktop:block text-xs">"or"</span>
+							<div class="hidden desktop:inline-flex gap-2 vcenter">
+								<span class="kbd">"ESC"</span>
+								<span class="text-xs">"or"</span>
+							</div>
 							<button
-								class="flex center btn-circle p-2 highlight"
+								class="btn-icon size-8 highlight"
 								on:click=move |_| is_open.set(false)
 							>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-								</svg>
+								<span class="icon i-o-x-mark"/>
 							</button>
 						</div>
 					</div>

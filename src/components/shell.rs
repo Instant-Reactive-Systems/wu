@@ -36,6 +36,9 @@ pub fn Shell<M>(
 	/// Corresponds to the 'class' attribute of elements.
 	#[prop(default = "".into(), into)]
 	class: TextProp,
+	/// Corresponds to the 'class' attribute of elements.
+	#[prop(default = "".into(), into)]
+	center_class: TextProp,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -79,7 +82,7 @@ where
 			// Header
 			{move || main_cx.get().header.run()}
 			// center area
-			<div class="grow flex flex-row">
+			<div class=move || tw_merge!("grow flex flex-row", center_class.get())>
 				// LeftSidebar
 				{move || main_cx.get().left_sidebar.run()}
 				// Main content area
