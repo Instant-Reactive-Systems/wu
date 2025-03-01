@@ -20,13 +20,6 @@ pub type ReactiveTheme = ReadSignal<Theme>;
 
 /// Changes the theme given browser preference or explicit selection.
 pub fn change_theme(theme: Theme) {
-	let prev_theme = get_theme_from_local_storage();
-	if prev_theme == theme {
-		return;
-	}
-
-	set_theme_to_local_storage(theme);
-
 	let theme_str = serde_json::to_string(&theme).expect("should always be valid");
 	let custom_event_init = web_sys::CustomEventInit::new();
 	custom_event_init.set_detail(&theme_str.into());
@@ -61,29 +54,20 @@ pub fn provide_theme_context() {
 			},
 		};
 
+		set_theme_to_local_storage(new_theme);
 		theme.set(new_theme);
 	});
 	// handle external modification of localStorage
-	_ = leptos_use::use_event_listener(leptos_use::use_window(), leptos::ev::storage, move |ev| match ev.key() {
-		Some(key) => {
-			if key == THEME_NAME {
-				match ev.new_value() {
-					Some(new_value) => {
-						let new_theme: Theme = match serde_json::from_str(&new_value) {
-							Ok(theme) => theme,
-							Err(err) => {
-								log::error!("could not parse `{THEME_NAME}`: {err}");
-								return;
-							},
-						};
-						theme.set(new_theme);
-					},
-					None => theme.set(Theme::Auto),
-				}
+	leptos_use::use_interval_fn(
+		move || {
+			let storage_theme = get_theme_from_local_storage();
+			let prev_theme = theme.get_untracked();
+			if storage_theme != prev_theme {
+				theme.set(storage_theme);
 			}
 		},
-		None => theme.set(Theme::Auto),
-	});
+		1000,
+	);
 
 	// apply the class document-wide
 	Effect::new(move |_| {

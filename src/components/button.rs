@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 
-/// A wrapper around a `<select>` and `<option>` that automatically
-/// interactivity automatically.
+/// A wrapper around a `<button>` that automatically
+/// handles actions.
 ///
 /// # Example
 /// ```rust,ignore
@@ -32,17 +32,17 @@ pub fn ActionButton<I, O, S>(
 	pending_view: ViewFn,
 	/// View to display during finished state.
 	#[prop(optional, into)]
-	finished_view: ViewFn,
+	finished_view: crate::utils::ViewFnWithArgs<O>,
 	/// Logic to run after the finished state.
-	#[prop(default = (|| ()).into(), into)]
-	on_finish: Callback<(), ()>,
+	#[prop(default=(|_: O| ()).into(), into)]
+	on_finish: Callback<(O,), ()>,
 	/// How long the finished state will last for.
 	#[prop(into)]
 	finished_lasts_for: f64,
 ) -> impl IntoView
 where
 	I: Send + Sync + 'static,
-	O: Send + Sync + 'static,
+	O: Clone + Send + Sync + 'static,
 	S: Storage<ArcAction<I, O>> + 'static,
 {
 	// types
@@ -57,7 +57,7 @@ where
 	let state = RwSignal::new(State::Idle);
 	let leptos_use::UseTimeoutFnReturn { start, stop, is_pending, .. } = leptos_use::use_timeout_fn(
 		move |_| {
-			on_finish.run(());
+			on_finish.run((action.value().get_untracked().expect("should be Some"),));
 			state.update(move |state| *state = State::Idle);
 		},
 		finished_lasts_for,
@@ -87,6 +87,8 @@ where
 		false,
 	);
 
+	Effect::new(move |_| log::info!("button state: {:?}", state.get()));
+
 	view! {
 		<button
 			on:click=move |_| _ = action.dispatch(input.run(()))
@@ -95,7 +97,7 @@ where
 			{move || match state.get() {
 				State::Idle => idle_view.run(),
 				State::Pending => pending_view.run(),
-				State::Finished => finished_view.run(),
+				State::Finished => finished_view.run(action.value().get_untracked().expect("should be Some")),
 			}}
 		</button>
 	}

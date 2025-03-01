@@ -169,12 +169,12 @@ where
 				</div>
 				<div class=move || tw_merge!("overlay flex items-end justify-end opacity-75", dbg_overlay_class.get())>
 					// if mobile
-					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border surface-2">
+					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
 					</button>
 					// if >mobile
-					<div class="hidden desktop:horizontal vcenter gap-2 py-2 px-4 rounded-lg border surface-2">
+					<div class="hidden desktop:horizontal vcenter gap-2 py-2 px-4 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
 						<span clasS="hidden desktop:block text-xl font-bold">"-"</span>
@@ -184,23 +184,23 @@ where
 				</div>
 			</wu-debug-console-watermark>
 			<wu-debug-console class="contents">
-				<Modal class="vertical gap-2 surface-1 border shadow-lg rounded-md" toggle=toggle_debug_console>
+				<Modal class="vertical gap-2 border bg-surface-1 border-surface-2 shadow-lg rounded-md" toggle=toggle_debug_console>
 					<h1 class="text-2xl font-bold text-center">
 						"Debugger"
 					</h1>
-					<div class="hdivider divider-bg-2">
+					<div class="hdivider divider-surface-3">
 						<span class="icon i-o-console"/>
 					</div>
 					<div class="vertical w-full desktop:w-[600px] gap-2">
 						// Text buffer
-						<div class="grow surface-bg-2 rounded-md">
+						<div class="grow border bg-surface-2 border-surface-3 rounded-md">
 							<ul class="flex flex-col-reverse w-full h-full min-h-[250px] max-h-[250px] desktop:min-h-[400px] desktop:max-h-[400px] overflow-y-auto">
 								<For
 									each=move || cmd_history.get()
 									key=move |cmd| cmd.id
 									let:cmd
 								>
-									<li class="w-full flex flex-col font-mono border-t surface-border-3 px-2 py-2">
+									<li class="w-full flex flex-col font-mono border-t border-surface-3 px-2 py-2">
 										<span class="font-semibold"> "> " {cmd.command} </span>
 										<span> {move || cmd.output.run()} </span>
 									</li>
@@ -210,7 +210,7 @@ where
 						// Input
 						<div class="shrink flex flex-row vcenter">
 							<input
-								class="grow min-h-12 surface-bg-2 surface-2 border rounded-l-md"
+								class="grow min-h-12 border bg-surface-2 border-surface-3 rounded-l-md"
 								type="text"
 								placeholder="type a command"
 								on:input=move |ev| cmd_text.set(event_target_value(&ev))

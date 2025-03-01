@@ -10,70 +10,48 @@ html.dark {
   color-scheme: dark;
 }
 
-@theme {
+@theme inline {
 	/* wu.theme */
 	/* surface */
-	--color-surface-50: oklch(0.9257 0.011 274.89);
-	--color-surface-100: oklch(0.9015 0.015 273.83);
-	--color-surface-200: oklch(0.8769 0.018 272.29);
-	--color-surface-300: oklch(0.7995 0.031 271.01);
-	--color-surface-400: oklch(0.6439 0.057 270.73);
-	--color-surface-500: oklch(0.4780 0.088 269.38);
-	--color-surface-600: oklch(0.4448 0.081 269.72);
-	--color-surface-700: oklch(0.3939 0.068 269.1);
-	--color-surface-800: oklch(0.3395 0.058 269.92);
-	--color-surface-900: oklch(0.2986 0.049 270.23);
-	--color-surface-content: var(--color-white);
-	--color-light-1: var(--color-surface-100);
-	--color-light-2: var(--color-surface-200);
-	--color-light-3: var(--color-surface-300);
-	--color-light-content: var(--color-surface-900);
-	--color-dark-1: var(--color-surface-900);
-	--color-dark-2: var(--color-surface-800);
-	--color-dark-3: var(--color-surface-700);
-	--color-dark-content: var(--color-surface-100);
-	--color-fg: light-dark(var(--color-dark-1), var(--color-light-1));
-	--color-bg-1: light-dark(var(--color-light-1), var(--color-dark-1));
-	--color-bg-2: light-dark(var(--color-light-2), var(--color-dark-2));
-	--color-bg-3: light-dark(var(--color-light-3), var(--color-dark-3));
+	--color-light-1: oklch(0.9015 0.015 273.83);
+	--color-light-2: oklch(0.8769 0.018 272.29);
+	--color-light-3: oklch(0.7995 0.031 271.01);
+	--color-light-4: oklch(0.6439 0.057 270.73);
+	--color-dark-1: oklch(0.2986 0.049 270.23);
+	--color-dark-2: oklch(0.3395 0.058 269.92);
+	--color-dark-3: oklch(0.3939 0.068 269.10);
+	--color-dark-4: oklch(0.4448 0.081 269.72);
+	--color-content-light-emph: oklch(0.1774 0.000 269.52);
+	--color-content-light-noemph: --alpha(var(--color-content-light-emph) / 75%);
+	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 50%);
+	--color-content-dark-emph: oklch(0.9015 0.015 273.83);
+	--color-content-dark-noemph: --alpha(var(--color-content-dark-emph) / 75%);
+	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 50%);
+	--color-content-emph: light-dark(var(--color-content-light-emph), var(--color-content-dark-emph));
+	--color-content-noemph: light-dark(var(--color-content-light-noemph), var(--color-content-dark-noemph));
+	--color-content-sideinfo: light-dark(var(--color-content-light-sideinfo), var(--color-content-dark-sideinfo));
+	--color-surface-1: light-dark(var(--color-light-1), var(--color-dark-1));
+	--color-surface-2: light-dark(var(--color-light-2), var(--color-dark-2));
+	--color-surface-3: light-dark(var(--color-light-3), var(--color-dark-3));
+	--color-surface-4: light-dark(var(--color-light-4), var(--color-dark-4));
+	--color-surface-content: var(--color-content-emph);
 	/* primary */
-	--color-primary-50: oklch(0.9487 0.03 172.86);
-	--color-primary-100: oklch(0.9307 0.038 173.93);
-	--color-primary-200: oklch(0.9149 0.048 173.42);
-	--color-primary-300: oklch(0.8643 0.075 172.32);
-	--color-primary-400: oklch(0.7753 0.123 168.14);
-	--color-primary-500: oklch(0.6984 0.15 162.22);
-	--color-primary-600: oklch(0.6451 0.138 162.43);
-	--color-primary-700: oklch(0.5671 0.121 162.6);
-	--color-primary-800: oklch(0.4833 0.102 162.59);
-	--color-primary-900: oklch(0.4182 0.087 163.43);
-	--color-primary-content: var(--color-light-content);
-	--color-highlight: var(--color-primary-500); /* TODO: rework */
-	--color-highlight-content: var(--color-dark-1); /* TODO: rework */
+	--color-primary: oklch(0.6984 0.150 162.22);
+	--color-primary-darker: oklch(0.5671 0.121 162.60);
+	--color-primary-darkest: oklch(0.4182 0.087 163.43);
+	--color-primary-content: var(--color-content-light-emph);
+	--color-highlight: var(--color-primary);
+	--color-highlight-content: var(--color-content-light-emph);
 	/* secondary */
-	--color-secondary-50: oklch(0.9246 0.032 289.58);
-	--color-secondary-100: oklch(0.8999 0.044 288.36);
-	--color-secondary-200: oklch(0.8751 0.055 287.5);
-	--color-secondary-300: oklch(0.7991 0.09 287.03);
-	--color-secondary-400: oklch(0.6496 0.162 283.37);
-	--color-secondary-500: oklch(0.5106 0.23 276.97);
-	--color-secondary-600: oklch(0.4735 0.211 277.11);
-	--color-secondary-700: oklch(0.4178 0.182 277.24);
-	--color-secondary-800: oklch(0.3576 0.152 277.76);
-	--color-secondary-900: oklch(0.3133 0.129 278.71);
-	--color-secondary-content: var(--color-dark-content);
+	--color-secondary: oklch(0.5106 0.230 276.97);
+	--color-secondary-darker: oklch(0.4178 0.182 277.24);
+	--color-secondary-darkest: oklch(0.3133 0.129 278.71);
+	--color-secondary-content: var(--color-content-dark-emph);
 	/* tertiary */
-	--color-tertiary-50: oklch(0.9473 0.028 225.69);
-	--color-tertiary-100: oklch(0.9287 0.037 227.59);
-	--color-tertiary-200: oklch(0.9123 0.046 226.73);
-	--color-tertiary-300: oklch(0.8598 0.072 227.6);
-	--color-tertiary-400: oklch(0.7649 0.119 230.74);
-	--color-tertiary-500: oklch(0.6847 0.148 237.32);
-	--color-tertiary-600: oklch(0.6349 0.136 236.99);
-	--color-tertiary-700: oklch(0.5556 0.118 236.77);
-	--color-tertiary-800: oklch(0.4732 0.1 236.38);
-	--color-tertiary-900: oklch(0.4113 0.085 235.45);
-	--color-tertiary-content: var(--color-light-content);
+	--color-tertiary: oklch(0.6847 0.148 237.32);
+	--color-tertiary-darker: oklch(0.5556 0.118 236.77);
+	--color-tertiary-darkest: oklch(0.4113 0.085 235.45);
+	--color-tertiary-content: var(--color-content-dark-emph);
 	/* success */
 	--color-success-50: oklch(0.9615 0.037 123.68);
 	--color-success-100: oklch(0.9494 0.051 125.35);
@@ -85,7 +63,7 @@ html.dark {
 	--color-success-700: oklch(0.6215 0.164 130.64);
 	--color-success-800: oklch(0.5280 0.138 130.38);
 	--color-success-900: oklch(0.4593 0.118 130.07);
-	--color-success-content: var(--color-dark-content);
+	--color-success-content: var(--color-content-light-emph);
 	/* warning */
 	--color-warning-50: oklch(0.9666 0.035 92.82);
 	--color-warning-100: oklch(0.9551 0.046 92.18);
@@ -97,7 +75,7 @@ html.dark {
 	--color-warning-700: oklch(0.6429 0.13 86.07);
 	--color-warning-800: oklch(0.5458 0.11 86.87);
 	--color-warning-900: oklch(0.4751 0.096 87.46);
-	--color-warning-content: var(--color-light-content);
+	--color-warning-content: var(--color-content-light-emph);
 	/* error */
 	--color-error-50: oklch(0.9242 0.035 348.04);
 	--color-error-100: oklch(0.8974 0.048 345.77);
@@ -109,15 +87,10 @@ html.dark {
 	--color-error-700: oklch(0.4642 0.178 357.85);
 	--color-error-800: oklch(0.3956 0.15 357.41);
 	--color-error-900: oklch(0.3445 0.129 356.99);
-	--color-error-content: var(--color-dark-content);
+	--color-error-content: var(--color-content-dark-emph);
 
 	/* wu.screens */
-	--breakpoint-tablet: 768px;
-	--breakpoint-desktop: 1280px;
-	--breakpoint-wide: 2560px;
-	--container-tablet: 768px;
-	--container-desktop: 1280px;
-	--container-wide: 2560px;
+	--breakpoint-*: initial;
 
 	/* wu.shadow */
 	--shadow-left: -1px 0 3px 0 rgba(0 0 0 / 0.1), -1px 0 2px -1px rgb(0 0 0 / 0.1);
@@ -138,11 +111,58 @@ html.dark {
 	--shadow-top-lg: 0 -10px 15px -3px rgb(0 0 0 / 0.1), 0 -4px 6px -4px rgb(0 0 0 / 0.1);
 	--shadow-top-xl: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
 	--shadow-top-2xl: 0 -25px 50px -12px rgb(0 0 0 / 0.25);
-
-	/* wu.generic-colors */
-	--wu-fg-color: light-dark(var(--color-dark-1), var(--color-light-1));
-	--wu-bg-color: light-dark(var(--color-light-1), var(--color-dark-1));
 }
+
+/* wu.variant.breakpoints
+A custom extension of breakpoints so that we support different breakpoint 
+widths based on device orientation.
+*/
+@custom-variant tablet {
+  @media (orientation: portrait) and (width >= 768px) {
+    @slot;
+  }
+
+  @media (orientation: landscape) and (width >= 1080px) {
+    @slot;
+  }
+}
+
+@custom-variant desktop {
+  @media (orientation: portrait) and (width >= 1280px) {
+    @slot;
+  }
+
+  @media (orientation: landscape) and (width >= 1280px) {
+    @slot;
+  }
+}
+
+@utility container {
+  width: 100%;
+
+  /* tablet */
+  @media (orientation: portrait) and (width >= 768px) {
+    max-width: 768px;
+  }
+
+  @media (orientation: landscape) and (width >= 1080px) {
+    max-width: 1080px;
+  }
+
+  /* desktop */
+  @media (orientation: portrait) and (width >= 1080px) {
+    max-width: 1080px;
+  }
+
+  @media (orientation: landscape) and (width >= 1280px) {
+    max-width: 1280px;
+  }
+}
+
+/* wu.variant.hocus
+Applies a class on hover, focus or focus-within.
+*/
+@custom-variant hocus (&:is(:hover, :focus, :focus-within));
 
 /* wu.preflight
 Additional preflight styles.
@@ -169,20 +189,13 @@ Additional preflight styles.
 		filter: blur(var(--blur-sm));
 		backdrop-filter: blur(var(--blur-sm));
 		background-color: --alpha(var(--color-black) / 50%);
+		background-size: 120% 120%;
+		background-position: center;
 	}
 
-	*, .default {
-		color: var(--wu-fg-color);
-		text-decoration-color: var(--wu-fg-color);
-		--wu-divider-color: var(--wu-fg-color);
-	}
-
-	.filled {
-		fill: var(--wu-fg-color);
-	}
-
-	.stroked {
-		stroke: var(--wu-fg-color);
+	* {
+		color: var(--color-content-emph);
+		text-decoration-color: var(--color-content-emph);
 	}
 
 	/* resets */
@@ -197,12 +210,25 @@ Additional preflight styles.
 Custom styling for input form elements.
 */
 @theme inline {
-  --wu-forms-input-padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
-  --wu-forms-input-border-width: 1px;
-  --wu-forms-input-border-radius: var(--radius-md);
-  --wu-forms-input-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-forms-input-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
-  --wu-forms-input-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
+  --wu-forms-input-padding-t: --spacing(1);
+  --wu-forms-input-padding-r: --spacing(3);
+  --wu-forms-input-padding-b: --spacing(1);
+  --wu-forms-input-padding-l: --spacing(3);
+  --wu-forms-input-padding: var(--wu-forms-input-padding-t) var(--wu-forms-input-padding-r) var(--wu-forms-input-padding-b) var(--wu-forms-input-padding-l);
+  --wu-forms-input-border-width-t: 1px;
+  --wu-forms-input-border-width-r: 1px;
+  --wu-forms-input-border-width-b: 1px;
+  --wu-forms-input-border-width-l: 1px;
+  --wu-forms-input-border-width: var(--wu-forms-input-border-width-t) var(--wu-forms-input-border-width-r) var(--wu-forms-input-border-width-b) var(--wu-forms-input-border-width-l);
+  --wu-forms-input-border-radius-tl: var(--radius-md);
+  --wu-forms-input-border-radius-tr: var(--radius-md);
+  --wu-forms-input-border-radius-br: var(--radius-md);
+  --wu-forms-input-border-radius-bl: var(--radius-md);
+  --wu-forms-input-border-radius: var(--wu-forms-input-border-radius-tl) var(--wu-forms-input-border-radius-tr) var(--wu-forms-input-border-radius-br) var(--wu-forms-input-border-radius-bl);
+  --wu-forms-input-bg-color: var(--color-surface-2);
+  --wu-forms-input-border-color: var(--color-surface-3);
+  --wu-forms-input-text-color: var(--color-content-emph);
+  --wu-forms-input-placeholder-color: var(--color-content-noemph);
 }
 
 @layer base {
@@ -215,32 +241,48 @@ Custom styling for input form elements.
 
 	input::placeholder,
 	textarea::placeholder {
-		color: var(--wu-forms-input-text-color);
+		color: var(--wu-forms-input-placeholder-color);
 	}
 
 	input,
 	textarea {
-		@apply outline-0 w-full transition duration-100;
-		@apply brightness-90 focus:brightness-95 hover:brightness-95 focus-within:brightness-95;
-		@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+	  outline-width: 0;
+	  width: 100%;
+	  filter: brightness(95%);
 		padding: var(--wu-forms-input-padding);
 		border-width: var(--wu-forms-input-border-width);
 		border-radius: var(--wu-forms-input-border-radius);
 		background-color: var(--wu-forms-input-bg-color);
 		border-color: var(--wu-forms-input-border-color);
 		color: var(--wu-forms-input-text-color);
+
+		@variant hocus {
+  	  filter: brightness(98%);
+		}
+
+	  --tw-inset-ring-shadow: 0 0 0 0;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+		@variant focus-within {
+  	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+		  --tw-ring-color: var(--color-highlight);
+		}
+
+		&:user-invalid {
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+		}
 	}
 
 
 	/* states */
 	input[readonly],
 	textarea[readonly] {
-		@apply border-0 cursor-not-allowed hover:brightness-100;
+	  cursor: not-allowed;
 	}
 
 	input:disabled,
 	textarea:disabled {
-		@apply opacity-50 cursor-not-allowed hover:brightness-100;
+	  opacity: 50%;
+	  cursor: not-allowed;
 	}
 
 	/* webkit search input cancel button */
@@ -270,11 +312,19 @@ Custom styling for input form elements.
 Custom styling for the progress form element.
 */
 @theme inline {
-  --wu-forms-progress-border-width: --spacing(1);
-  --wu-forms-progress-border-radius: var(--radius-md);
-  --wu-forms-progress-border-color: light-dark(var(--color-dark-3), var(--color-light-3));
-  --wu-forms-progress-bar-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-forms-progress-fill-color: light-dark(var(--color-dark-3), var(--color-light-3));
+  --wu-forms-progress-border-width-t: 1px;
+  --wu-forms-progress-border-width-r: 1px;
+  --wu-forms-progress-border-width-b: 1px;
+  --wu-forms-progress-border-width-l: 1px;
+  --wu-forms-progress-border-width: var(--wu-forms-progress-border-width-t) var(--wu-forms-progress-border-width-r) var(--wu-forms-progress-border-width-b) var(--wu-forms-progress-border-width-l);
+  --wu-forms-progress-border-radius-tl: var(--radius-md);
+  --wu-forms-progress-border-radius-tr: var(--radius-md);
+  --wu-forms-progress-border-radius-br: var(--radius-md);
+  --wu-forms-progress-border-radius-bl: var(--radius-md);
+  --wu-forms-progress-border-radius: var(--wu-forms-progress-border-radius-tl) var(--wu-forms-progress-border-radius-tr) var(--wu-forms-progress-border-radius-br) var(--wu-forms-progress-border-radius-bl);
+  --wu-forms-progress-border-color: var(--color-surface-3);
+  --wu-forms-progress-bar-color: var(--color-surface-2);
+  --wu-forms-progress-fill-color: var(--color-surface-3);
 }
 
 @layer base {
@@ -323,48 +373,90 @@ Custom styling for the range input element.
 Custom styling for the select form element.
 */
 @theme inline {
-  --wu-forms-select-padding: --spacing(2) --spacing(8) --spacing(2) --spacing(2);
-  --wu-forms-select-border-width: 1px;
-  --wu-forms-select-border-radius: var(--radius-md);
-  --wu-forms-select-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-forms-select-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
-  --wu-forms-select-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
+  --wu-forms-select-padding-t: --spacing(2);
+  --wu-forms-select-padding-r: --spacing(8);
+  --wu-forms-select-padding-b: --spacing(2);
+  --wu-forms-select-padding-l: --spacing(2);
+  --wu-forms-select-padding: var(--wu-forms-select-padding-t) var(--wu-forms-select-padding-r) var(--wu-forms-select-padding-b) var(--wu-forms-select-padding-l);
+  --wu-forms-select-border-width-t: 1px;
+  --wu-forms-select-border-width-r: 1px;
+  --wu-forms-select-border-width-b: 1px;
+  --wu-forms-select-border-width-l: 1px;
+  --wu-forms-select-border-width: var(--wu-forms-select-border-width-t) var(--wu-forms-select-border-width-r) var(--wu-forms-select-border-width-b) var(--wu-forms-select-border-width-l);
+  --wu-forms-select-border-radius-tl: var(--radius-md);
+  --wu-forms-select-border-radius-tr: var(--radius-md);
+  --wu-forms-select-border-radius-br: var(--radius-md);
+  --wu-forms-select-border-radius-bl: var(--radius-md);
+  --wu-forms-select-border-radius: var(--wu-forms-select-border-radius-tl) var(--wu-forms-select-border-radius-tr) var(--wu-forms-select-border-radius-br) var(--wu-forms-select-border-radius-bl);
+  --wu-forms-select-bg-color: var(--color-surface-2);
+  --wu-forms-select-border-color: var(--color-surface-3);
+  --wu-forms-select-text-color: var(--color-surface-content);
 
-  --wu-forms-select-option-padding: --spacing(2) --spacing(4);
-  --wu-forms-select-option-border-width: 1px;
-  --wu-forms-select-option-border-radius: var(--radius-md);
-  --wu-forms-select-option-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-forms-select-option-border-color: --alpha(light-dark(var(--color-dark-3), var(--color-light-3)) / 50%);
-  --wu-forms-select-option-text-color: light-dark(var(--color-dark-3), var(--color-light-3));
+  --wu-forms-select-option-padding-t: --spacing(2);
+  --wu-forms-select-option-padding-r: --spacing(4);
+  --wu-forms-select-option-padding-b: --spacing(2);
+  --wu-forms-select-option-padding-l: --spacing(4);
+  --wu-forms-select-option-padding: var(--wu-forms-select-option-padding-t) var(--wu-forms-select-option-padding-r) var(--wu-forms-select-option-padding-b) var(--wu-forms-select-option-padding-l);
+  --wu-forms-select-option-border-width-t: 1px;
+  --wu-forms-select-option-border-width-r: 1px;
+  --wu-forms-select-option-border-width-b: 1px;
+  --wu-forms-select-option-border-width-l: 1px;
+  --wu-forms-select-option-border-width: var(--wu-forms-select-option-border-width-t) var(--wu-forms-select-option-border-width-r) var(--wu-forms-select-option-border-width-b) var(--wu-forms-select-option-border-width-l);
+  --wu-forms-select-option-border-radius-tl: var(--radius-md);
+  --wu-forms-select-option-border-radius-tr: var(--radius-md);
+  --wu-forms-select-option-border-radius-br: var(--radius-md);
+  --wu-forms-select-option-border-radius-bl: var(--radius-md);
+  --wu-forms-select-option-border-radius: var(--wu-forms-select-option-border-radius-tl) var(--wu-forms-select-option-border-radius-tr) var(--wu-forms-select-option-border-radius-br) var(--wu-forms-select-option-border-radius-bl);
+  --wu-forms-select-option-bg-color: var(--color-surface-2);
+  --wu-forms-select-option-border-color: var(--color-surface-3);
+  --wu-forms-select-option-text-color: var(--color-surface-content);
 }
 
 @layer base {	
 	select {
-		@apply outline-0 w-full transition duration-100 space-y-1;
-		@apply brightness-90 focus:brightness-95 hover:brightness-95 focus-within:brightness-95;
-		@apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+	  outline-width: 0;
+	  width: 100%;
+	  filter: brightness(95%);
 		padding: var(--wu-forms-select-padding);
 		border-width: var(--wu-forms-select-border-width);
 		border-radius: var(--wu-forms-select-border-radius);
 		background-color: var(--wu-forms-select-bg-color);
 		border-color: var(--wu-forms-select-border-color);
 		color: var(--wu-forms-select-text-color);
+
+		@variant hocus {
+  	  filter: brightness(98%);
+		}
+
+	  --tw-inset-ring-shadow: 0 0 0 0;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+		@variant focus-within {
+  	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+		  --tw-ring-color: var(--color-highlight);
+		}
 	}
+
 	select[size] {
 		--wu-select-bg-color: transparent;
 	}
+
 	select optgroup {
-		@apply space-y-1 font-bold;
+	  font-weight: 700;
 	}
+
 	select optgroup option {
-		@apply ml-0 pl-0;
+	  margin-left: 0;
+	  padding-left: 0;
 	}
+
 	select optgroup option:first-of-type {
-		@apply mt-3;
+	  margin-top: --spacing(3);
 	}
+
 	select optgroup option:last-child {
-		@apply mb-3;
+	  margin-bottom: --spacing(3);
 	}
+
 	select option {
 		padding: var(--wu-forms-select-option-padding);
 		border-width: var(--wu-forms-select-option-border-width);
@@ -374,16 +466,20 @@ Custom styling for the select form element.
 		color: var(--wu-forms-select-option-text-color);
 	  cursor: pointer;
 	}
+
 	select option:checked {
 		/* https://stackoverflow.com/questions/50618602/change-color-of-selected-option-in-select-multiple */
 		background: rgb(var(--color-highlight)) linear-gradient(0deg, rgb(var(--color-highlight)) 0%, rgb(var(--color-highlight)) 100%);
 		color: var(--color-highlight-content);
 	}
+
 	select:disabled {
-		@apply opacity-50 cursor-not-allowed hover:brightness-100;
+	  opacity: 50%;
+	  cursor: not-allowed;
 	}
+
 	select[readonly] {
-		@apply border-0 cursor-not-allowed hover:brightness-100;
+	  cursor: not-allowed;
 	}
 }
 
@@ -402,8 +498,6 @@ Custom styling for the radio and checkbox element.
 	  height: var(--wu-forms-radio-size);
 		accent-color: var(--wu-forms-radio-accent-color);
 		cursor: pointer;
-
-		@apply ring-0 brightness-80 focus:brightness-100 hover:brightness-100;
 	}
 }
 
@@ -413,24 +507,26 @@ Custom styling for a color picker element.
 @layer base {
 	/* https://stackoverflow.com/questions/11167281/webkit-css-to-control-the-box-around-the-color-in-an-inputtype-color */
 	[type='color'] {
-		@apply w-10 h-10 overflow-hidden cursor-pointer;
+	  width: --spacing(10);
+	  height: --spacing(10);
+	  overflow: hidden;
+	  cursor: pointer;
 		-webkit-appearance: none; /* WebKit Only */
 	}
 	[type='color']::-webkit-color-swatch-wrapper {
-		@apply p-0;
+	  padding: 0;
 	}
 	[type='color']::-webkit-color-swatch {
-		@apply border-none hover:brightness-110;
+	  border-width: 0;
+
+	  @variant hover {
+	    filter: brightness(110%);
+	  }
 	}
 	[type='color']::-moz-color-swatch {
-		@apply border-none;
+	  border-width: 0;
 	}
 }
-
-/* wu.variant.hocus
-Applies a class on hover, focus or focus-within.
-*/
-@custom-variant hocus (&:is(:hover, :focus, :focus-within));
 
 /* wu.utility.anchor
 Positions an element at the sides of a parent element.
@@ -633,7 +729,7 @@ Utilities for covering the full area of the parent.                             
   height: 100%;
 }
 
-/* wu.utility.divider
+/* wu.component.divider
 Used to separate content vertically or horizontally.
 
 # Usage
@@ -648,41 +744,45 @@ Used to separate content vertically or horizontally.
 <div class="hdivider"/>
 ```
 */
-@utility hdivider {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-self: stretch;
+@layer components {
+  .hdivider {
+    height: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: stretch;
 
-  &:before, &:after {
-    content: "";
-    background-color: var(--wu-divider-color);
-    flex-grow: 1;
-    width: 100%;
-    height: 1px;
+    &:before, &:after {
+      content: "";
+      background-color: var(--wu-divider-color);
+      flex-grow: 1;
+      width: 100%;
+      height: 1px;
+    }
+
+    &:not(:empty) {
+      gap: --spacing(2);
+    }
   }
+  
+  .vdivider {
+    width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
 
-  &:not(:empty) {
-    gap: --spacing(2);
-  }
-}
+    &:before, &:after {
+      content: "";
+      background-color: var(--wu-divider-color);
+      flex-grow: 1;
+      width: 1px;
+      height: 100%;
+    }
 
-@utility vdivider {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: stretch;
-
-  &:before, &:after {
-    content: "";
-    background-color: var(--wu-divider-color);
-    flex-grow: 1;
-    width: 1px;
-    height: 100%;
-  }
-
-  &:not(:empty) {
-    gap: --spacing(2);
+    &:not(:empty) {
+      gap: --spacing(2);
+    }
   }
 }
 
@@ -692,7 +792,7 @@ Used to separate content vertically or horizontally.
 
 /* wu.utility.ghost
 Styling for components with a strong border and weak body.
-
+ relative after:absolute after:top-1/4 after:h-[20px] after:bg-center after:w-3/4 after:bg-radial after:from-bg-3/50 after:from-5% after:to-70% after:to-transparent
 # Usage
 
 ```html
@@ -731,8 +831,8 @@ A button style that highlights the surrounding area on hover.
 ```
 */
 @utility highlight {
-  --wu-highlight-border-color: --alpha(var(--wu-fg-color) / 10%);
-  --wu-highlight-bg-color: --alpha(var(--wu-fg-color) / 20%);
+  --wu-highlight-border-color: --alpha(var(--color-surface-content) / 20%);
+  --wu-highlight-bg-color: --alpha(var(--color-surface-content) / 10%);
   border-width: 1px;
   box-sizing: border-box;
   --wu-divider-color: var(--wu-highlight-border-color);
@@ -749,18 +849,18 @@ A button style that highlights the surrounding area on hover.
 }
 
 @utility highlight-bright {
-  filter: brightness(90%);
+  filter: brightness(95%);
   
   @variant hover {
-    filter: brightness(100%);
+    filter: brightness(98%);
   }
 
   @variant focus-within {
-    filter: brightness(100%);
+    filter: brightness(98%);
   }
 }
 
-/* wu.utility.link
+/* wu.component.link
 Fancy styling for links.
 
 # Usage
@@ -769,30 +869,34 @@ Fancy styling for links.
 <a href="#" class="link link-primary">{link}</a>
 ```
 */
-@utility link {
-  cursor: pointer;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 1px;
-  text-decoration-line: none;
-  text-decoration-color: currentColor;
+@layer components {
+  .link {
+    cursor: pointer;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 1px;
+    text-decoration-line: none;
+    text-decoration-color: currentColor;
+    filter: brightness(95%);
 
-  @variant hover {
-    filter: brightness(115%);
-    text-decoration-line: underline;
-  }
+    @variant hover {
+      filter: brightness(98%);
+      text-decoration-line: underline;
+    }
 
-  @variant focus {
-    filter: brightness(115%);
-    text-decoration-line: underline;
-  }
+    @variant focus {
+      filter: brightness(98%);
+      text-decoration-line: underline;
+    }
 
-  &[aria-current="page"] {
-    filter: brightness(115%);
-    text-decoration-line: underline;
+    &[aria-current="page"] {
+      filter: brightness(98%);
+      text-decoration-line: underline;
+    }
   }
 }
 
 @utility link-* {
+  color: --value(--color-*);
   text-decoration-color: --value(--color-*);
 }
 
@@ -853,7 +957,7 @@ Styles the colors for a scrollbar cross-browser.
   scrollbar-color: var(--wu-scrollbar-thumb) var(--wu-scrollbar-track);
 }
 
-/* wu.utility.stack
+/* wu.component.stack
 Visually puts elements on top of each other.
 
 # Usage
@@ -866,78 +970,34 @@ Visually puts elements on top of each other.
 </div>
 ```
 */
-@utility stack {
-  display: inline-grid;
-  place-items: center;
-  align-items: flex-end;
+@layer components {
+  .stack {
+    display: inline-grid;
+    place-items: center;
+    align-items: flex-end;
 
-  & > * {
-    grid-column-start: 1;
-    grid-row-start: 1;
-    width: 100%;
-    z-index: 1;
-    opacity: 60%;
-    transform: translateY(10%) scale(0.9);
+    & > * {
+      grid-column-start: 1;
+      grid-row-start: 1;
+      width: 100%;
+      z-index: 1;
+      opacity: 60%;
+      transform: translateY(10%) scale(0.9);
+    }
+
+    & > *:nth-child(2) {
+      z-index: 2;
+      opacity: 80%;
+      transform: translateY(5%) scale(0.95);
+    }
+
+    & > *:nth-child(1) {
+      z-index: 3;
+      opacity: 100%;
+      transform: translateY(0) scale(1);
+    }
   }
-
-  & > *:nth-child(2) {
-    z-index: 2;
-    opacity: 80%;
-    transform: translateY(5%) scale(0.95);
-  }
-
-  & > *:nth-child(1) {
-    z-index: 3;
-    opacity: 100%;
-    transform: translateY(0) scale(1);
-  }
 }
-
-/* wu.utility.surface
-Styling for surfaces.
-
-# Usage
-
-```html
-<div class="surface-1">{...}</div>
-```
-*/
-@utility surface-bg-1 {
-  @apply bg-light-1 dark:bg-dark-1;
-}
-
-@utility surface-bg-2 {
-  @apply bg-light-2 dark:bg-dark-2;
-}
-
-@utility surface-bg-3 {
-  @apply bg-light-3 dark:bg-dark-3;
-}
-
-@utility surface-border-1 {
-  @apply border-light-1 dark:border-dark-1 divide-light-1 dark:divide-dark-1;
-}
-
-@utility surface-border-2 {
-  @apply border-light-2 dark:border-dark-2 divide-light-2 dark:divide-dark-2;
-}
-
-@utility surface-border-3 {
-  @apply border-light-3 dark:border-dark-3 divide-light-3 dark:divide-dark-3;
-}
-
-@utility surface-1 {
-  @apply bg-light-1 dark:bg-dark-1 border-light-2 dark:border-dark-2 divide-light-2 dark:divide-dark-2;
-}
-
-@utility surface-2 {
-  @apply bg-light-2 dark:bg-dark-2 border-light-3 dark:border-dark-3 divide-light-3 dark:divide-dark-3;
-}
-
-@utility surface-3 {
-  @apply bg-light-3 dark:bg-dark-3 border-light-3 dark:border-dark-3 divide-light-3 dark:divide-dark-3;
-}
-
 
 /* wu.utility.swap
 Allows toggling the visibility of two elements using a checkbox or a class name.
@@ -1098,9 +1158,37 @@ Styling of UI elements that inform users about important events.
 </div>
 ```
 */
+@theme inline {
+  --wu-alert-padding-t: --spacing(4);
+  --wu-alert-padding-r: --spacing(4);
+  --wu-alert-padding-b: --spacing(4);
+  --wu-alert-padding-l: --spacing(4);
+  --wu-alert-padding: var(--wu-alert-padding-t) var(--wu-alert-padding-r) var(--wu-alert-padding-b) var(--wu-alert-padding-l);
+  --wu-alert-border-width-t: 1px;
+  --wu-alert-border-width-r: 1px;
+  --wu-alert-border-width-b: 1px;
+  --wu-alert-border-width-l: 1px;
+  --wu-alert-border-width: var(--wu-alert-border-width-t) var(--wu-alert-border-width-r) var(--wu-alert-border-width-b) var(--wu-alert-border-width-l);
+  --wu-alert-border-radius-tl: var(--radius-md);
+  --wu-alert-border-radius-tr: var(--radius-md);
+  --wu-alert-border-radius-br: var(--radius-md);
+  --wu-alert-border-radius-bl: var(--radius-md);
+  --wu-alert-border-radius: var(--wu-alert-border-radius-tl) var(--wu-alert-border-radius-tr) var(--wu-alert-border-radius-br) var(--wu-alert-border-radius-bl);
+}
+
 @layer components {
   .alert {
-    @apply flex flex-col desktop:flex-row desktop:items-center p-4 gap-4 rounded-md;
+    display: flex;
+    flex-direction: column;
+    gap: --spacing(4);
+    padding: var(--wu-alert-padding);
+    border-width: var(--wu-alert-border-width);
+    border-radius: var(--wu-alert-border-radius);
+
+    @variant desktop {
+      flex-direction: row;
+      align-items: center;
+    }
   }
 }
 
@@ -1125,13 +1213,14 @@ Avatar component with optional slots on its circumference at 8 points.
     display: grid;
     grid-template-columns: 1fr;
     pointer-events: none !important;
+    border-radius: calc(infinity * 1px);
     & > * {
       pointer-events: auto;
     }
-    @apply rounded-full;
 
     & .avatar-slot-1, & .avatar-slot-2, & .avatar-slot-3, & .avatar-slot-4, & .avatar-slot-5, & .avatar-slot-6, & .avatar-slot-7, & .avatar-slot-8 {
-      @apply justify-self-center self-center;
+      justify-self: center;
+      align-self: center;
       grid-row-start: 1;
       grid-column-start: 1;
       pointer-events: none !important;
@@ -1204,12 +1293,27 @@ Styling for small non-interactive elements that indicate some information.
 */
 @layer components {
   .badge {
-    @apply inline-flex justify-center items-center whitespace-nowrap;
-    @apply font-semibold text-xs px-2 py-1 rounded-xl;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    padding: --spacing(1) --spacing(2);
+    border-radius: var(--radius-xl);
   }
   .badge-icon {
-    @apply aspect-square flex justify-center items-center rounded-full;
-    @apply font-semibold text-xs;
+    width: --spacing(6);
+    height: --spacing(6);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    border-radius: calc(infinity * 1px);
   }
 }
 
@@ -1230,14 +1334,26 @@ Styling of a list that displays the current navigation hierarchy.
 */
 @layer components {
   .breadcrumbs {
-    @apply inline-flex vcenter gap-2 overflow-x-auto py-2;
+    display: inline-flex;
+    align-items: center;
+    gap: --spacing(2);
+    overflow-x: auto;
+    padding-block: --spacing(2);
+
     & > * {
-      @apply inline-flex vcenter;
+      display: inline-flex;
+      align-items: center;
       & + *:before {
         content: "";
         border-top: 1px solid;
         border-right: 1px solid;
-        @apply bg-transparent mr-3 inline-flex size-1.5 rotate-45 transform opacity-40;
+        background-color: transparent;
+        display: inline-flex;
+        margin-right: --spacing(3);
+        width: --spacing(1.5);
+        height: --spacing(1.5);
+        rotate: 45deg;
+        opacity: 40%;
       }
     }
   }
@@ -1256,28 +1372,53 @@ Styling for elements that provide the user to take an action.
 TODO: flesh out properly
 */
 @theme inline {
-  --wu-btn-padding: --spacing(2) --spacing(3);
-  --wu-btn-border-width: 0;
-  --wu-btn-border-radius: 0;
+  --wu-btn-padding-t: --spacing(2);
+  --wu-btn-padding-r: --spacing(3);
+  --wu-btn-padding-b: --spacing(2);
+  --wu-btn-padding-l: --spacing(3);
+  --wu-btn-padding: var(--wu-btn-padding-t) var(--wu-btn-padding-r) var(--wu-btn-padding-b) var(--wu-btn-padding-l);
+  --wu-btn-border-width-t: 1px;
+  --wu-btn-border-width-r: 1px;
+  --wu-btn-border-width-b: 1px;
+  --wu-btn-border-width-l: 1px;
+  --wu-btn-border-width: var(--wu-btn-border-width-t) var(--wu-btn-border-width-r) var(--wu-btn-border-width-b) var(--wu-btn-border-width-l);
+  --wu-btn-border-radius-tl: var(--radius-md);
+  --wu-btn-border-radius-tr: var(--radius-md);
+  --wu-btn-border-radius-br: var(--radius-md);
+  --wu-btn-border-radius-bl: var(--radius-md);
+  --wu-btn-border-radius: var(--wu-btn-border-radius-tl) var(--wu-btn-border-radius-tr) var(--wu-btn-border-radius-br) var(--wu-btn-border-radius-bl);
   --wu-btn-bg-color: transparent;
   --wu-btn-border-color: transparent;
-  --wu-btn-text-color: light-dark(var(--color-dark-1), var(--color-light-1));
+  --wu-btn-text-color: var(--color-content-emph);
 
-  --wu-btn-icon-padding: --spacing(1);
-  --wu-btn-icon-border-width: 0;
-  --wu-btn-icon-border-radius: calc(infinity * 1px);
+  --wu-btn-icon-padding-t: --spacing(1);
+  --wu-btn-icon-padding-r: --spacing(1);
+  --wu-btn-icon-padding-b: --spacing(1);
+  --wu-btn-icon-padding-l: --spacing(1);
+  --wu-btn-icon-padding: var(--wu-btn-icon-padding-t) var(--wu-btn-icon-padding-r) var(--wu-btn-icon-padding-b) var(--wu-btn-icon-padding-l);
+  --wu-btn-icon-border-width-t: 1px;
+  --wu-btn-icon-border-width-r: 1px;
+  --wu-btn-icon-border-width-b: 1px;
+  --wu-btn-icon-border-width-l: 1px;
+  --wu-btn-icon-border-width: var(--wu-btn-icon-border-width-t) var(--wu-btn-icon-border-width-r) var(--wu-btn-icon-border-width-b) var(--wu-btn-icon-border-width-l);
+  --wu-btn-icon-border-radius-tl: calc(infinity * 1px);
+  --wu-btn-icon-border-radius-tr: calc(infinity * 1px);
+  --wu-btn-icon-border-radius-br: calc(infinity * 1px);
+  --wu-btn-icon-border-radius-bl: calc(infinity * 1px);
+  --wu-btn-icon-border-radius: var(--wu-btn-icon-border-radius-tl) var(--wu-btn-icon-border-radius-tr) var(--wu-btn-icon-border-radius-br) var(--wu-btn-icon-border-radius-bl);
   --wu-btn-icon-bg-color: transparent;
   --wu-btn-icon-border-color: transparent;
-  --wu-btn-icon-text-color: light-dark(var(--color-dark-1), var(--color-light-1));
-
-  --wu-fg-color: var(--wu-btn-text-color);
+  --wu-btn-icon-text-color: var(--color-content-emph);
 }
 
 @layer components {
   .btn {
-    @apply whitespace-nowrap text-nowrap inline-flex justify-center items-center cursor-pointer;
-    @apply hover:brightness-[1.15] focus:brightness-[1.15];
-    @apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+    white-space: nowrap;
+    text-wrap: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
     background-color: var(--wu-btn-bg-color);
     border-color: var(--wu-btn-border-color);
     color: var(--wu-btn-text-color);
@@ -1285,15 +1426,48 @@ TODO: flesh out properly
     border-width: var(--wu-btn-border-width);
     border-radius: var(--wu-btn-border-radius);
 
+    @variant hocus {
+      filter: brightness(115%);
+    }
+
+	  --tw-inset-ring-shadow: 0 0 0 0;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+		@variant focus-within {
+  	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+		  --tw-ring-color: var(--color-highlight);
+		}
+
     &:disabled {
-      @apply opacity-50 cursor-not-allowed hover:brightness-100;
+      cursor: not-allowed;
+      background-color: --alpha(var(--wu-btn-bg-color) / 75%);
+
+      @variant hover {
+        filter: brightness(100%);
+      }
+    }
+
+    & > * {
+      color: var(--wu-btn-text-color);
+      fill: var(--wu-btn-text-color);
+      stroke: var(--wu-btn-text-color);
+    }
+
+    & > .icon {
+      --wu-icon-color: var(--wu-btn-text-color);
+    }
+
+    & > .loading {
+      --wu-loading-color: var(--wu-btn-text-color);
     }
   }
 
   .btn-icon {
-    @apply whitespace-nowrap text-nowrap inline-flex justify-center items-center cursor-pointer aspect-square;
-    @apply hover:brightness-[1.15] focus:brightness-[1.15];
-    @apply ring-0 ring-inset focus-within:ring-1 focus-within:ring-highlight;
+    white-space: nowrap;
+    text-wrap: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
     background-color: var(--wu-btn-icon-bg-color);
     border-color: var(--wu-btn-icon-border-color);
     color: var(--wu-btn-icon-text-color);
@@ -1301,8 +1475,38 @@ TODO: flesh out properly
     border-width: var(--wu-btn-icon-border-width);
     border-radius: var(--wu-btn-icon-border-radius);
 
+    @variant hocus {
+      filter: brightness(115%);
+    }
+
+	  --tw-inset-ring-shadow: 0 0 0 0;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+		@variant focus-within {
+  	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+		  --tw-ring-color: var(--color-highlight);
+		}
+
     &:disabled {
-      @apply opacity-50 cursor-not-allowed hover:brightness-100;
+      cursor: not-allowed;
+      background-color: --alpha(var(--wu-btn-icon-bg-color) / 75%);
+
+      @variant hover {
+        filter: brightness(100%);
+      }
+    }
+
+    & > * {
+      color: var(--wu-btn-text-color);
+      fill: var(--wu-btn-text-color);
+      stroke: var(--wu-btn-text-color);
+    }
+
+    & > .icon {
+      --wu-icon-color: var(--wu-btn-text-color);
+    }
+
+    & > .loading {
+      --wu-loading-color: var(--wu-btn-text-color);
     }
   }
 }
@@ -1322,83 +1526,106 @@ Styling for elements that provide the user to take an action.
 TODO: flesh out properly
 */
 @theme inline {
-  --wu-btns-padding: 2px;
-  --wu-btns-border-radius: 0;
-  --wu-btns-border-width: 0;
+  --wu-btns-padding-t: 0;
+  --wu-btns-padding-r: 0;
+  --wu-btns-padding-b: 0;
+  --wu-btns-padding-l: 0;
+  --wu-btns-padding: var(--wu-btns-padding-t) var(--wu-btns-padding-r) var(--wu-btns-padding-b) var(--wu-btns-padding-l);
+  --wu-btns-border-radius-tl: 0;
+  --wu-btns-border-radius-tr: 0;
+  --wu-btns-border-radius-br: 0;
+  --wu-btns-border-radius-bl: 0;
+  --wu-btns-border-radius: var(--wu-btns-border-radius-tl) var(--wu-btns-border-radius-tr) var(--wu-btns-border-radius-br) var(--wu-btns-border-radius-bl);
+  --wu-btns-border-width-t: 0;
+  --wu-btns-border-width-r: 0;
+  --wu-btns-border-width-b: 0;
+  --wu-btns-border-width-l: 0;
+  --wu-btns-border-width: var(--wu-btns-border-width-t) var(--wu-btns-border-width-r) var(--wu-btns-border-width-b) var(--wu-btns-border-width-l);
   --wu-btns-bg-color: transparent;
   --wu-btns-border-color: transparent;
 }
 
 @layer components {
   .hbtns {
-    @apply flex flex-row w-fit h-fit;
+    display: flex;
+    flex-direction: row;
     padding: var(--wu-btns-padding);
     border-width: var(--wu-btns-border-width);
     border-radius: var(--wu-btns-border-radius);
     border-color: var(--wu-btns-border-color);
     background-color: var(--wu-btns-bg-color);
 
-    &:has(> :first-child.btn-icon) {
-      --wu-btns-border-radius: var(--wu-btn-icon-border-radius);
+    & > * {
+      border-radius: var(--wu-btns-border-radius);
     }
 
-    &:has(> :first-child.btn) {
-      --wu-btns-border-radius: var(--wu-btn-border-radius);
-    }
-
-    & > .btn:not(:first-child, :last-child),
-    & > .btn-icon:not(:first-child, :last-child) {
-      border-radius: 0;
+    & > :not(:first-child, :last-child) {
       border-left-width: 0;
       border-right-width: 0;
     }
 
-    & > .btn:first-child,
-    & > .btn-icon:first-child {
+    & > :first-child:not(:only-child) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
 
-    & > .btn:last-child,
-    & > .btn-icon:last-child {
+    & > :last-child:not(:only-child) {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :not(:first-child, :last-child) {
+      border-radius: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :first-child:not(:only-child) {
+      border-right-width: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :last-child:not(:only-child) {
+      border-left-width: 0;
     }
   }
 
   .vbtns {
-    @apply flex flex-col w-fit h-fit;
+    display: flex;
+    flex-direction: column;
     padding: var(--wu-btns-padding);
     border-width: var(--wu-btns-border-width);
     border-radius: var(--wu-btns-border-radius);
     border-color: var(--wu-btns-border-color);
     background-color: var(--wu-btns-bg-color);
 
-    &:has(> :first-child.btn-icon) {
-      --wu-btns-border-radius: var(--wu-btn-icon-border-radius);
+
+    & > * {
+      border-radius: var(--wu-btns-border-radius);
     }
 
-    &:has(> :first-child.btn) {
-      --wu-btns-border-radius: var(--wu-btn-border-radius);
-    }
-
-    & > .btn:not(:first-child, :last-child),
-    & > .btn-icon:not(:first-child, :last-child) {
-      border-radius: 0;
+    & > :not(:first-child, :last-child) {
       border-top-width: 0;
       border-bottom-width: 0;
     }
 
-    & > .btn:first-child,
-    & > .btn-icon:first-child {
+    & > :first-child {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
     }
 
-    & > .btn:last-child,
-    & > .btn-icon:last-child {
+    & > :last-child {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :not(:first-child, :last-child) {
+      border-radius: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :first-child {
+      border-bottom-width: 0;
+    }
+
+    &:not(.hbtns-borders-between) > :last-child {
+      border-top-width: 0;
     }
   }
 }
@@ -1423,42 +1650,55 @@ Used to group and display content in a way that is easily readable.
 */
 @layer components {
   .card {
-    @apply relative flex flex-col gap-2;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: --spacing(2);
 
     &:focus {
-      @apply outline-none;
+      outline-width: 0;
     }
 
     & figure {
-      @apply center;
+      justify-content: center;
+      align-items: center;
     }
 
     &.image-full {
-      @apply grid;
+      display: grid;
+
       &:before {
-        @apply relative content-[""] z-1 opacity-75;
+        position: relative;
+        content: '';
+        z-index: 1;
+        opacity: 75%;
       }
 
       &:before, & > * {
-        @apply col-start-1 row-start-1;
+        grid-column-start: 1;
+        grid-row-start: 1;
       }
 
       & > figure img {
-        @apply h-full object-cover;
+        height: 100%;
+        object-fit: cover;
       }
 
       &:where(figure) {
-        @apply overflow-hidden;
+        overflow: hidden;
         border-radius: "inherit";
       }
     }
 
     &.image-full > .card-body {
-      @apply relative z-2 center;
+      position: relative;
+      z-index: 2;
+      justify-content: center;
+      align-items: center;
     }
 
     &:where(figure:first-child) {
-      @apply overflow-hidden;
+      overflow: hidden;
 			border-start-start-radius: "inherit";
 			border-start-end-radius: "inherit";
 			border-end-start-radius: "unset";
@@ -1466,7 +1706,7 @@ Used to group and display content in a way that is easily readable.
     }
 
     &:where(figure:last-child) {
-      @apply overflow-hidden;
+      overflow: hidden;
 			border-start-start-radius: "unset";
 			border-start-end-radius: "unset";
 			border-end-start-radius: "inherit";
@@ -1475,19 +1715,30 @@ Used to group and display content in a way that is easily readable.
   }
 
   .card-body {
-    @apply flex flex-auto flex-col gap-2 p-4 pt-0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: --spacing(2);
+    padding: 0 --spacing(4) --spacing(4) --spacing(4);
 
     :where(p) {
-      @apply flex-grow;
+      flex-grow: 1;
     }
   }
 
   .card-title {
-    @apply hcenter gap-2 text-xl font-semibold;
+    justify-content: center;
+    gap: --spacing(2);
+    font-weight: 600;
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
   }
 
   .card-actions {
-    @apply flex flex-wrap items-start gap-2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: --spacing(2);
   }
 }
 
@@ -1558,32 +1809,56 @@ Shows images or content in a scrollable area.
 */
 @layer components {
   .carousel {
-    @apply inline-flex overflow-x-scroll snap-x snap-mandatory scroll-smooth hide-scrollbar;
+    display: inline-flex;
+    overflow-x: scroll;
+    --tw-scroll-snap-strictness: mandatory;
+    scroll-snap-type: x var(--tw-scroll-snap-strictness);
+    scroll-behavior: smooth;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .vcarousel {
-    @apply inline-flex flex-col overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar;
+    display: inline-flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    --tw-scroll-snap-strictness: mandatory;
+    scroll-snap-type: y var(--tw-scroll-snap-strictness);
+    scroll-behavior: smooth;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .carousel-item {
-    @apply box-content flex flex-none snap-start;
+    display: flex;
+    flex: none;
+    box-sizing: content-box;
+    scroll-snap-align: start;
   }
 
   .carousel-snap-start {
     & .carousel-item {
-      @apply snap-start;
+      scroll-snap-align: start;
     }
   }
 
   .carousel-snap-center {
     & .carousel-item {
-      @apply snap-center;
+      scroll-snap-align: center;
     }
   }
 
   .carousel-snap-end {
     & .carousel-item {
-      @apply snap-end;
+      scroll-snap-align: end;
     }
   }
 }
@@ -1599,13 +1874,25 @@ Styling of small interactive elements for actions, selection, or filtering.
 */
 @layer components {
   .chip {
-    @apply px-3 py-1 whitespace-nowrap cursor-pointer;
-    @apply text-xs text-center;
-    @apply rounded-md inline-flex justify-center items-center gap-2;
-    @apply hover:brightness-[1.15];
-    @apply transition-all;
+    padding-inline: --spacing(3);
+    padding-block: --spacing(1);
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: --spacing(2);
+
+    @variant hocus {
+      filter: brightness(115%);
+    }
+
     &:disabled {
-      @apply opacity-50 cursor-not-allowed;
+      opacity: 50%;
+      cursor: not-allowed;
     }
   }
 }
@@ -1635,18 +1922,27 @@ Used to show a block of code in a box that looks like a code editor.
 */
 @layer components {
   .code {
-    @apply relative overflow-hidden overflow-x-auto;
-    @apply w-full py-5 rounded-md;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    width: 100%;
+    padding-block: --spacing(5);
+    border-radius: var(--radius-md);
+
     pre {
-      @apply pr-5;
+      padding-right: --spacing(5);
+
       &:before {
-        @apply mr-[2ch] inline-block text-right;
+        display: inline-block;
+        margin-right: 2ch;
+        text-align: right;
       }
     }
 
     pre[data-prefix] {
       content: attr(data-prefix);
-      @apply w-8 opacity-50;
+      width: --spacing(8);
+      opacity: 50%;
     }
   }
 }
@@ -1658,7 +1954,9 @@ Used to show a block of code in a box that looks like a code editor.
     &:before {
       content: counter(line);
       counter-increment: line;
-      @apply w-8 opacity-50 mr-4;
+      width: --spacing(8);
+      opacity: 50%;
+      margin-right: --spacing(4);
     }
   }
 }
@@ -1702,22 +2000,44 @@ Contains logo, copyright notice, and links to other pages.
 */
 @layer components {
   .footer-table {
-    @apply grid w-full place-items-start grid-flow-row tablet:grid-flow-col gap-y-10 gap-x-4 text-sm;
+    display: grid;
+    width: 100%;
+    place-items: start;
+    grid-auto-flow: row;
+    row-gap: --spacing(10);
+    column-gap: --spacing(4);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+
+    @variant tablet {
+      grid-auto-flow: column;
+    }
 
     & > * {
-      @apply grid place-items-start gap-2;
+      display: grid;
+      place-items: start;
+      gap: --spacing(2);
     }
   }
 
   .footer-table-center {
-    @apply place-items-center text-center tablet:grid-flow-row-dense;
+    place-items: center;
+    text-align: center;
+
+    @variant tablet {
+      grid-auto-flow: row dense;
+    }
+
     & > * {
-      @apply place-items-center;
+      place-items: center;
     }
   }
 
   .footer-table-title {
-    @apply mb-2 font-bold uppercase opacity-50;
+    margin-bottom: --spacing(2);
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 50%;
   }
 }
 
@@ -1731,23 +2051,53 @@ Styling of form elements.
 ```
 */
 @utility input-success {
-  @apply bg-success-200 border-success-500 text-success-700 focus-within:ring-success-500 focus:ring;
+  background-color: var(--color-success-200);
+  border-color: var(--color-success-500);
+  color: var(--color-success-700);
+
+  --tw-inset-ring-shadow: 0 0 0 0;
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+	@variant focus-within {
+	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+	  --tw-ring-color: var(--color-success-500);
+	}
+
   &::placeholder {
-    @apply text-success-content;
+    color: var(--color-success-content);
   }
 }
 
 @utility input-warning {
-  @apply bg-warning-200 border-warning-500 text-warning-700 focus-within:ring-warning-500 focus:ring;
+  background-color: var(--color-warning-200);
+  border-color: var(--color-warning-500);
+  color: var(--color-warning-700);
+
+  --tw-inset-ring-shadow: 0 0 0 0;
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+	@variant focus-within {
+	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+	  --tw-ring-color: var(--color-warning-500);
+	}
+
   &::placeholder {
-    @apply text-warning-content;
+    color: var(--color-warning-content);
   }
 }
 
 @utility input-error {
-  @apply bg-error-200 border-error-500 text-error-700 focus-within:ring-error-500 focus:ring;
+  background-color: var(--color-error-200);
+  border-color: var(--color-error-500);
+  color: var(--color-error-700);
+
+  --tw-inset-ring-shadow: 0 0 0 0;
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+	@variant focus-within {
+	  --tw-inset-ring-shadow: inset 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
+	  --tw-ring-color: var(--color-error-500);
+	}
+
   &::placeholder {
-    @apply text-error-content;
+    color: var(--color-error-content);
   }
 }
 
@@ -1761,13 +2111,34 @@ Used to display keyboard shortcuts.
 ```
 */
 @theme inline {
-  --wu-kbd-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-kbd-border-color: light-dark(var(--color-light-3), var(--color-dark-3));
+  --wu-kbd-padding-t: --spacing(1);
+  --wu-kbd-padding-r: --spacing(2);
+  --wu-kbd-padding-b: --spacing(1);
+  --wu-kbd-padding-l: --spacing(2);
+  --wu-kbd-padding: var(--wu-kbd-padding-t) var(--wu-kbd-padding-r) var(--wu-kbd-padding-b) var(--wu-kbd-padding-l);
+  --wu-kbd-border-width-t: 1px;
+  --wu-kbd-border-width-r: 1px;
+  --wu-kbd-border-width-b: 4px;
+  --wu-kbd-border-width-l: 1px;
+  --wu-kbd-border-width: var(--wu-kbd-border-width-t) var(--wu-kbd-border-width-r) var(--wu-kbd-border-width-b) var(--wu-kbd-border-width-l);
+  --wu-kbd-border-radius-t: var(--radius-lg);
+  --wu-kbd-border-radius-r: var(--radius-lg);
+  --wu-kbd-border-radius-b: var(--radius-lg);
+  --wu-kbd-border-radius-l: var(--radius-lg);
+  --wu-kbd-border-radius: var(--wu-kbd-border-radius-t) var(--wu-kbd-border-radius-r) var(--wu-kbd-border-radius-b) var(--wu-kbd-border-radius-l);
+  --wu-kbd-bg-color: var(--color-surface-2);
+  --wu-kbd-border-color: var(--color-surface-3);
 }
 
 @layer components {
   .kbd {
-    @apply inline-flex justify-center items-center border border-b-4 min-h-[2.2em] min-w-[2.2em] px-2 rounded-lg;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-width: var(--wu-kbd-border-width);
+    min-height: 2.2rem;
+    padding: var(--wu-kbd-padding);
+    border-radius: var(--wu-kbd-border-radius);
     background-color: var(--wu-kbd-bg-color);
     border-color: var(--wu-kbd-border-color);
   }
@@ -1783,25 +2154,31 @@ Shows an animation to indicate that something is loading.
 ```
 */
 @theme {
-  --wu-loading-spinner: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='%23000' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_V8m1%7Btransform-origin:center;animation:spinner_zKoa 2s linear infinite%7D.spinner_V8m1 circle%7Bstroke-linecap:round;animation:spinner_YpZS 1.5s ease-in-out infinite%7D%40keyframes spinner_zKoa%7B100%25%7Btransform:rotate(360deg)%7D%7D%40keyframes spinner_YpZS%7B0%25%7Bstroke-dasharray:0 150;stroke-dashoffset:0%7D47.5%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-16%7D95%25%2C100%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-59%7D%7D%3C%2Fstyle%3E%3Cg class='spinner_V8m1'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3'%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-  --wu-loading-dots: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_qM83%7Banimation:spinner_8HQG 1.05s infinite%7D.spinner_oXPr%7Banimation-delay:.1s%7D.spinner_ZTLf%7Banimation-delay:.2s%7D@keyframes spinner_8HQG%7B0%25,57.14%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)%7D28.57%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)%7D100%25%7Btransform:translate(0)%7D%7D%3C/style%3E%3Ccircle class='spinner_qM83' cx='4' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_oXPr' cx='12' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_ZTLf' cx='20' cy='12' r='3'/%3E%3C/svg%3E");
-  --wu-loading-ring: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg' stroke='%23fff'%3E%3Cg fill='none' fill-rule='evenodd' stroke-width='2'%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='0s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='0s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='-0.9s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='-0.9s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
-  --wu-loading-bars: url("data:image/svg+xml,%0A%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_rXNP%7Banimation:spinner_YeBj .8s infinite%7D@keyframes spinner_YeBj%7B0%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);cy:5px%7D46.875%25%7Bcy:20px;rx:4px;ry:4px%7D50%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);cy:20.5px;rx:4.8px;ry:3px%7D53.125%25%7Brx:4px;ry:4px%7D100%25%7Bcy:5px%7D%7D%3C/style%3E%3Cellipse class='spinner_rXNP' cx='12' cy='5' rx='4' ry='4'/%3E%3C/svg%3E");
-  --wu-loading-infinity: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='shape-rendering: auto;' width='200px' height='200px' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Cpath fill='none' stroke='%230a0a0a' stroke-width='10' stroke-dasharray='205.271142578125 51.317785644531256' d='M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z' stroke-linecap='round' style='transform:scale(0.8);transform-origin:50px 50px'%3E%3Canimate attributeName='stroke-dashoffset' repeatCount='indefinite' dur='2s' keyTimes='0;1' values='0;256.58892822265625'%3E%3C/animate%3E%3C/path%3E%3C/svg%3E");
+  --wu-loading-color: var(--color-content-emph);
+  
+  --wu-loading-anim-spinner: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='%23000' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_V8m1%7Btransform-origin:center;animation:spinner_zKoa 2s linear infinite%7D.spinner_V8m1 circle%7Bstroke-linecap:round;animation:spinner_YpZS 1.5s ease-in-out infinite%7D%40keyframes spinner_zKoa%7B100%25%7Btransform:rotate(360deg)%7D%7D%40keyframes spinner_YpZS%7B0%25%7Bstroke-dasharray:0 150;stroke-dashoffset:0%7D47.5%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-16%7D95%25%2C100%25%7Bstroke-dasharray:42 150;stroke-dashoffset:-59%7D%7D%3C%2Fstyle%3E%3Cg class='spinner_V8m1'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3'%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --wu-loading-anim-dots: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_qM83%7Banimation:spinner_8HQG 1.05s infinite%7D.spinner_oXPr%7Banimation-delay:.1s%7D.spinner_ZTLf%7Banimation-delay:.2s%7D@keyframes spinner_8HQG%7B0%25,57.14%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)%7D28.57%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)%7D100%25%7Btransform:translate(0)%7D%7D%3C/style%3E%3Ccircle class='spinner_qM83' cx='4' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_oXPr' cx='12' cy='12' r='3'/%3E%3Ccircle class='spinner_qM83 spinner_ZTLf' cx='20' cy='12' r='3'/%3E%3C/svg%3E");
+  --wu-loading-anim-ring: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg' stroke='%23fff'%3E%3Cg fill='none' fill-rule='evenodd' stroke-width='2'%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='0s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='0s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='-0.9s' dur='1.8s' values='1; 20' calcMode='spline' keyTimes='0; 1' keySplines='0.165, 0.84, 0.44, 1' repeatCount='indefinite' /%3E%3Canimate attributeName='stroke-opacity' begin='-0.9s' dur='1.8s' values='1; 0' calcMode='spline' keyTimes='0; 1' keySplines='0.3, 0.61, 0.355, 1' repeatCount='indefinite' /%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+  --wu-loading-anim-bars: url("data:image/svg+xml,%0A%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.spinner_rXNP%7Banimation:spinner_YeBj .8s infinite%7D@keyframes spinner_YeBj%7B0%25%7Banimation-timing-function:cubic-bezier(0.33,0,.66,.33);cy:5px%7D46.875%25%7Bcy:20px;rx:4px;ry:4px%7D50%25%7Banimation-timing-function:cubic-bezier(0.33,.66,.66,1);cy:20.5px;rx:4.8px;ry:3px%7D53.125%25%7Brx:4px;ry:4px%7D100%25%7Bcy:5px%7D%7D%3C/style%3E%3Cellipse class='spinner_rXNP' cx='12' cy='5' rx='4' ry='4'/%3E%3C/svg%3E");
+  --wu-loading-anim-infinity: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='shape-rendering: auto;' width='200px' height='200px' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Cpath fill='none' stroke='%230a0a0a' stroke-width='10' stroke-dasharray='205.271142578125 51.317785644531256' d='M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40 C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z' stroke-linecap='round' style='transform:scale(0.8);transform-origin:50px 50px'%3E%3Canimate attributeName='stroke-dashoffset' repeatCount='indefinite' dur='2s' keyTimes='0;1' values='0;256.58892822265625'%3E%3C/animate%3E%3C/path%3E%3C/svg%3E");
 }
 
 @layer components {
   .loading {
-    @apply pointer-events-none w-6 aspect-square inline-block bg-light-content dark:bg-dark-content;
+    pointer-events: none;
+    display: inline-block;
+    width: --spacing(6);
+    height: --spacing(6);
     mask-size: 100%;
     mask-repeat: no-repeat;
     mask-position: center;
-    mask-image: var(--wu-loading-spinner);
+    mask-image: var(--wu-loading-anim-spinner);
+    background-color: var(--wu-loading-color);
   }
 }
 
 @utility loading-* {
-  mask-image: --value(--wu-loading-*);
+  mask-image: --value(--wu-loading-anim-*);
 }
 
 /* wu.component.overlay
@@ -1866,7 +2243,7 @@ Used as placeholders while actual content is loading in the background.
 ```html
 <section class="card w-full">
 	<div class="p-4 space-y-4">
-		<div class="placeholder-circle" />
+		<div class="placeholder size-4" />
 		<div class="grid grid-cols-3 gap-8">
 			<div class="placeholder" />
 			<div class="placeholder" />
@@ -1884,11 +2261,11 @@ Used as placeholders while actual content is loading in the background.
 */
 @layer components {
   .placeholder {
-    @apply bg-light-content/10 dark:bg-dark-content/10 h-5 rounded-full animate-pulse;
-  }
+    background-color: --alpha(var(--color-content-noemph) / 10%);
+    height: --spacing(5);
+    border-radius: calc(infinity * 1px);
 
-  .placeholder-circle {
-    @apply bg-light-content/10 dark:bg-dark-content/10 aspect-square rounded-full animate-pulse;
+    animation: var(--animate-pulse);
   }
 }
 
@@ -1908,26 +2285,37 @@ Used to show the progress of a task or to show the passing of time.
     --wu-radial-thickness: calc(var(--wu-radial-size) / 10);
     width: var(--wu-radial-size);
     height: var(--wu-radial-size);
-    @apply bg-transparent rounded-full place-content-center inline-grid relative align-middle box-content;
+    background-color: transparent;
+    border-radius: calc(infinity * 1px);
+    display: inline-grid;
+    place-content: center;
+    position: relative;
+    vertical-align: middle;
+    box-sizing: content-box;
 
     &::-moz-progress-bar {
-      @apply bg-transparent appearance-none;
+      background-color: transparent;
+      appearance: none;
     }
 
     &::-webkit-progress-value {
-      @apply bg-transparent appearance-none;
+      background-color: transparent;
+      appearance: none;
     }
 
     &::-webkit-progress-bar {
-      @apply bg-transparent appearance-none;
+      background-color: transparent;
+      appearance: none;
     }
 
     &:before, &:after {
-      @apply absolute rounded-full content-[""] z-10;
+      position: absolute;
+      border-radius: calc(infinity * 1px);
+      content: '';
     }
 
     &:before {
-      @apply inset-0;
+      inset: 0;
   		background: radial-gradient(farthest-side, currentColor 98%, #0000) top/var(--wu-radial-thickness) var(--wu-radial-thickness) no-repeat, conic-gradient(currentColor calc(var(--wu-radial-value) * 1%), #0000 0);
   		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
   		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
@@ -1977,26 +2365,40 @@ Used to show a list of steps in a process.
 ```
 */
 @theme inline {
-  --wu-steps-inactive-bg-color: light-dark(var(--color-light-2), var(--color-dark-2));
-  --wu-steps-inactive-fg-color: light-dark(var(--color-dark-2), var(--color-light-2));
-  --wu-steps-active-bg-color: var(--color-highlight);
-  --wu-steps-active-fg-color: var(--color-highlight-content);
+  --wu-steps-inactive-bg-color: var(--color-surface-2);
+  --wu-steps-inactive-border-color: var(--color-surface-3);
+  --wu-steps-inactive-text-color: var(--color-content-noemph);
+  --wu-steps-active-bg-color: var(--color-primary);
+  --wu-steps-active-border-color: var(--color-primary-darker);
+  --wu-steps-active-text-color: var(--color-primary-content);
   --wu-steps-current-bg-color: var(--wu-steps-inactive-bg-color);
-  --wu-steps-current-fg-color: var(--wu-steps-inactive-fg-color);
+  --wu-steps-current-border-color: var(--wu-steps-inactive-border-color);
+  --wu-steps-current-text-color: var(--wu-steps-inactive-text-color);
 }
 
 @layer components {
   .hsteps {
-    @apply inline-grid grid-flow-col overflow-hidden overflow-x-auto;
+    display: inline-grid;
+    grid-auto-flow: column;
+    overflow-y: hidden;
+    overflow-x: auto;
     grid-auto-columns: 1fr;
     counter-reset: step;
     .step {
-      @apply grid grid-cols-1 grid-rows-2 place-items-center text-center;
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      place-items: center;
+      text-align: center;
       grid-template-rows: 40px 1fr;
       grid-template-columns: auto;
       min-width: 4rem;
       &:before {
-        @apply h-2 w-full top-0 col-start-1 row-start-1 transform translate-x-0 translate-y-0 rtl:translate-x-0;
+        height: --spacing(2);
+        width: 100%;
+        top: 0;
+        grid-column-start: 1;
+        grid-row-start: 1;
         margin-inline-start: -100%;
         border-block-width: 1px;
       }
@@ -2007,11 +2409,16 @@ Used to show a list of steps in a process.
   }
 
   .vsteps {
-    @apply inline-grid grid-flow-row overflow-y-auto;
+    display: inline-grid;
+    grid-auto-flow: row;
+    overflow-y: auto;
+    overflow-x: hidden;
     grid-auto-rows: 1fr;
     counter-reset: step;
     .step {
-      @apply grid grid-cols-2 grid-rows-1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(1, minmax(0, 1fr));
       gap: 0.5rem;
       grid-template-columns: 40px 1fr;
       grid-template-rows: auto;
@@ -2019,9 +2426,20 @@ Used to show a list of steps in a process.
       justify-items: start;
       border-inline-width: 1px;
       &:before {
-        @apply w-2 h-full top-0 col-start-1 row-start-1 transform -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2;
+        width: --spacing(2);
+        height: 100%;
+        top: 0;
+        grid-column-start: 1;
+        grid-row-start: 1;
+        --tw-translate-x: -50%;
+        --tw-translate-y: -50%;
+        translate: var(--tw-translate-x) var(--tw-translate-y);
         margin-inline-start: 50%;
         border-inline-width: 1px;
+
+        @variant rtl {
+          --tw-translate-x: 50%;
+        }
       }
       &:after {
         border-width: 1px;
@@ -2033,50 +2451,61 @@ Used to show a list of steps in a process.
     &:before {
       content: "";
       background-color: var(--wu-steps-inactive-bg-color);
-      border-color: --alpha(var(--wu-steps-inactive-fg-color) / 25%);
+      border-color: var(--wu-steps-inactive-border-color);
     }
     &:after {
       content: counter(step);
       counter-increment: step;
       z-index: 1;
       background-color: var(--wu-steps-inactive-bg-color);
-      border-color: --alpha(var(--wu-steps-inactive-fg-color) / 25%);
-      @apply relative col-start-1 row-start-1 grid size-8 place-items-center place-self-center rounded-full;
+      border-color: var(--wu-steps-inactive-border-color);
+      color: var(--wu-steps-inactive-text-color);
+      position: relative;
+      display: grid;
+      grid-column-start: 1;
+      grid-row-start: 1;
+      width: --spacing(8);
+      height: --spacing(8);
+      place-items: center;
+      place-self: center;
+      border-radius: calc(infinity * 1px);
     }
     &:first-child:before {
       content: none;
     }
     &[data-content]:after {
       content: attr(data-content);
-      color: var(--wu-steps-inactive-fg-color);
+      color: var(--wu-steps-inactive-text-color);
     }
   }
 
   .step-active {
     &:before {
       background-color: var(--wu-steps-active-bg-color);
-      border-color: --alpha(var(--wu-steps-active-fg-color) / 25%);
+      border-color: var(--wu-steps-active-border-color);
     }
     &:after {
       background-color: var(--wu-steps-active-bg-color);
-      border-color: --alpha(var(--wu-steps-active-fg-color) / 25%);
+      border-color: var(--wu-steps-active-border-color);
+      color: var(--wu-steps-active-text-color);
     }
     &[data-content]:after {
-      color: var(--wu-steps-active-fg-color);
+      color: var(--wu-steps-active-text-color);
     }
   }
 
   .step-current {
     &:before {
       background-color: var(--wu-steps-current-bg-color);
-      border-color: --alpha(var(--wu-steps-current-fg-color) / 25%);
+      border-color: var(--wu-steps-current-border-color);
     }
     &:after {
       background-color: var(--wu-steps-current-bg-color);
-      border-color: --alpha(var(--wu-steps-current-fg-color) / 25%);
+      border-color: var(--wu-steps-current-border-color);
+      color: var(--wu-steps-current-text-color);
     }
     &[data-content]:after {
-      color: var(--wu-steps-current-fg-color);
+      color: var(--wu-steps-current-text-color);
     }
   }
 }
@@ -2094,59 +2523,88 @@ Used to show a list of links in a tabbed format.
 </div>
 ```
 */
+@theme inline {
+  --wu-tabs-bg-color: transparent;
+  --wu-tabs-border-color: transparent;
+  --wu-tabs-text-color: var(--color-content-noemph);
+  --wu-tabs-active-bg-color: transparent;
+  --wu-tabs-active-border-color: transparent;
+  --wu-tabs-active-text-color: var(--color-content-emph);
+}
+
+/* TODO: Consider entire rework of this component */
 @layer components {
   .tabs {
-    @apply flex flex-wrap items-end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+
     & > .tab {
-      @apply border-surface-400 dark:border-surface-500;
+      border-color: var(--wu-tabs-border-color);
     }
   }
 
   .tab {
-    @apply text-surface-content/50 px-4 py-2 cursor-pointer;
+    color: --alpha(var(--wu-tabs-text-color) / 50%);
+    padding-inline: --spacing(4);
+    padding-block: --spacing(2);
+    cursor: pointer;
+
     &.tab-active:not(.tab-disabled, [disabled]) {
-      @apply border-surface-400/100 dark:border-surface-500/100 text-surface-content/100;
+      border-color: --alpha(var(--wu-tabs-border-color) / 100%);
+      color: --alpha(var(--wu-tabs-text-color) / 100%);
     }
+
     &:not(.tab-active, .tab-disabled, [disabled]) {
-      @media(hover: hover) {
-        @apply hover:text-surface-content/75;
+      @variant hocus {
+        color: --alpha(var(--wu-tabs-text-color) / 75%);
       }
     }
+
     &:focus {
-      @apply outline-none;
+      outline-width: 0;
     }
+
     &:focus-visible {
-      @apply outline outline-2 outline-current outline-offset-[-3px];
+      outline-width: 2px;
+      outline-color: currentColor;
+      outline-offset: -3px;
     }
     &[disabled] {
-      @apply text-surface-content/25 cursor-not-allowed;
+      color: --alpha(var(--wu-tabs-text-color) / 25%);
+      cursor: not-allowed;
     }
     @media (hover: hover) {
       &[disabled], &[disabled]:hover {
-        @apply text-surface-content/25 cursor-not-allowed;
+        color: --alpha(var(--wu-tabs-text-color) / 25%);
+        cursor: not-allowed;
       }
     }
   }
 
   .tab-disabled {
-    @apply text-surface-content/25 cursor-not-allowed;
+    color: --alpha(var(--wu-tabs-text-color) / 25%);
+    cursor: not-allowed;
   }
 
   .tabs-bordered > .tab {
-    @apply border-b-2 border-surface-400/20 dark:border-surface-500/20;
+    border-bottom-width: 2px;
+    border-color: --alpha(var(--wu-tabs-border-color) / 20%);
   }
 
   .tabs-lifted > .tab {
-    @apply border-b-2;
+    border-bottom-width: 2px;
     &.tab-active:not(.tab-disabled, [disabled]) {
-      @apply border-2 border-b-0 rounded-t-lg;
+      border-width: 2px 2px 0 2px;
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
     }
   }
 
   .tabs-boxed {
-    @apply bg-surface-400/20 dark:bg-surface-500/20;
+    background-color: --alpha(var(--wu-tabs-bg-color) / 20%);
     &.tab-active:not(.tab-disabled, [disabled]) {
-      @apply bg-primary-500;
+      background-color: var(--wu-tabs-active-bg-color);
     }
   }
 }
@@ -2164,17 +2622,37 @@ Shows a box that looks like an operating system window.
 */
 @layer components {
   .window {
-    @apply relative overflow-hidden overflow-x-auto pt-5 rounded-md;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding-top: --spacing(5);
+    border-radius: var(--radius-md);
     &:before {
-      @apply content-[""] mb-4 block size-3 rounded-full opacity-100;
+      content: '';
+      display: block;
+      margin-bottom: --spacing(4);
+      width: --spacing(3);
+      height: --spacing(3);
+      border-radius: calc(infinity * 1px);
+      opacity: 100%;
       box-shadow: 1.4em 0 rgba(225, 0, 11, 0.8), 2.8em 0 rgba(222, 172, 10, 0.8), 4.2em 0 rgba(71, 172, 7, 0.8);
     }
   }
 
   .window-grayscale {
-    @apply relative overflow-hidden overflow-x-auto pt-5 rounded-md;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding-top: --spacing(5);
+    border-radius: var(--radius-md);
     &:before {
-      @apply content-[""] mb-4 block size-3 rounded-full opacity-20;
+      content: '';
+      display: block;
+      margin-bottom: --spacing(4);
+      width: --spacing(3);
+      height: --spacing(3);
+      border-radius: calc(infinity * 1px);
+      opacity: 100%;
       box-shadow: 1.4em 0, 2.8em 0, 4.2em 0;
     }
   }
@@ -2196,6 +2674,8 @@ Shows an animation to indicate that something is loading.
 ```
 */
 @theme {
+  --wu-icon-color: var(--color-content-emph);
+  
   /* outline icons */
   --wu-icon-outline-info-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z'/%3E%3C/svg%3E");
   --wu-icon-outline-exclamation-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z'/%3E%3C/svg%3E");
@@ -2239,20 +2719,23 @@ Shows an animation to indicate that something is loading.
 
 @layer components {
   .icon {
-    @apply pointer-events-none w-6 aspect-square inline-block;
+    pointer-events: none;
+    width: --spacing(6);
+    height: --spacing(6);
+    display: inline-block;
     mask-size: 100%;
     mask-repeat: no-repeat;
     mask-position: center;
-    text-decoration-color: var(--wu-fg-color);
-    color: var(--wu-fg-color);
-    background-color: var(--wu-fg-color);
+    background-color: var(--wu-icon-color);
+    text-decoration-color: var(--wu-icon-color);
+    color: var(--wu-icon-color);
+    fill: var(--wu-icon-color);
+    stroke: var(--wu-icon-color);
   }
 }
 
 @utility icon-* {
-  text-decoration-color: --value(--color-*);
-  color: --value(--color-*);
-  background-color: --value(--color-*);
+  --wu-icon-color: --value(--color-*);
 }
 
 @utility i-o-* {

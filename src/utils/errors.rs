@@ -20,7 +20,7 @@ impl ReactiveErrors {
 	/// # Note
 	/// Call in a signal for reactivity.
 	pub fn get(&self, name: impl Into<std::borrow::Cow<'static, str>>) -> Option<ArcSignal<String>> {
-		self.errors.with(move |errors| errors.get(&name.into()).cloned())
+		self.errors.read().get(&name.into()).cloned()
 	}
 
 	/// Replaces this with another [`Errors`].
@@ -33,6 +33,13 @@ impl Default for ReactiveErrors {
 	fn default() -> Self {
 		Self { errors: RwSignal::default() }
 	}
+}
+
+/// Creates a [`Errors`] with a single error.
+pub fn error(key: String, value: ArcSignal<String>) -> Errors {
+	let mut errors = Errors::default();
+	errors.insert(key.into(), value);
+	errors
 }
 
 /// Shows an error as an injected message.

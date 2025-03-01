@@ -152,9 +152,9 @@ where
 
 	view! {
 		{children()}
-		<wu-toast-hook class="overlay-viewport-container overflow-clip">
+		<wu-toast-hook class="overlay overlay-container overflow-clip">
 			<div class="overlay flex justify-end">
-				<wu-toasts class="h-fit divide-y border surface-2 rounded-bl-lg shadow-lg">
+				<wu-toasts class="h-fit divide-y border bg-surface-2 border-surface-3 rounded-bl-lg shadow-lg">
 					<For
 						each=move || toasts.get()
 						key=move |toast| toast.id
@@ -163,11 +163,11 @@ where
 							let timeout_handle = toast.timeout_handle;
 							let class = {
 								let class = class.clone();
-								move || tw_merge!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 surface-bg-1 last:rounded-bl-md", class.get())
+								move || tw_merge!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-surface-1 last:rounded-bl-md", class.get())
 							};
 							let dismiss_btn_class = {
 								let class = dismiss_btn_class.clone();
-								move || tw_merge!("flex center text-sm font-thin rounded-full highlight p-2", class.get())
+								move || tw_merge!("flex center text-sm font-thin rounded-full highlight", class.get())
 							};
 
 							view! {

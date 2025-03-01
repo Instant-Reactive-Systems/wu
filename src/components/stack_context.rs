@@ -1,3 +1,5 @@
+//! A utility for providing a stack to children via the context API.
+
 use leptos::prelude::*;
 
 #[doc(hidden)]
@@ -59,3 +61,16 @@ impl<M: Send + Sync + 'static, T: Send + Sync + Clone + 'static> Clone for Activ
 }
 
 impl<M: Send + Sync + 'static, T: Send + Sync + Clone + 'static> Copy for ActiveStackCtx<M, T> {}
+
+/// A utility function to push an item onto the stack only for the duration of the
+/// current reactive owner.
+pub fn push_new_stack_ctx<M, T>(ctx: impl Into<T>)
+where
+	M: Send + Sync + 'static,
+	T: Send + Sync + 'static,
+{
+	let push_stack_cx = expect_context::<PushStackCtx<M, T>>();
+	let pop_stack_cx = expect_context::<PopStackCtx<M>>();
+	push_stack_cx.run(ctx.into());
+	on_cleanup(move || pop_stack_cx.run(()));
+}

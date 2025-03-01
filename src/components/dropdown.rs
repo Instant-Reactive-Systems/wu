@@ -10,7 +10,7 @@ use leptos::prelude::*;
 ///     attr:id="fruits"
 ///     value=num
 ///     items=[0, 2, 4]
-///     class="surface-3"
+///     class="text-sm"
 ///  />
 /// ```
 #[component]

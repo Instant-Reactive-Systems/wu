@@ -3,7 +3,7 @@ mod errors;
 mod states;
 mod theme;
 pub use focus_trap::*;
-pub use errors::{Errors, ReactiveErrors, ShowError};
+pub use errors::{Errors, ReactiveErrors, ShowError, error};
 use leptos_router::NavigateOptions;
 pub use states::*;
 pub use theme::*;
@@ -74,4 +74,41 @@ macro_rules! generate_marker_type {
 pub fn use_copy_navigate() -> Callback<(String, NavigateOptions)> {
 	let navigate = leptos_router::hooks::use_navigate();
 	Callback::new(move |(url, opts): (String, NavigateOptions)| navigate(&url, opts))
+}
+
+/// New-type wrapper for a function that returns a view with `From` and `Default` traits implemented
+/// to enable optional props in for example `<Show>` and `<Suspense>`.
+#[derive(Clone)]
+pub struct ViewFnWithArgs<T>(std::sync::Arc<dyn Fn(T) -> AnyView + Send + Sync + 'static>)
+where
+	T: Send + Sync + 'static;
+
+impl<T> Default for ViewFnWithArgs<T>
+where
+	T: Send + Sync + 'static,
+{
+	fn default() -> Self {
+		Self(std::sync::Arc::new(|_t: T| ().into_any()))
+	}
+}
+
+impl<T, F, C> From<F> for ViewFnWithArgs<T>
+where
+	T: Send + Sync + 'static,
+	F: Fn(T) -> C + Send + Sync + 'static,
+	C: RenderHtml + Send + 'static,
+{
+	fn from(value: F) -> Self {
+		Self(std::sync::Arc::new(move |t: T| value(t).into_any()))
+	}
+}
+
+impl<T> ViewFnWithArgs<T>
+where
+	T: Send + Sync + 'static,
+{
+	/// Execute the wrapped function
+	pub fn run(&self, t: T) -> AnyView {
+		(self.0)(t)
+	}
 }
