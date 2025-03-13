@@ -1,9 +1,8 @@
 use std::collections::VecDeque;
-
-use leptos::{ev, prelude::*, text_prop::TextProp};
-use tailwind_fuse::*;
+use leptos::{ev, prelude::*};
 
 use crate::components::Modal;
+use crate::utils::Text;
 
 /// A trait that debugging commands should implement in order to execute their commands.
 pub trait DebugCommand {
@@ -68,8 +67,8 @@ pub fn DebugConsole<M, T>(
 	#[prop(optional, into)]
 	overlay: ViewFn,
 	/// Specifies the default 'class' attribute for the default debug overlay.
-	#[prop(default = "".into(), into)]
-	dbg_overlay_class: TextProp,
+	#[prop(optional, into)]
+	dbg_overlay_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -103,7 +102,7 @@ where
 		provide_context(DebugConsoleExternalCommand::<M, T>::new(external_cmd.write_only()));
 
 		// logic
-		let mut submit_cmd = Callback::new({
+		let submit_cmd = Callback::new({
 			let state = state.clone();
 			move |_| {
 				let cmd = cmd_text.get();
@@ -167,19 +166,19 @@ where
 				<div class="overlay">
 					{move || overlay.run()}
 				</div>
-				<div class=move || tw_merge!("overlay flex items-end justify-end opacity-75", dbg_overlay_class.get())>
+				<div class=move || format!("overlay flex items-end justify-end opacity-75 {dbg_overlay_class}")>
 					// if mobile
-					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex desktop:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
+					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex xl:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
 					</button>
 					// if >mobile
-					<div class="hidden desktop:horizontal vcenter gap-2 py-2 px-4 rounded-lg border bg-surface-2 border-surface-3">
+					<div class="hidden xl:horizontal vcenter gap-2 py-2 px-4 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
-						<span clasS="hidden desktop:block text-xl font-bold">"-"</span>
-						<span class="hidden desktop:block kbd">{key.clone()}</span>
-						<span class="hidden desktop:block text-xl font-bold">"for console"</span>
+						<span clasS="hidden xl:block text-xl font-bold">"-"</span>
+						<span class="hidden xl:block kbd">{key.clone()}</span>
+						<span class="hidden xl:block text-xl font-bold">"for console"</span>
 					</div>
 				</div>
 			</wu-debug-console-watermark>
@@ -191,10 +190,10 @@ where
 					<div class="hdivider divider-surface-3">
 						<span class="icon i-o-console"/>
 					</div>
-					<div class="vertical w-full desktop:w-[600px] gap-2">
+					<div class="vertical w-full xl:w-[600px] gap-2">
 						// Text buffer
 						<div class="grow border bg-surface-2 border-surface-3 rounded-md">
-							<ul class="flex flex-col-reverse w-full h-full min-h-[250px] max-h-[250px] desktop:min-h-[400px] desktop:max-h-[400px] overflow-y-auto">
+							<ul class="flex flex-col-reverse w-full h-full min-h-[250px] max-h-[250px] xl:min-h-[400px] xl:max-h-[400px] overflow-y-auto">
 								<For
 									each=move || cmd_history.get()
 									key=move |cmd| cmd.id

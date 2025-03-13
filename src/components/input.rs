@@ -1,5 +1,5 @@
-use leptos::{prelude::*, text_prop::TextProp};
-use tailwind_fuse::*;
+use leptos::prelude::*;
+use crate::utils::Text;
 
 /// A wrapper around a `<input>` with a `String` value that handles reactive
 /// interactivity automatically and displays an error if error occurs.
@@ -18,32 +18,32 @@ pub fn FallibleReactiveInput(
 	errors: crate::ReactiveErrors,
 	/// Error ID of the field.
 	#[prop(into)]
-	error_id: TextProp,
+	error_id: Text,
 	/// Specifies the `type` attribute on the element.
-	#[prop(default = "".into(), into)]
-	r#type: TextProp,
+	#[prop(optional, into)]
+	r#type: Text,
 	/// Specifies the `placeholder` attribute on the element.
-	#[prop(default = "".into(), into)]
-	placeholder: TextProp,
+	#[prop(optional, into)]
+	placeholder: Text,
 	/// Specifies the `required` attribute on the element.
 	#[prop(optional, into)]
 	required: Signal<bool>,
 	/// Specifies the default 'class' attribute for all modals.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
+	#[prop(optional, into)]
+	class: Text,
 ) -> impl IntoView {
 	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<div class="relative vertical">
 			// if mobile
-			<div class="flex desktop:hidden relative">
-				{let error_id = error_id.clone(); move || errors.get(error_id.get()).map(move |err| view! {
+			<div class="flex xl:hidden relative">
+				{move || errors.get(error_id.get()).map(move |err| view! {
 					<div
 						class=
 						"
-							input-error border w-fit text-nowrap py-1 px-2 mb-2 rounded-md rounded-bl-none 
-							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 
-							before:left-[2px] before:top-[calc(100%_-_12px)] before:rotate-45 before:border-r before:border-b 
+							input-error border w-fit text-nowrap py-1 px-2 mb-2 rounded-md rounded-bl-none \
+							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 \
+							before:left-[2px] before:top-[calc(100%_-_12px)] before:rotate-45 before:border-r before:border-b \
 						"
 					>
 						{err}
@@ -52,14 +52,14 @@ pub fn FallibleReactiveInput(
 			</div>
 
 			// if >mobile
-			<div class="hidden desktop:flex relative">
-				{let error_id = error_id.clone(); move || errors.get(error_id.get()).map(move |err| view! {
+			<div class="hidden xl:flex relative">
+				{move || errors.get(error_id.get()).map(move |err| view! {
 					<div
 						class=
 						"
-							absolute end-0 left-[calc(100%_+_12px)] input-error border w-fit text-nowrap py-1 px-2 rounded-md rounded-tl-none 
-							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 
-							before:left-[-5px] before:top-[1px] before:rotate-45 before:border-l before:border-b 
+							absolute end-0 left-[calc(100%_+_12px)] input-error border w-fit text-nowrap py-1 px-2 rounded-md rounded-tl-none \
+							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 \
+							before:left-[-5px] before:top-[1px] before:rotate-45 before:border-l before:border-b \
 						"
 					>
 						{err}
@@ -69,13 +69,10 @@ pub fn FallibleReactiveInput(
 
 			// all
 			<input
-				type=move || r#type.get()
+				type=r#type
 				bind:value=value
-				class={
-					let error_id = error_id.clone();
-					move || tw_merge!(class.get(), errors.get(error_id.get()).map(move |_| "input-error"))
-				}
-				placeholder=move || placeholder.get()
+				class=move || format!("{} {}", class.get(), errors.get(error_id.get()).map(move |_| "input-error").unwrap_or(""))
+				placeholder=placeholder
 				required=move || required.get()
 			/>
 		</div>
@@ -110,14 +107,14 @@ pub fn InputCode(
 	#[prop(into)]
 	field_thickness: i32,
 	/// Specifies the `placeholder` attribute on the element.
-	#[prop(default = "".into(), into)]
-	placeholder: TextProp,
+	#[prop(optional, into)]
+	placeholder: Text,
 	/// Specifies the `required` attribute on the element.
 	#[prop(optional, into)]
 	required: Signal<bool>,
 	/// Specifies the default 'class' attribute for all modals.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
+	#[prop(optional, into)]
+	class: Text,
 ) -> impl IntoView {
 	// vars
 	let half_field_size = field_size / 2;
@@ -133,25 +130,25 @@ pub fn InputCode(
 					maxlength=code_length
 					inputmode="numeric"
 					style=format!("
-						--tw-ring-inset: 0;
-						font-family: monospace;
-						padding-left: calc({half_field_size}px - (1ch / 2));
-						letter-spacing: calc({field_size}px - 1ch);
-						border-width: 0;
-						background-color: transparent;
-						filter: none;
-						overflow: hidden;
-						background-image: linear-gradient(to right, transparent 0%, transparent 15%, currentColor 15%, currentColor 85%, transparent 85%, transparent 0%);
-						background-position: bottom left;
-						background-size: {field_size}px {field_thickness}px;
-						background-repeat: repeat-x;
-						width: calc({total_field_size}px + {field_size}px);
-						min-width: calc({total_field_size}px + {field_size}px);
-						max-width: calc({total_field_size}px + {field_size}px);
-						outline: none;
+						--tw-inset-ring-shadow: 0;\
+						font-family: monospace;\
+						padding-left: calc({half_field_size}px - (1ch / 2));\
+						letter-spacing: calc({field_size}px - 1ch);\
+						border-width: 0;\
+						background-color: transparent;\
+						filter: none;\
+						overflow: hidden;\
+						background-image: linear-gradient(to right, transparent 0%, transparent 15%, currentColor 15%, currentColor 85%, transparent 85%, transparent 0%);\
+						background-position: bottom left;\
+						background-size: {field_size}px {field_thickness}px;\
+						background-repeat: repeat-x;\
+						width: calc({total_field_size}px + {field_size}px);\
+						min-width: calc({total_field_size}px + {field_size}px);\
+						max-width: calc({total_field_size}px + {field_size}px);\
+						outline: none;\
 					")
-					class=move || class.get()
-					placeholder=move || placeholder.get()
+					class=move || format!("selection:bg-transparent {class}")
+					placeholder=placeholder
 					required=move || required.get()
 				/>
 			</div>

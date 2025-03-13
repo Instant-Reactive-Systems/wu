@@ -1,4 +1,5 @@
-use leptos::{prelude::*, text_prop::TextProp, either::*};
+use leptos::{prelude::*, either::*};
+use crate::utils::Text;
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -46,11 +47,11 @@ pub fn Tabs<M: Send + Sync + 'static, T: Send + Sync + 'static>(
 	#[prop(default = Vec::default(), into)]
 	tabs: Vec<T>,
 	/// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
+	#[prop(optional, into)]
+	class: Text,
 	/// List class.
-	#[prop(default = "".into(), into)]
-	list_class: TextProp,
+	#[prop(optional, into)]
+	list_class: Text,
 	/// List item slot.
 	#[prop(into)]
 	item: Callback<TabSignal<T>, AnyView>,

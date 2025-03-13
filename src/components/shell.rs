@@ -1,5 +1,5 @@
-use leptos::{prelude::*, text_prop::TextProp, either::*};
-use tailwind_fuse::*;
+use leptos::{prelude::*, either::*};
+use crate::utils::Text;
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -46,14 +46,14 @@ pub fn Shell<M>(
 	#[prop(optional, into)]
 	footer: ViewFn,
 	/// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
+	#[prop(optional, into)]
+	class: Text,
 	/// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)]
-	center_class: TextProp,
+	#[prop(optional, into)]
+	center_class: Text,
 	/// Corresponds to the 'class' attribute of elements.
-	#[prop(default = "".into(), into)]
-	main_class: TextProp,
+	#[prop(optional, into)]
+	main_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -99,18 +99,18 @@ where
 	})));
 
 	view! {
-		<wu-shell class=move || tw_merge!("overlay vertical", class.get())>
+		<wu-shell class=move || format!("overlay vertical {class}")>
 			// wu.shell.header
 			{move || main_cx.get().header.run()}
 			// center area
-			<wu-shell-center class=move || tw_merge!("grow horizontal", center_class.get())>
+			<wu-shell-center class=move || format!("grow horizontal {center_class}")>
 				// wu.shell.left_sidebar
 				{match left_sidebar_container {
 					Some(sidebar) => Either::Left(move || sidebar.run(main_cx.get().left_sidebar)),
 					None => Either::Right(move || main_cx.get().left_sidebar.run()),
 				}}
 				// Main content area
-				<wu-shell-main class=move || tw_merge!("grow vertical", main_class.get())>
+				<wu-shell-main class=move || format!("grow vertical {main_class}")>
 					// wu.shell.inner_header
 					{move || main_cx.get().inner_header.run()}
 					// wu.shell.content
@@ -134,19 +134,21 @@ where
 
 /// A utility function to push a new shell onto the stack only for the duration of the
 /// current reactive owner.
+#[track_caller]
 pub fn push_new_shell_ctx<M>(ctx: ShellCtx)
 where
 	M: Send + Sync + 'static,
 {
-	log::info!("owner in push fn: {:?}", Owner::current().unwrap().debug_id());
+	let location = std::panic::Location::caller();
 	let push_shell_cx = expect_context::<PushShell<M>>();
 	let pop_shell_cx = expect_context::<PopShell<M>>();
-	push_shell_cx.run(ctx.into());
-	log::info!("pushing shell");
+	Effect::new(move |_| {
+		log::info!("{location} | pushing a new shell ctx");
+		push_shell_cx.run(ctx.clone().into());
+	});
 	on_cleanup(move || {
-		log::info!("owner in cleanup fn: {:?}", Owner::current().unwrap().debug_id());
-		log::info!("popping shell");
-		pop_shell_cx.run(())
+		log::info!("{location} | popping a shell ctx");
+		pop_shell_cx.run(());
 	});
 }
 
@@ -165,6 +167,20 @@ pub struct ShellCtx {
 	pub inner_footer: Option<ViewFn>,
 	/// Footer slot.
 	pub footer: Option<ViewFn>,
+}
+
+impl ShellCtx {
+	/// Returns a [`ShellCtx`] which sets all shell fragments to an empty view.
+	pub fn cleaned() -> Self {
+		Self {
+			header: Some(ViewFn::from(move || Some(()))),
+			inner_header: Some(ViewFn::from(move || Some(()))),
+			left_sidebar: Some(ViewFn::from(move || Some(()))),
+			right_sidebar: Some(ViewFn::from(move || Some(()))),
+			inner_footer: Some(ViewFn::from(move || Some(()))),
+			footer: Some(ViewFn::from(move || Some(()))),
+		}
+	}
 }
 
 /// Holds the the slots of the currently displayed shell context.

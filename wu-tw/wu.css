@@ -22,11 +22,11 @@ html.dark {
 	--color-dark-3: oklch(0.3939 0.068 269.10);
 	--color-dark-4: oklch(0.4448 0.081 269.72);
 	--color-content-light-emph: oklch(0.1774 0.000 269.52);
-	--color-content-light-noemph: --alpha(var(--color-content-light-emph) / 75%);
-	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 50%);
+	--color-content-light-noemph: --alpha(var(--color-content-light-emph) / 50%);
+	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 25%);
 	--color-content-dark-emph: oklch(0.9015 0.015 273.83);
-	--color-content-dark-noemph: --alpha(var(--color-content-dark-emph) / 75%);
-	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 50%);
+	--color-content-dark-noemph: --alpha(var(--color-content-dark-emph) / 50%);
+	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 25%);
 	--color-content-emph: light-dark(var(--color-content-light-emph), var(--color-content-dark-emph));
 	--color-content-noemph: light-dark(var(--color-content-light-noemph), var(--color-content-dark-noemph));
 	--color-content-sideinfo: light-dark(var(--color-content-light-sideinfo), var(--color-content-dark-sideinfo));
@@ -90,7 +90,7 @@ html.dark {
 	--color-error-content: var(--color-content-dark-emph);
 
 	/* wu.screens */
-	--breakpoint-*: initial;
+	/* --breakpoint-*: initial; */
 
 	/* wu.shadow */
 	--shadow-left: -1px 0 3px 0 rgba(0 0 0 / 0.1), -1px 0 2px -1px rgb(0 0 0 / 0.1);
@@ -117,52 +117,17 @@ html.dark {
 A custom extension of breakpoints so that we support different breakpoint 
 widths based on device orientation.
 */
-@custom-variant tablet {
-  @media (orientation: portrait) and (width >= 768px) {
-    @slot;
-  }
-
-  @media (orientation: landscape) and (width >= 1080px) {
-    @slot;
-  }
-}
-
-@custom-variant desktop {
-  @media (orientation: portrait) and (width >= 1280px) {
-    @slot;
-  }
-
-  @media (orientation: landscape) and (width >= 1280px) {
-    @slot;
-  }
-}
-
-@utility container {
-  width: 100%;
-
-  /* tablet */
-  @media (orientation: portrait) and (width >= 768px) {
-    max-width: 768px;
-  }
-
-  @media (orientation: landscape) and (width >= 1080px) {
-    max-width: 1080px;
-  }
-
-  /* desktop */
-  @media (orientation: portrait) and (width >= 1080px) {
-    max-width: 1080px;
-  }
-
-  @media (orientation: landscape) and (width >= 1280px) {
-    max-width: 1280px;
-  }
-}
+@custom-variant h-sm (@media (height >= 32rem));
+@custom-variant h-md (@media (height >= 40rem));
+@custom-variant h-lg (@media (height >= 48rem));
+@custom-variant h-xl (@media (height >= 56rem));
+@custom-variant h-2xl (@media (height >= 64rem));
+@custom-variant h-3xl (@media (height >= 72rem));
 
 /* wu.variant.hocus
 Applies a class on hover, focus or focus-within.
 */
-@custom-variant hocus (&:is(:hover, :focus, :focus-within));
+@custom-variant hocus (&:is(:hover, :focus, :focus-within), &:has(:hover));
 
 /* wu.preflight
 Additional preflight styles.
@@ -804,6 +769,72 @@ Styling for components with a strong border and weak body.
   background-color: --alpha(--value(--color-*) / 20%);
 }
 
+/* wu.utility.w-fixed
+Used to fixate the width of an element.
+*/
+@utility w-fixed-* {
+  min-width: calc(var(--spacing) * --value(integer));
+  width: calc(var(--spacing) * --value(integer));
+  min-width: --value([length]);
+  width: --value([length]);
+}
+
+/* wu.utility.w-max
+Used to expand an element with regards to the viewport width.
+*/
+@utility w-max-* {
+  width: 100lvw;
+  max-width: calc(100lvw - var(--spacing) * --value(integer));
+  max-width: calc(100lvw - --value([length]));
+
+  /* heavily relies on the fact that the user won't change breakpoints, modify this if you do !!! */
+  &:where(.container *, .sm\:container *, .md\:container *, .lg\:container *, .xl\:container *, .2xl\:container *) {
+    @variant sm {
+      max-width: calc(var(--breakpoint-sm) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-sm) - --value([length]));
+    }
+
+    @variant md {
+      max-width: calc(var(--breakpoint-md) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-md) - --value([length]));
+    }
+
+    @variant lg {
+      max-width: calc(var(--breakpoint-lg) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-lg) - --value([length]));
+    }
+
+    @variant xl {
+      max-width: calc(var(--breakpoint-xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-xl) - --value([length]));
+    }
+
+    @variant 2xl {
+      max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-2xl) - --value([length]));
+    }
+  }
+}
+
+/* wu.utility.h-fixed
+Used to fixate the height of an element.
+*/
+@utility h-fixed-* {
+  min-height: calc(var(--spacing) * --value(integer));
+  height: calc(var(--spacing) * --value(integer));
+  min-height: --value([length]);
+  height: --value([length]);
+}
+
+/* wu.utility.h-max
+Used to expand an element with regards to the viewport height.
+*/
+@utility h-max-* {
+  height: 100lvh;
+  max-height: calc(100lvh - var(--spacing) * --value(integer));
+  max-height: calc(100lvh - --value([length]));
+}
+
 /* wu.utility.hide-scrollbar
 Used to hide a scrollbar from a container.
 
@@ -1185,7 +1216,7 @@ Styling of UI elements that inform users about important events.
     border-width: var(--wu-alert-border-width);
     border-radius: var(--wu-alert-border-radius);
 
-    @variant desktop {
+    @variant md {
       flex-direction: row;
       align-items: center;
     }
@@ -2009,7 +2040,7 @@ Contains logo, copyright notice, and links to other pages.
     font-size: var(--text-sm);
     line-height: var(--text-sm--line-height);
 
-    @variant tablet {
+    @variant md {
       grid-auto-flow: column;
     }
 
@@ -2024,7 +2055,7 @@ Contains logo, copyright notice, and links to other pages.
     place-items: center;
     text-align: center;
 
-    @variant tablet {
+    @variant md {
       grid-auto-flow: row dense;
     }
 

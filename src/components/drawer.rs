@@ -1,5 +1,5 @@
-use leptos::{html, prelude::*, text_prop::TextProp};
-use tailwind_fuse::*;
+use leptos::{html, prelude::*};
+use crate::utils::Text;
 
 /// All possible drawer positions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -24,7 +24,7 @@ pub fn Drawer(
 	size: i32,
 	/// Drawer class.
 	#[prop(default = "".into(), into)]
-	class: TextProp,
+	class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
@@ -79,7 +79,7 @@ pub fn Drawer(
 				<div class="overlay-viewport-container">
 					// Content
 					<div
-						class=move || tw_merge!("overlay", class.get())
+						class=move || format!("overlay {class}")
 						style=move || format!(
 							"position: absolute; \
 							overflow: hidden; \
@@ -97,7 +97,7 @@ pub fn Drawer(
 					// Close button
 					<div class="overlay flex justify-end p-2">
 						<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
-							<div class="hidden desktop:inline-flex gap-2 vcenter">
+							<div class="hidden xl:inline-flex gap-2 vcenter">
 								<span class="kbd">"ESC"</span>
 								<span class="text-xs">"or"</span>
 							</div>

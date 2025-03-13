@@ -1,7 +1,7 @@
 use std::{borrow::Cow, time::Duration};
 
-use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*, text_prop::TextProp};
-use tailwind_fuse::*;
+use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*};
+use crate::utils::Text;
 
 /// A toast message.
 ///
@@ -122,11 +122,11 @@ pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, 
 pub fn ToastHook<M>(
 	#[prop(optional)] _phant: std::marker::PhantomData<M>,
 	/// Toast class.
-	#[prop(default = "".into(), into)]
-	class: TextProp,
+	#[prop(optional, into)]
+	class: Text,
 	/// Dismiss button class.
-	#[prop(default = "".into(), into)]
-	dismiss_btn_class: TextProp,
+	#[prop(optional, into)]
+	dismiss_btn_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -161,23 +161,15 @@ where
 						children=move |toast| {
 							let id = toast.id;
 							let timeout_handle = toast.timeout_handle;
-							let class = {
-								let class = class.clone();
-								move || tw_merge!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-surface-1 last:rounded-bl-md", class.get())
-							};
-							let dismiss_btn_class = {
-								let class = dismiss_btn_class.clone();
-								move || tw_merge!("flex center text-sm font-thin rounded-full highlight", class.get())
-							};
 
 							view! {
-								<wu-toast class=class>
+								<wu-toast class=move || format!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-surface-1 last:rounded-bl-md {class}")>
 									// content
 									{toast.msg.clone()}
 									// close
 									{toast.dismissable.then(move || view! {
 										<button
-											class=dismiss_btn_class
+											class=move || format!("flex center text-sm font-thin rounded-full highlight {dismiss_btn_class}")
 											on:click=move |_| {
 												timeout_handle.clear();
 												toasts.update(|toasts| toasts.retain(|toast| toast.id != id));

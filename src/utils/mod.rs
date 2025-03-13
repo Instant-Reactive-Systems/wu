@@ -112,3 +112,115 @@ where
 		(self.0)(t)
 	}
 }
+
+/// A utility signal type that provides easy manipulation of a string.
+///
+/// Aims to replace `TextProp`.
+#[derive(Clone, Copy)]
+pub struct Text(Signal<std::borrow::Cow<'static, str>>);
+
+impl Text {
+	/// Gets the underlying string.
+	pub fn get(&self) -> std::borrow::Cow<'static, str> {
+		self.0.get()
+	}
+}
+
+impl std::convert::From<String> for Text {
+	fn from(value: String) -> Self {
+		Self(Signal::stored(value.into()))
+	}
+}
+
+impl std::convert::From<&'static str> for Text {
+	fn from(value: &'static str) -> Self {
+		Self(Signal::stored(value.into()))
+	}
+}
+
+impl std::convert::From<std::borrow::Cow<'static, str>> for Text {
+	fn from(value: std::borrow::Cow<'static, str>) -> Self {
+		Self(Signal::stored(value))
+	}
+}
+
+impl<S> std::convert::From<Signal<S>> for Text
+where
+	S: std::convert::Into<std::borrow::Cow<'static, str>> + Clone + Send + Sync + 'static,
+{
+	fn from(value: Signal<S>) -> Self {
+		Self(Signal::derive(move || value.get().into()))
+	}
+}
+
+impl<F, S> std::convert::From<F> for Text
+where
+	F: Fn() -> S + Send + Sync + 'static,
+	S: Into<std::borrow::Cow<'static, str>>,
+{
+	fn from(value: F) -> Self {
+		Self(Signal::derive(move || value().into()))
+	}
+}
+
+impl Default for Text {
+	fn default() -> Self {
+		Self(Signal::stored("".into()))
+	}
+}
+
+impl IntoRender for Text {
+	type Output = std::borrow::Cow<'static, str>;
+
+	fn into_render(self) -> Self::Output {
+		self.0.get()
+	}
+}
+
+impl IntoAttributeValue for Text {
+	type Output = String;
+
+	fn into_attribute_value(self) -> Self::Output {
+		self.0.get().into_owned()
+	}
+}
+
+impl std::fmt::Display for Text {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		f.write_str(&self.0.get())
+	}
+}
+
+impl std::fmt::Debug for Text {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		f.write_str(&self.0.get())
+	}
+}
+
+/// Prints a message on the initial effect run and the cleanup.
+///
+/// Useful for debugging.
+#[track_caller]
+pub fn print_on_enter_exit(msg: impl ToString) {
+	print_on_enter_exit_impl(msg.to_string());
+}
+
+#[track_caller]
+fn print_on_enter_exit_impl(msg: String) {
+	let location = std::panic::Location::caller();
+	Effect::new({
+		let msg = msg.clone();
+		move || log::info!("{location} | on first effect: {msg}")
+	});
+	on_cleanup(move || log::info!("{location} | on cleanup: {msg}"));
+}
+
+/// A utility for comparing whether an option changed from None to Some and vice versa, without
+/// checking the data underneath.
+pub fn nested_option_memo_compare_fn<T>(old: Option<&Option<T>>, new: Option<&Option<T>>) -> bool {
+	match (old, new) {
+		(Some(..), None) => true,
+		(None, Some(..)) => true,
+		(old, new) => old.flatten().is_some() != new.flatten().is_some(),
+	}
+}
