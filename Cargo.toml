@@ -23,10 +23,10 @@ web-sys = { version = "0.3", features = [
 	"CustomEventInit",
 ]}
 # leptos
-leptos = { version = "0.7" }
-leptos_router = { version = "0.7" }
-leptos-use = { version = "0.15" }
-reactive_stores = { version = "0.1" }
+leptos = { version = "0.8.0-beta" }
+leptos_router = { version = "0.8.0-beta" }
+leptos-use = { version = "0.16.0-beta", default-features = false }
+reactive_stores = { version = "0.2.0-beta" }
 # logging
 log = "0.4"
 console_error_panic_hook = "0.1"
@@ -38,7 +38,85 @@ uuid = { version = "1.10", default-features = false, features = ["v4"] }
 serde_json = { version = "1.0" }
 
 [features]
-default = ["csr"]
+default = [
+    "csr",
+    # "leptos-use/use_calendar",
+    # "leptos-use/use_textarea_autosize",
+    # "leptos-use/use_web_lock",
+    # "leptos-use/use_window_size",
+    # "leptos-use/is_err",
+    # "leptos-use/is_none",
+    # "leptos-use/is_ok",
+    # "leptos-use/is_some",
+    "leptos-use/on_click_outside",
+    # "leptos-use/signal_debounced",
+    # "leptos-use/signal_throttled",
+    # "leptos-use/storage",
+    # "leptos-use/sync_signal",
+    "leptos-use/use_active_element",
+    # "leptos-use/use_breakpoints",
+    # "leptos-use/use_broadcast_channel",
+    # "leptos-use/use_calendar",
+    # "leptos-use/use_clipboard",
+    # "leptos-use/use_color_mode",
+    # "leptos-use/use_cookie",
+    # "leptos-use/use_css_var",
+    # "leptos-use/use_cycle_list",
+    # "leptos-use/use_debounce_fn",
+    # "leptos-use/use_device_orientation",
+    # "leptos-use/use_device_pixel_ratio",
+    # "leptos-use/use_display_media",
+    "leptos-use/use_document",
+    # "leptos-use/use_document_visibility",
+    "leptos-use/use_draggable",
+    "leptos-use/use_drop_zone",
+    # "leptos-use/use_element_bounding",
+    # "leptos-use/use_element_hover",
+    # "leptos-use/use_element_size",
+    # "leptos-use/use_element_visibility",
+    "leptos-use/use_event_listener",
+    # "leptos-use/use_event_source",
+    # "leptos-use/use_favicon",
+    "leptos-use/use_geolocation",
+    # "leptos-use/use_idle",
+    # "leptos-use/use_infinite_scroll",
+    # "leptos-use/use_intersection_observer",
+    # "leptos-use/use_interval",
+    "leptos-use/use_interval_fn",
+    # "leptos-use/use_intl_number_format",
+    # "leptos-use/use_locale",
+    # "leptos-use/use_locales",
+    # "leptos-use/use_media_query",
+    # "leptos-use/use_mouse",
+    # "leptos-use/use_mouse_in_element",
+    # "leptos-use/use_mutation_observer",
+    # "leptos-use/use_permission",
+    # "leptos-use/use_preferred_contrast",
+    # "leptos-use/use_preferred_dark",
+    # "leptos-use/use_prefers_reduced_motion",
+    # "leptos-use/use_raf_fn",
+    # "leptos-use/use_resize_observer",
+    # "leptos-use/use_scroll",
+    # "leptos-use/use_service_worker",
+    # "leptos-use/use_sorted",
+    # "leptos-use/use_supported",
+    # "leptos-use/use_throttle_fn",
+    "leptos-use/use_timeout_fn",
+    # "leptos-use/use_timestamp",
+    # "leptos-use/use_toggle",
+    # "leptos-use/use_to_string",
+    # "leptos-use/use_user_media",
+    # "leptos-use/use_web_notification",
+    "leptos-use/use_websocket",
+    "leptos-use/use_window",
+    # "leptos-use/use_window_focus",
+    # "leptos-use/use_window_scroll",
+    # "leptos-use/watch_debounced",
+    # "leptos-use/watch_pausable",
+    # "leptos-use/watch_throttled",
+    # "leptos-use/watch_with_options",
+    # "leptos-use/whenever"
+]
 csr = [
 	"leptos/csr", 
 ]

@@ -23,10 +23,10 @@ html.dark {
 	--color-dark-4: oklch(0.4448 0.081 269.72);
 	--color-content-light-emph: oklch(0.1774 0.000 269.52);
 	--color-content-light-noemph: --alpha(var(--color-content-light-emph) / 50%);
-	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 25%);
+	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 35%);
 	--color-content-dark-emph: oklch(0.9015 0.015 273.83);
 	--color-content-dark-noemph: --alpha(var(--color-content-dark-emph) / 50%);
-	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 25%);
+	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 35%);
 	--color-content-emph: light-dark(var(--color-content-light-emph), var(--color-content-dark-emph));
 	--color-content-noemph: light-dark(var(--color-content-light-noemph), var(--color-content-dark-noemph));
 	--color-content-sideinfo: light-dark(var(--color-content-light-sideinfo), var(--color-content-dark-sideinfo));

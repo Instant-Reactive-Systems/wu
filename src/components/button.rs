@@ -18,9 +18,9 @@ use leptos::prelude::*;
 ///  />
 /// ```
 #[component]
-pub fn ActionButton<I, O, S>(
+pub fn ActionButton<I, O>(
 	/// Action to dispatch and to await.
-	action: Action<I, O, S>,
+	action: Action<I, O>,
 	/// Input to the action.
 	#[prop(into)]
 	input: Callback<(), I>,
@@ -43,7 +43,6 @@ pub fn ActionButton<I, O, S>(
 where
 	I: Send + Sync + 'static,
 	O: Clone + Send + Sync + 'static,
-	S: Storage<ArcAction<I, O>> + 'static,
 {
 	// types
 	#[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -57,7 +56,7 @@ where
 	let state = RwSignal::new(State::Idle);
 	let leptos_use::UseTimeoutFnReturn { start, stop, is_pending, .. } = leptos_use::use_timeout_fn(
 		move |_| {
-			on_finish.run((action.value().get_untracked().expect("should be Some"),));
+			on_finish.run((action.value().get_untracked().as_ref().cloned().expect("should be Some"),));
 			state.update(move |state| *state = State::Idle);
 		},
 		finished_lasts_for,
@@ -87,8 +86,6 @@ where
 		false,
 	);
 
-	Effect::new(move |_| log::info!("button state: {:?}", state.get()));
-
 	view! {
 		<button
 			on:click=move |_| _ = action.dispatch(input.run(()))
@@ -97,7 +94,7 @@ where
 			{move || match state.get() {
 				State::Idle => idle_view.run(),
 				State::Pending => pending_view.run(),
-				State::Finished => finished_view.run(action.value().get_untracked().expect("should be Some")),
+				State::Finished => finished_view.run(action.value().get_untracked().as_ref().cloned().expect("should be Some")),
 			}}
 		</button>
 	}

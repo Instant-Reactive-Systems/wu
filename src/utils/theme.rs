@@ -41,6 +41,7 @@ pub fn change_theme(theme: Theme) {
 /// Provides the active theme as a signal and sets up reactive updates from [`change_theme`].
 pub fn provide_theme_context() {
 	let initial_theme = get_theme_from_local_storage();
+	set_theme_to_local_storage(initial_theme);
 	let theme = RwSignal::new(initial_theme);
 
 	// handle programmatic change of theme

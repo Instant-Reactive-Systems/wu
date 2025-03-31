@@ -224,3 +224,82 @@ pub fn nested_option_memo_compare_fn<T>(old: Option<&Option<T>>, new: Option<&Op
 		(old, new) => old.flatten().is_some() != new.flatten().is_some(),
 	}
 }
+
+/// A [`ViewFn`] that also knows the location of where it originated in order to use it in a [`Memo`].
+pub struct LocatableViewFn {
+	location: &'static std::panic::Location<'static>,
+	view: ViewFn,
+}
+
+impl LocatableViewFn {
+	/// Creates a new view.
+	#[track_caller]
+	pub fn new(view: impl Into<ViewFn>) -> Self {
+		Self {
+			location: std::panic::Location::caller(),
+			view: view.into(),
+		}
+	}
+
+	/// Execute the wrapped function.
+	pub fn run(&self) -> AnyView {
+		self.view.run()
+	}
+
+	/// Removes the wrapper and returns the inner [`ViewFn`].
+	pub fn into_view_fn(self) -> ViewFn {
+		self.view
+	}
+}
+
+impl std::fmt::Debug for LocatableViewFn {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "Location: {:?}", self.location)
+	}
+}
+
+impl Clone for LocatableViewFn {
+	fn clone(&self) -> Self {
+		Self {
+			location: self.location,
+			view: self.view.clone(),
+		}
+	}
+}
+
+impl PartialEq for LocatableViewFn {
+	fn eq(&self, other: &Self) -> bool {
+		self.location.eq(other.location)
+	}
+}
+
+impl Eq for LocatableViewFn {}
+
+impl std::hash::Hash for LocatableViewFn {
+	fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+		self.location.hash(state)
+	}
+}
+
+impl<F, C> From<F> for LocatableViewFn
+where
+	F: Fn() -> C + Send + Sync + 'static,
+	C: RenderHtml + Send + 'static,
+{
+	fn from(value: F) -> Self {
+		Self {
+			location: std::panic::Location::caller(),
+			view: ViewFn::from(value),
+		}
+	}
+}
+
+impl Default for LocatableViewFn {
+	#[track_caller]
+	fn default() -> Self {
+		Self {
+			location: std::panic::Location::caller(),
+			view: ViewFn::default(),
+		}
+	}
+}

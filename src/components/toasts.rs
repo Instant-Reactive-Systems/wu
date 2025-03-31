@@ -1,4 +1,4 @@
-use std::{borrow::Cow, time::Duration};
+use std::time::Duration;
 
 use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*};
 use crate::utils::Text;
@@ -9,13 +9,13 @@ use crate::utils::Text;
 #[derive(Clone)]
 pub enum ToastMsg {
 	/// Simple text payload.
-	Text(Cow<'static, str>),
+	Text(ArcSignal<String>),
 	/// Info message.
-	Info(Cow<'static, str>),
+	Info(ArcSignal<String>),
 	/// Warn message.
-	Warn(Cow<'static, str>),
+	Warn(ArcSignal<String>),
 	/// Error message.
-	Error(Cow<'static, str>),
+	Error(ArcSignal<String>),
 	/// Complex view.
 	View(ViewFn),
 	/// Info message with an additional complex view.
@@ -36,22 +36,22 @@ impl IntoRender for ToastMsg {
 			}
 			.into_any(),
 			ToastMsg::Info(text) => view! {
-				<div class="horizontal hcenter gap-4">
+				<div class="horizontal vcenter gap-4">
 					<span class="icon i-o-info-circle"/>
 					<p class="overflow-hidden grow">{text}</p>
 				</div>
 			}
 			.into_any(),
 			ToastMsg::Warn(text) => view! {
-				<div class="horizontal hcenter gap-4">
-					<span class="icon i-o-exclamation-circle icon-warning"/>
+				<div class="horizontal vcenter gap-4">
+					<span class="icon i-o-exclamation-circle icon-warning-500"/>
 					<p class="overflow-hidden grow">{text}</p>
 				</div>
 			}
 			.into_any(),
 			ToastMsg::Error(text) => view! {
-				<div class="horizontal hcenter gap-4">
-					<span class="icon i-o-exclamation-triangle icon-error"/>
+				<div class="horizontal vcenter gap-4">
+					<span class="icon i-o-exclamation-triangle icon-error-500"/>
 					<p class="overflow-hidden grow">{text}</p>
 				</div>
 			}
@@ -61,22 +61,22 @@ impl IntoRender for ToastMsg {
 			}
 			.into_any(),
 			ToastMsg::InfoView(vw) => view! {
-				<div class="horizontal hcenter gap-4">
+				<div class="horizontal vcenter gap-4">
 					<span class="icon i-o-info-circle"/>
 					<p class="overflow-hidden grow">{vw.run()}</p>
 				</div>
 			}
 			.into_any(),
 			ToastMsg::WarnView(vw) => view! {
-				<div class="horizontal hcenter gap-4">
-					<span class="icon i-o-exclamation-circle icon-warning"/>
+				<div class="horizontal vcenter gap-4">
+					<span class="icon i-o-exclamation-circle icon-warning-500"/>
 					<p class="overflow-hidden grow">{vw.run()}</p>
 				</div>
 			}
 			.into_any(),
 			ToastMsg::ErrorView(vw) => view! {
-				<div class="horizontal hcenter gap-4">
-					<span class="icon i-o-exclamation-triangle icon-error"/>
+				<div class="horizontal vcenter gap-4">
+					<span class="icon i-o-exclamation-triangle icon-error-500"/>
 					<p class="overflow-hidden grow">{vw.run()}</p>
 				</div>
 			}
@@ -99,7 +99,7 @@ pub struct Toast {
 impl Default for Toast {
 	fn default() -> Self {
 		Self {
-			msg: ToastMsg::Warn("No message specified, default toast created".into()),
+			msg: ToastMsg::Warn(ArcSignal::stored("No message specified, default toast created".to_string())),
 			timeout: Duration::from_secs(3),
 			dismissable: true,
 		}
@@ -115,7 +115,7 @@ crate::generate_marker_type!(
 	PushToastMarker
 );
 
-pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, Callback<Toast>>;
+pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, Callback<Toast, TimeoutHandle>>;
 
 /// Simple notifications utilizing a dynamic queue system.
 #[component]
@@ -124,9 +124,6 @@ pub fn ToastHook<M>(
 	/// Toast class.
 	#[prop(optional, into)]
 	class: Text,
-	/// Dismiss button class.
-	#[prop(optional, into)]
-	dismiss_btn_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -139,22 +136,20 @@ where
 	provide_context(PushToast::<M>::new(Callback::new(move |toast: Toast| {
 		let id = toast_id.get_untracked();
 		let timeout_handle = set_timeout_with_handle(move || toasts.update(move |toasts| toasts.retain(|toast: &ToastWithId| toast.id != id)), toast.timeout);
-		let timeout_handle = if let Ok(timeout_handle) = timeout_handle {
-			timeout_handle
-		} else {
-			log::error!("could not create timeout handle. toast will not be created.");
-			return;
+		let Ok(timeout_handle) = timeout_handle else {
+			unreachable!("should be able to construct a timeout handle always");
 		};
 
 		toasts.update(move |toasts| toasts.push(ToastWithId { id, toast, timeout_handle }));
 		toast_id.update(|n| *n = n.overflowing_add(1).0);
+		timeout_handle
 	})));
 
 	view! {
 		{children()}
 		<wu-toast-hook class="overlay overlay-container overflow-clip">
 			<div class="overlay flex justify-end">
-				<wu-toasts class="h-fit divide-y border bg-surface-2 border-surface-3 rounded-bl-lg shadow-lg">
+				<wu-toasts class="h-fit divide-y border bg-surface-2 border-surface-3 divide-surface-3 rounded-bl-lg shadow-lg z-100">
 					<For
 						each=move || toasts.get()
 						key=move |toast| toast.id
@@ -163,16 +158,18 @@ where
 							let timeout_handle = toast.timeout_handle;
 
 							view! {
-								<wu-toast class=move || format!("flex flex-row vcenter gap-4 min-w-[400px] h-10 px-4 pr-2 py-1 bg-surface-1 last:rounded-bl-md {class}")>
+								<wu-toast class="flex flex-row vcenter gap-4 max-w-lvw min-h-10 px-2 py-1 last:rounded-bl-md">
 									// content
-									{toast.msg.clone()}
+									<div class=move || format!("grow {class}")>
+										{toast.msg.clone()}
+									</div>
 									// close
 									{toast.dismissable.then(move || view! {
 										<button
-											class=move || format!("flex center text-sm font-thin rounded-full highlight {dismiss_btn_class}")
+											class="btn-icon highlight size-6"
 											on:click=move |_| {
 												timeout_handle.clear();
-												toasts.update(|toasts| toasts.retain(|toast| toast.id != id));
+												toasts.write().retain(|toast| toast.id != id);
 											}
 										>
 											<span class="icon i-o-x-mark"/>

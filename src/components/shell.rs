@@ -1,5 +1,5 @@
 use leptos::{prelude::*, either::*};
-use crate::utils::Text;
+use crate::utils::{Text, LocatableViewFn};
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -23,28 +23,28 @@ pub fn Shell<M>(
 	#[prop(optional)] _phant: std::marker::PhantomData<M>,
 	/// Header slot.
 	#[prop(optional, into)]
-	header: ViewFn,
+	header: LocatableViewFn,
 	/// Inner header slot (a part of the main content area).
 	#[prop(optional, into)]
-	inner_header: ViewFn,
+	inner_header: LocatableViewFn,
 	/// Left sidebar container slot (immutable).
 	#[prop(optional, into)]
-	left_sidebar_container: Option<crate::utils::ViewFnWithArgs<ViewFn>>,
+	left_sidebar_container: Option<crate::utils::ViewFnWithArgs<Memo<LocatableViewFn>>>,
 	/// Left sidebar slot.
 	#[prop(optional, into)]
-	left_sidebar: ViewFn,
+	left_sidebar: LocatableViewFn,
 	/// Right sidebar container slot (immutable).
 	#[prop(optional, into)]
-	right_sidebar_container: Option<crate::utils::ViewFnWithArgs<ViewFn>>,
+	right_sidebar_container: Option<crate::utils::ViewFnWithArgs<Memo<LocatableViewFn>>>,
 	/// Right sidebar slot.
 	#[prop(optional, into)]
-	right_sidebar: ViewFn,
+	right_sidebar: LocatableViewFn,
 	/// Inner footer slot (a part of the main content area).
 	#[prop(optional, into)]
-	inner_footer: ViewFn,
+	inner_footer: LocatableViewFn,
 	/// Footer slot.
 	#[prop(optional, into)]
-	footer: ViewFn,
+	footer: LocatableViewFn,
 	/// Corresponds to the 'class' attribute of elements.
 	#[prop(optional, into)]
 	class: Text,
@@ -60,6 +60,7 @@ pub fn Shell<M>(
 where
 	M: Send + Sync + 'static,
 {
+	// vars
 	let shell_cxs = RwSignal::<Vec<ShellCtx>>::new(vec![ShellCtx {
 		header: Some(header.clone()),
 		inner_header: Some(inner_header.clone()),
@@ -87,6 +88,14 @@ where
 			footer,
 		}
 	});
+	let header = Memo::new(move |_| main_cx.get().header);
+	let inner_header = Memo::new(move |_| main_cx.get().inner_header);
+	let left_sidebar = Memo::new(move |_| main_cx.get().left_sidebar);
+	let right_sidebar = Memo::new(move |_| main_cx.get().right_sidebar);
+	let inner_footer = Memo::new(move |_| main_cx.get().inner_footer);
+	let footer = Memo::new(move |_| main_cx.get().footer);
+
+	// provide contexts
 	provide_context(PushShell::<M>::new(Callback::new(move |cx| {
 		shell_cxs.write().push(cx);
 	})));
@@ -101,33 +110,33 @@ where
 	view! {
 		<wu-shell class=move || format!("overlay vertical {class}")>
 			// wu.shell.header
-			{move || main_cx.get().header.run()}
+			{move || header.get().run()}
 			// center area
 			<wu-shell-center class=move || format!("grow horizontal {center_class}")>
 				// wu.shell.left_sidebar
 				{match left_sidebar_container {
-					Some(sidebar) => Either::Left(move || sidebar.run(main_cx.get().left_sidebar)),
-					None => Either::Right(move || main_cx.get().left_sidebar.run()),
+					Some(sidebar) => Either::Left(move || sidebar.run(left_sidebar)),
+					None => Either::Right(move || left_sidebar.get().run()),
 				}}
 				// Main content area
 				<wu-shell-main class=move || format!("grow vertical {main_class}")>
 					// wu.shell.inner_header
-					{move || main_cx.get().inner_header.run()}
+					{move || inner_header.get().run()}
 					// wu.shell.content
 					<wu-shell-content class="grow overlay-container">
 						{children()}
 					</wu-shell-content>
 					// wu.shell.inner_footer
-					{move || main_cx.get().inner_footer.run()}
+					{move || inner_footer.get().run()}
 				</wu-shell-main>
 				// wu.shell.right_sidebar
 				{match right_sidebar_container {
-					Some(sidebar) => Either::Left(move || sidebar.run(main_cx.get().right_sidebar)),
-					None => Either::Right(move || main_cx.get().right_sidebar.run()),
+					Some(sidebar) => Either::Left(move || sidebar.run(right_sidebar)),
+					None => Either::Right(move || right_sidebar.get().run()),
 				}}
 			</wu-shell-center>
 			// wu.shell.footer
-			{move || main_cx.get().footer.run()}
+			{move || footer.get().run()}
 		</wu-shell>
 	}
 }
@@ -143,59 +152,59 @@ where
 	let push_shell_cx = expect_context::<PushShell<M>>();
 	let pop_shell_cx = expect_context::<PopShell<M>>();
 	Effect::new(move |_| {
-		log::info!("{location} | pushing a new shell ctx");
+		log::trace!("{location} | pushing a new shell ctx");
 		push_shell_cx.run(ctx.clone().into());
 	});
 	on_cleanup(move || {
-		log::info!("{location} | popping a shell ctx");
+		log::trace!("{location} | popping a shell ctx");
 		pop_shell_cx.run(());
 	});
 }
 
 /// Holds all slots for a context.
-#[derive(Clone, Default)]
+#[derive(Clone, Default, PartialEq, Eq, Hash)]
 pub struct ShellCtx {
 	/// Header slot.
-	pub header: Option<ViewFn>,
+	pub header: Option<LocatableViewFn>,
 	/// Inner header slot (a part of the main content area).
-	pub inner_header: Option<ViewFn>,
+	pub inner_header: Option<LocatableViewFn>,
 	/// Left sidebar slot.
-	pub left_sidebar: Option<ViewFn>,
+	pub left_sidebar: Option<LocatableViewFn>,
 	/// Right sidebar slot.
-	pub right_sidebar: Option<ViewFn>,
+	pub right_sidebar: Option<LocatableViewFn>,
 	/// Inner footer slot (a part of the main content area).
-	pub inner_footer: Option<ViewFn>,
+	pub inner_footer: Option<LocatableViewFn>,
 	/// Footer slot.
-	pub footer: Option<ViewFn>,
+	pub footer: Option<LocatableViewFn>,
 }
 
 impl ShellCtx {
 	/// Returns a [`ShellCtx`] which sets all shell fragments to an empty view.
 	pub fn cleaned() -> Self {
 		Self {
-			header: Some(ViewFn::from(move || Some(()))),
-			inner_header: Some(ViewFn::from(move || Some(()))),
-			left_sidebar: Some(ViewFn::from(move || Some(()))),
-			right_sidebar: Some(ViewFn::from(move || Some(()))),
-			inner_footer: Some(ViewFn::from(move || Some(()))),
-			footer: Some(ViewFn::from(move || Some(()))),
+			header: Some(LocatableViewFn::new(move || Some(()))),
+			inner_header: Some(LocatableViewFn::new(move || Some(()))),
+			left_sidebar: Some(LocatableViewFn::new(move || Some(()))),
+			right_sidebar: Some(LocatableViewFn::new(move || Some(()))),
+			inner_footer: Some(LocatableViewFn::new(move || Some(()))),
+			footer: Some(LocatableViewFn::new(move || Some(()))),
 		}
 	}
 }
 
 /// Holds the the slots of the currently displayed shell context.
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 struct MainShellContext {
 	/// Header slot.
-	pub header: ViewFn,
+	pub header: LocatableViewFn,
 	/// Inner header slot (a part of the main content area).
-	pub inner_header: ViewFn,
+	pub inner_header: LocatableViewFn,
 	/// Left sidebar slot.
-	pub left_sidebar: ViewFn,
+	pub left_sidebar: LocatableViewFn,
 	/// Right sidebar slot.
-	pub right_sidebar: ViewFn,
+	pub right_sidebar: LocatableViewFn,
 	/// Inner footer slot (a part of the main content area).
-	pub inner_footer: ViewFn,
+	pub inner_footer: LocatableViewFn,
 	/// Footer slot.
-	pub footer: ViewFn,
+	pub footer: LocatableViewFn,
 }
