@@ -23,10 +23,10 @@ web-sys = { version = "0.3", features = [
 	"CustomEventInit",
 ]}
 # leptos
-leptos = { version = "0.8.0-beta" }
-leptos_router = { version = "0.8.0-beta" }
+leptos = { version = "0.8" }
+leptos_router = { version = "0.8" }
 leptos-use = { version = "0.16.0-beta", default-features = false }
-reactive_stores = { version = "0.2.0-beta" }
+reactive_stores = { version = "0.2" }
 # logging
 log = "0.4"
 console_error_panic_hook = "0.1"
