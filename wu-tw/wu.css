@@ -835,6 +835,14 @@ Used to expand an element with regards to the viewport height.
   max-height: calc(100lvh - --value([length]));
 }
 
+/* wu.utility.h-min
+Used to expand an element to a minimal height with regards to the viewport height.
+*/
+@utility h-min-* {
+  min-height: calc(100lvh - var(--spacing) * --value(integer));
+  min-height: calc(100lvh - --value([length]));
+}
+
 /* wu.utility.hide-scrollbar
 Used to hide a scrollbar from a container.
 

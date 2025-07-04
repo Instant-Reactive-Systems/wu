@@ -303,3 +303,72 @@ impl Default for LocatableViewFn {
 		}
 	}
 }
+
+/// A utility for pushing messages downstream.
+pub struct MsgChannel<M, Msg>
+where
+	M: Send + Sync + 'static,
+	Msg: Clone + Send + Sync + 'static,
+{
+	msgs: RwSignal<Vec<Msg>>,
+	_phant: std::marker::PhantomData<M>,
+}
+
+impl<M, Msg> MsgChannel<M, Msg>
+where
+	M: Send + Sync + 'static,
+	Msg: Clone + Send + Sync + 'static,
+{
+	/// Create a new message channel.
+	pub fn new() -> Self {
+		Self::default()
+	}
+
+	/// Pushes a new message.
+	pub fn push(&self, msg: Msg) {
+		self.msgs.write().push(msg);
+	}
+
+	/// Consumes the message queue.
+	///
+	/// # Note
+	/// To be called in a reactive context for reactivity.
+	pub fn consume(&self) -> Vec<Msg> {
+		let msgs = self.msgs.get();
+		self.msgs.write_untracked().clear();
+		msgs
+	}
+}
+
+impl<M, Msg> Default for MsgChannel<M, Msg>
+where
+	M: Send + Sync + 'static,
+	Msg: Clone + Send + Sync + 'static,
+{
+	fn default() -> Self {
+		Self {
+			msgs: Default::default(),
+			_phant: Default::default(),
+		}
+	}
+}
+
+impl<M, Msg> Clone for MsgChannel<M, Msg>
+where
+	M: Send + Sync + 'static,
+	Msg: Clone + Send + Sync + 'static,
+{
+	fn clone(&self) -> Self {
+		Self {
+			msgs: self.msgs.clone(),
+			_phant: Default::default(),
+		}
+	}
+}
+
+impl<M, Msg> Copy for MsgChannel<M, Msg>
+where
+	M: Send + Sync + 'static,
+	Msg: Clone + Send + Sync + 'static,
+{
+}

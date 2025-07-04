@@ -115,7 +115,23 @@ crate::generate_marker_type!(
 	PushToastMarker
 );
 
-pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, Callback<Toast, TimeoutHandle>>;
+pub type PushToast<M> = crate::utils::Marked<ToastMarker<(M, PushToastMarker)>, Callback<Toast, ToastHandle>>;
+
+/// A type that allows cancelling a toast.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToastHandle {
+	toasts_ref: RwSignal<Vec<ToastWithId>>,
+	toast_id: u64,
+	timeout_handle: TimeoutHandle,
+}
+
+impl ToastHandle {
+	/// Cancels the toast.
+	pub fn cancel(&self) {
+		self.timeout_handle.clear();
+		self.toasts_ref.write().retain(|toast: &ToastWithId| toast.id != self.toast_id);
+	}
+}
 
 /// Simple notifications utilizing a dynamic queue system.
 #[component]
@@ -135,14 +151,19 @@ where
 	let toasts = RwSignal::new(Vec::default());
 	provide_context(PushToast::<M>::new(Callback::new(move |toast: Toast| {
 		let id = toast_id.get_untracked();
-		let timeout_handle = set_timeout_with_handle(move || toasts.update(move |toasts| toasts.retain(|toast: &ToastWithId| toast.id != id)), toast.timeout);
+		let timeout_handle = set_timeout_with_handle(move || toasts.write().retain(|toast: &ToastWithId| toast.id != id), toast.timeout);
 		let Ok(timeout_handle) = timeout_handle else {
 			unreachable!("should be able to construct a timeout handle always");
+		};
+		let toast_handle = ToastHandle {
+			toasts_ref: toasts,
+			toast_id: id,
+			timeout_handle,
 		};
 
 		toasts.update(move |toasts| toasts.push(ToastWithId { id, toast, timeout_handle }));
 		toast_id.update(|n| *n = n.overflowing_add(1).0);
-		timeout_handle
+		toast_handle
 	})));
 
 	view! {
@@ -154,8 +175,11 @@ where
 						each=move || toasts.get()
 						key=move |toast| toast.id
 						children=move |toast| {
-							let id = toast.id;
-							let timeout_handle = toast.timeout_handle;
+							let toast_handle = ToastHandle {
+								toasts_ref: toasts,
+								toast_id: toast.id,
+								timeout_handle: toast.timeout_handle,
+							};
 
 							view! {
 								<wu-toast class="flex flex-row vcenter gap-4 max-w-lvw min-h-10 px-2 py-1 last:rounded-bl-md">
@@ -167,10 +191,7 @@ where
 									{toast.dismissable.then(move || view! {
 										<button
 											class="btn-icon highlight size-6"
-											on:click=move |_| {
-												timeout_handle.clear();
-												toasts.write().retain(|toast| toast.id != id);
-											}
+											on:click=move |_| toast_handle.cancel()
 										>
 											<span class="icon i-o-x-mark"/>
 										</button>
