@@ -128,7 +128,6 @@ pub fn InputCode(
 					type="text"
 					bind:value=value
 					maxlength=code_length
-					inputmode="numeric"
 					style=format!("
 						--tw-inset-ring-shadow: 0;\
 						font-family: monospace;\

@@ -495,6 +495,15 @@ Custom styling for a color picker element.
 
 /* wu.utility.anchor
 Positions an element at the sides of a parent element.
+
+# Qualifiers
+Certain letters that come before the edge specification carry 
+additional information on where to put the element. These 
+letters are qualifiers that add even more nuance and control 
+to the anchor utility. Without these qualifiers, the element 
+will be placed on _its_ half at the given edge.
+- 'o' means 'outside'
+- 'i' means 'inside'
 */
 @utility anchor {
   position: relative;
@@ -511,7 +520,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-tl {
   position: absolute;
+  transform: translateX(-50%);
+  top: auto;
+  left: 0%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-itl {
+  position: absolute;
   transform: translateX(0%);
+  top: auto;
+  left: 0%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-otl {
+  position: absolute;
+  transform: translateX(-100%);
   top: auto;
   left: 0%;
   right: auto;
@@ -520,7 +547,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-tr {
   position: absolute;
+  transform: translateX(-50%);
+  top: auto;
+  left: 100%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-itr {
+  position: absolute;
   transform: translateX(-100%);
+  top: auto;
+  left: 100%;
+  right: auto;
+  bottom: 100%;
+}
+
+@utility anchor-otr {
+  position: absolute;
+  transform: translateX(0%);
   top: auto;
   left: 100%;
   right: auto;
@@ -538,7 +583,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-bl {
   position: absolute;
+  transform: translateX(-50%);
+  top: 100%;
+  left: 0%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-ibl {
+  position: absolute;
   transform: translateX(0%);
+  top: 100%;
+  left: 0%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-obl {
+  position: absolute;
+  transform: translateX(-100%);
   top: 100%;
   left: 0%;
   right: auto;
@@ -547,7 +610,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-br {
   position: absolute;
+  transform: translateX(-50%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-ibr {
+  position: absolute;
   transform: translateX(-100%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-obr {
+  position: absolute;
+  transform: translateX(0%);
   top: 100%;
   left: 100%;
   right: auto;
@@ -565,7 +646,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-lt {
   position: absolute;
+  transform: translateY(-50%);
+  top: 0%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-ilt {
+  position: absolute;
   transform: translateY(0%);
+  top: 0%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-olt {
+  position: absolute;
+  transform: translateY(-100%);
   top: 0%;
   left: auto;
   right: 100%;
@@ -574,7 +673,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-lb {
   position: absolute;
+  transform: translateY(-50%);
+  top: 100%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-ilb {
+  position: absolute;
   transform: translateY(-100%);
+  top: 100%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+}
+
+@utility anchor-olb {
+  position: absolute;
+  transform: translateY(0%);
   top: 100%;
   left: auto;
   right: 100%;
@@ -592,7 +709,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-rt {
   position: absolute;
+  transform: translateY(-50%);
+  top: 0%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-irt {
+  position: absolute;
   transform: translateY(0%);
+  top: 0%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-ort {
+  position: absolute;
+  transform: translateY(-100%);
   top: 0%;
   left: 100%;
   right: auto;
@@ -601,7 +736,25 @@ Positions an element at the sides of a parent element.
 
 @utility anchor-rb {
   position: absolute;
+  transform: translateY(-50%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-irb {
+  position: absolute;
   transform: translateY(-100%);
+  top: 100%;
+  left: 100%;
+  right: auto;
+  bottom: auto;
+}
+
+@utility anchor-orb {
+  position: absolute;
+  transform: translateY(0%);
   top: 100%;
   left: 100%;
   right: auto;
@@ -1119,6 +1272,116 @@ Allows toggling the visibility of two elements using a checkbox or a class name.
   }
 }
 
+/* wu.component.table
+Wrapper class for a <div> surrounding a <table> for unique styling.
+
+# Usage
+
+```
+<table class="wtable">
+  <thead>...</thead>
+  <tbody>...</tbody>
+  <tfoot>...</tfoot>
+</table>
+```
+*/
+@theme inline {
+  --wu-table-body-bg-color: var(--color-surface-1);
+  --wu-table-header-bg-color: var(--color-surface-2);
+  --wu-table-footer-bg-color: var(--color-surface-2);
+  --wu-table-border-color: var(--color-surface-3);
+  --wu-table-body-text-color: var(--color-content-emph);
+  --wu-table-header-text-color: var(--color-content-emph);
+  --wu-table-footer-text-color: var(--color-content-emph);
+  --wu-table-cell-padding-t: --spacing(2);
+  --wu-table-cell-padding-r: --spacing(4);
+  --wu-table-cell-padding-b: --spacing(2);
+  --wu-table-cell-padding-l: --spacing(4);
+  --wu-table-cell-padding: var(--wu-table-cell-padding-t) var(--wu-table-cell-padding-r) var(--wu-table-cell-padding-b) var(--wu-table-cell-padding-l);
+  --wu-table-border-width: 1px;
+  --wu-table-border-radius: var(--radius-lg);
+  --wu-table-text-align: left;
+}
+
+@layer components {
+  /* NOTE: `table` is taken by tailwind, so name it wtable */
+  .wtable {
+    color: var(--wu-table-body-text-color);
+    background-color: var(--wu-table-body-bg-color);
+    border-color: var(--wu-table-border-color);
+    border-width: var(--wu-table-border-width);
+    border-radius: var(--wu-table-border-radius);
+    overflow: hidden;
+
+    table, .table {
+      width: 100%;
+      height: 100%;
+    }
+
+    td, th, .table-cell {
+      padding: var(--wu-table-cell-padding);
+      text-align: var(--wu-table-text-align);
+      border-color: var(--wu-table-border-color);
+    }
+
+    tr, .table-row {
+      border-color: var(--wu-table-border-color);
+    }
+
+    & tr, & .table-row {
+      & > :not(:last-child) {
+        border-color: var(--wu-table-border-color);
+        border-inline-start-width: 0px;
+        border-inline-end-width: var(--wu-table-border-width);
+      }
+    }
+
+    & tbody, & .table-row-group,
+    & thead, & .table-header-group,
+    & tfoot, & .table-footer-group {
+      & > :not(:last-child) {
+        border-top-width: 0px;
+        border-bottom-width: var(--wu-table-border-width);
+      }
+    }
+
+    & thead tr, & .table-header-group .table-row {
+      & > :not(:last-child) {
+        border-color: var(--wu-table-border-color);
+      }
+    }
+
+    & tfoot tr, & .table-footer-group .table-row {
+      & > :not(:last-child) {
+        border-color: var(--wu-table-border-color);
+      }
+    }
+
+    thead, .table-header-group {
+      & td, & th, & .table-cell {
+        background-color: var(--wu-table-header-bg-color);
+        border-color: var(--wu-table-border-color);
+        color: var(--wu-table-header-text-color);
+      }
+      
+    }
+
+    td, .table-cell {
+      background-color: var(--wu-table-body-bg-color);
+      border-color: var(--wu-table-border-color);
+      color: var(--wu-table-body-text-color);
+    }
+
+    tfoot, .table-footer-group {
+      & td, & th, & .table-cell {
+        background-color: var(--wu-table-footer-bg-color);
+        border-color: var(--wu-table-border-color);
+        color: var(--wu-table-footer-text-color);
+      }
+    }
+  }
+}
+
 /* wu.utility.text-outline
 Adds outline to text.
 
@@ -1126,6 +1389,7 @@ Adds outline to text.
 
 ```html
 <h1 class="text-outline-8 text-outline-primary">{title}</h1>
+```
 */
 @utility text-outline-* {
   -webkit-text-stroke-width: --value([length]);
@@ -2351,6 +2615,7 @@ Used to show the progress of a task or to show the passing of time.
       position: absolute;
       border-radius: calc(infinity * 1px);
       content: '';
+      z-index: 2;
     }
 
     &:before {
@@ -2399,6 +2664,7 @@ Used to show the progress of a task or to show the passing of time.
       position: absolute;
       border-radius: calc(infinity * 1px);
       content: '';
+      z-index: 1;
     }
 
     &:before {
