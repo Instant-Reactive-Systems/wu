@@ -1300,7 +1300,6 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
   --wu-table-cell-padding: var(--wu-table-cell-padding-t) var(--wu-table-cell-padding-r) var(--wu-table-cell-padding-b) var(--wu-table-cell-padding-l);
   --wu-table-border-width: 1px;
   --wu-table-border-radius: var(--radius-lg);
-  --wu-table-text-align: left;
 }
 
 @layer components {
@@ -1314,17 +1313,42 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     overflow: hidden;
 
     table, .table {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       height: 100%;
     }
 
     td, th, .table-cell {
+      display: flex;
+      flex: 1;
+      justify-content: flex-start;
+      align-items: center;
       padding: var(--wu-table-cell-padding);
       text-align: var(--wu-table-text-align);
       border-color: var(--wu-table-border-color);
     }
 
+    &[data-wtable-align="left"] td,
+    &[data-wtable-align="left"] th,
+    &[data-wtable-align="left"] .table-cell {
+      justify-content: flex-start;
+    }
+
+    &[data-wtable-align="center"] td,
+    &[data-wtable-align="center"] th,
+    &[data-wtable-align="center"] .table-cell {
+      justify-content: center;
+    }
+
+    &[data-wtable-align="right"] td,
+    &[data-wtable-align="right"] th,
+    &[data-wtable-align="right"] .table-cell {
+      justify-content: flex-end;
+    }
+
     tr, .table-row {
+      display: flex;
       border-color: var(--wu-table-border-color);
     }
 
@@ -1357,19 +1381,25 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
       }
     }
 
+    td, .table-cell {
+      background-color: var(--wu-table-body-bg-color);
+      border-color: var(--wu-table-border-color);
+      color: var(--wu-table-body-text-color);
+    }
+
+    tbody, .table-row-group {
+      overflow: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
     thead, .table-header-group {
       & td, & th, & .table-cell {
         background-color: var(--wu-table-header-bg-color);
         border-color: var(--wu-table-border-color);
         color: var(--wu-table-header-text-color);
       }
-      
-    }
-
-    td, .table-cell {
-      background-color: var(--wu-table-body-bg-color);
-      border-color: var(--wu-table-border-color);
-      color: var(--wu-table-body-text-color);
     }
 
     tfoot, .table-footer-group {
