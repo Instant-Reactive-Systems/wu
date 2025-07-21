@@ -1,29 +1,21 @@
 [package]
-name = "wu"
+name = "wu-docs"
 version = "0.1.0"
-edition = "2021"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2024"
 
 [dependencies]
+# app
+wu = { path = "../" }
 # web
-# http = "1.0"
-web-sys = { version = "0.3", features = [
-	"Document", 
-	"Element", 
-	"NodeList", 
-	"Event", 
-	"EventTarget", 
-	"KeyboardEvent", 
-	"HtmlSelectElement",
-	"CustomEvent",
-	"CustomEventInit",
-]}
+http = "1.0"
+web-sys = { version = "0.3", features = ["Event", "EventTarget", "HtmlSelectElement", "Performance"] }
+gloo-net = { version = "0.6", features = ["http"] }
+gloo-timers = { version = "0.3", features = ["futures"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
 # leptos
-leptos = { version = "0.8" }
+leptos = { version = "0.8", features = ["tracing"] }
+leptos_meta = { version = "0.8" }
 leptos_router = { version = "0.8" }
 leptos-use = { version = "0.16.0-beta", default-features = false }
 reactive_stores = { version = "0.2" }
@@ -31,11 +23,24 @@ reactive_stores = { version = "0.2" }
 log = "0.4"
 console_error_panic_hook = "0.1"
 console_log = "1.0"
+tracing = { version = "0.1", optional = true }
+tracing-subscriber = { version = "0.3", optional = true }
+tracing-subscriber-wasm = { version = "0.1", optional = true }
 # common
+uuid = { version = "1.10", default-features = false, features = ["v4"] }
+fluent = "0.16"
+fluent-templates = { version = "0.12" }
+once_cell = "1.19"
 thiserror = "1.0"
 serde = "1.0"
-uuid = { version = "1.10", default-features = false, features = ["v4", "js"] }
+codee = { version = "0.3", default-features = false, features = ["json_serde"] }
 serde_json = { version = "1.0" }
+strum = { version = "0.26", features=["derive"] }
+jsonwebtoken = "9.3"
+send_wrapper = "0.6"
+anyhow = "1.0"
+secrecy = { version = "0.10.3", features = ["serde"] }
+chrono = "0.4"
 
 [features]
 default = [
@@ -51,7 +56,7 @@ default = [
     "leptos-use/on_click_outside",
     # "leptos-use/signal_debounced",
     # "leptos-use/signal_throttled",
-    # "leptos-use/storage",
+    "leptos-use/storage",
     # "leptos-use/sync_signal",
     "leptos-use/use_active_element",
     # "leptos-use/use_breakpoints",
@@ -118,7 +123,13 @@ default = [
     # "leptos-use/whenever"
 ]
 csr = [
-	"leptos/csr", 
+    "leptos/csr",
+    "uuid/js",
+]
+tracing = [
+    "dep:tracing",
+    "dep:tracing-subscriber",
+    "dep:tracing-subscriber-wasm",
 ]
 
 [profile.release]
@@ -126,9 +137,31 @@ codegen-units = 1
 lto = true
 opt-level = 'z'
 
+# Defines a size-optimized profile for the WASM bundle in release mode
 [profile.wasm-release]
 inherits = "release"
 opt-level = 'z'
 lto = true
 codegen-units = 1
 panic = "abort"
+
+# for custom leptos patching
+# [patch.crates-io]
+# leptos = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# leptos_router = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# leptos_server = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# tachys = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# either_of = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# reactive_graph = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# reactive_stores = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+# reactive_stores_macro = { git = "ssh://git@github.com/Instant-Reactive-Systems/leptos.git", branch = "latest" }
+
+# [patch.crates-io]
+# leptos = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# leptos_router = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# leptos_server = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# tachys = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# either_of = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# reactive_graph = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# reactive_stores = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
+# reactive_stores_macro = { git = "https://github.com/leptos-rs/leptos", branch = "main" }
