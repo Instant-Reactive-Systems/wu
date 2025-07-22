@@ -100,10 +100,10 @@ pub fn InputCode(
 	/// How long is the code.
 	#[prop(into)]
 	code_length: i32,
-	/// How huge is one field input of the code.
+	/// How large is one field input of the code.
 	#[prop(into)]
 	field_size: i32,
-	/// How huge is one field input of the code.
+	/// How thick is one field input of the code.
 	#[prop(into)]
 	field_thickness: i32,
 	/// Specifies the `placeholder` attribute on the element.

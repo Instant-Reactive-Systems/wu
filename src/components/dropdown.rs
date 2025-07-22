@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-/// A wrapper around a `<select>` and `<option>` that automatically
+/// A wrapper around a `<select>` and `<option>` that provides
 /// interactivity automatically.
 ///
 /// # Example

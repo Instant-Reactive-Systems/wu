@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use leptos::prelude::*;
 
 /// A wrapper around a `<button>` that automatically
@@ -38,7 +40,7 @@ pub fn ActionButton<I, O>(
 	on_finish: Callback<(O,), ()>,
 	/// How long the finished state will last for.
 	#[prop(into)]
-	finished_lasts_for: f64,
+	finished_lasts_for: Duration,
 ) -> impl IntoView
 where
 	I: Send + Sync + 'static,
@@ -59,7 +61,7 @@ where
 			on_finish.run((action.value().get_untracked().as_ref().cloned().expect("should be Some"),));
 			state.update(move |state| *state = State::Idle);
 		},
-		finished_lasts_for,
+		finished_lasts_for.as_millis() as f64,
 	);
 
 	// logic
