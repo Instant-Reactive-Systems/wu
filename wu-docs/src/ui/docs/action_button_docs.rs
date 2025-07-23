@@ -18,17 +18,6 @@ async fn get_time_from_api(tz : String) -> String {
 pub fn ActionButtonDocs() -> impl IntoView {
     let (text_from_fetched_time, set_text_from_fetched_time) = signal(String::from("Response from Time API will be displayed here"));
     let (time_zone, set_time_zone) = signal(String::from("Europe/Zagreb"));
-
-    const ACTION_BUTTON_CODE : &str = 
-r##"<ActionButton 
-action=fetch_time 
-input={move || time_zone.get()}
-idle_view={move || {"Get the time"}}
-pending_view={move || {"Getting the time"}}
-finished_view={move |_fetched_time| {"This is the time"}}
-on_finish={move |fetched_time| {set_text_from_fetched_time.set(fetched_time)}}
-finished_lasts_for=1000
-/>"##;
     
     let fetch_time = Action::new(move |tz : &String| {
         set_text_from_fetched_time.set(String::new());

@@ -1,4 +1,4 @@
-use crate::{prelude::*, ui::docs};
+use crate::{prelude::*, ui::docs::{self, DropdownDocs, InputCodeDocs, ModalDocs}};
 
 #[component]
 pub fn Navbar() -> impl IntoView {
@@ -36,7 +36,7 @@ pub fn Home() -> impl IntoView {
             <A href="/dropdown">"Dropdown"</A>
             </li>
             <li>
-            <A href="/input">"Input"</A>
+            <A href="/input_code">"InputCode"</A>
             </li>
             <li>
             <A href="/modal">"Modal"</A>
@@ -75,10 +75,11 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/") view=Home />
                         <Route path=path!("action_button") view=docs::ActionButtonDocs/>
                         <Route path=path!("debug_console") view=NotFound/>
-                        <Route path=path!("drawer") view=NotFound/>
-                        <Route path=path!("dropdown") view=NotFound/>
-                        <Route path=path!("input") view=NotFound/>
-                        <Route path=path!("modal") view=NotFound/>
+                        <Route path=path!("drawer") view=docs::DrawerDocs/>
+                        <Route path=path!("dropdown") view=DropdownDocs/>
+                        <Route path=path!("input_code") view=InputCodeDocs/>
+                        <Route path=path!("fallible_reactive_input") view=NotFound/>
+                        <Route path=path!("modal") view=ModalDocs/>
                         <Route path=path!("shell") view=NotFound/>
                         <Route path=path!("stack_context") view=NotFound/>
                         <Route path=path!("tabs") view=NotFound/>
