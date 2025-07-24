@@ -10,9 +10,9 @@ pub struct ReactiveErrors {
 }
 
 impl ReactiveErrors {
-	/// Creates an empty [`Errors`].
-	pub fn new() -> Self {
-		Self::default()
+	/// Creates a [`ReactiveErrors`] from [`Errors`].
+	pub fn new(errors: Errors) -> Self {
+		Self { errors: RwSignal::new(errors) }
 	}
 
 	/// Gets the error with the specified name, if it exists.
