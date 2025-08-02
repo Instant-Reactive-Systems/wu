@@ -3,7 +3,7 @@ mod errors;
 mod states;
 mod theme;
 pub use focus_trap::*;
-pub use errors::{Errors, ReactiveErrors, ShowError, error};
+pub use errors::{error, Errors, ReactiveErrors, ShowError};
 use leptos_router::NavigateOptions;
 pub use states::*;
 pub use theme::*;
@@ -170,18 +170,18 @@ impl Default for Text {
 }
 
 impl IntoRender for Text {
-	type Output = std::borrow::Cow<'static, str>;
+	type Output = Signal<std::borrow::Cow<'static, str>>;
 
 	fn into_render(self) -> Self::Output {
-		self.0.get()
+		self.0
 	}
 }
 
 impl IntoAttributeValue for Text {
-	type Output = String;
+	type Output = Signal<String>;
 
 	fn into_attribute_value(self) -> Self::Output {
-		self.0.get().into_owned()
+		Signal::derive(move || self.0.get().into_owned())
 	}
 }
 
