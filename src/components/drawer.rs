@@ -1,4 +1,5 @@
 use leptos::{html, prelude::*};
+
 use crate::utils::Text;
 
 /// All possible drawer positions.
@@ -72,7 +73,6 @@ pub fn Drawer(
 		translate
 	});
 
-	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<wu-drawer class="contents">
 			<dialog node_ref=dialog_ref>

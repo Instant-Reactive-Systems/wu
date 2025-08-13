@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+
 use crate::utils::Text;
 
 /// A wrapper around a `<input>` with a `String` value that handles reactive
@@ -32,7 +33,6 @@ pub fn FallibleReactiveInput(
 	#[prop(optional, into)]
 	class: Text,
 ) -> impl IntoView {
-	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<div class="relative vertical">
 			// if mobile
@@ -120,7 +120,6 @@ pub fn InputCode(
 	let half_field_size = field_size / 2;
 	let total_field_size = code_length * field_size;
 
-	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<div class="overflow-hidden" style=format!("max-width: {total_field_size}px")> // prevents scroll-past-last-character behaviour
 			<div class="sticky left-0"> // necessary because it hard-fixes the input field not to scroll

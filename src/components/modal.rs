@@ -1,4 +1,5 @@
 use leptos::{html, prelude::*};
+
 use crate::utils::Text;
 
 /// A modal that provides an ergonomic wrapper around `<dialog>`.
@@ -44,7 +45,6 @@ pub fn Modal(
 		},
 	});
 
-	// TODO: wait for AttributeInterceptor to pass it to the inner input
 	view! {
 		<dialog node_ref=dialog_ref>
 			<div class=format!("overlay-viewport-container flex hcenter h-sm:vcenter bg-transparent z-9999 {}", if !no_blur_bg { "backdrop:blur-sm backdrop:backdrop-blur-sm backdrop:bg-black/50" } else { "backdrop:bg-transparent" })>
