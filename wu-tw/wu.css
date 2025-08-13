@@ -2893,6 +2893,93 @@ Used to show a list of steps in a process.
   }
 }
 
+/* wu.utility.scroll-shadow
+Used to enable visible shadows when a container overflows and is scrollable.
+
+# Usage
+
+```html
+<div class="scroll-shadow-y scroll-shadow-x max-w-40 max-h-40 overflow-auto">
+  ...
+</div>
+```
+*/
+@theme inline {
+  --wu-scroll-shadow-bg: var(--color-surface-1);
+}
+
+@utility scroll-shadow-x {
+  background:
+      /* Shadow Cover LEFT */
+      linear-gradient(
+          to right,
+          var(--wu-scroll-shadow-bg) 30%,
+          rgba(255, 255, 255, 0)
+      ) left center,
+  
+      /* Shadow Cover RIGHT */
+      linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0), 
+          var(--wu-scroll-shadow-bg) 70%
+      ) right center,
+  
+      /* Shadow LEFT */
+      radial-gradient(
+          farthest-side at 0% 50%,
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0)
+      ) left center,
+  
+      /* Shadow RIGHT */
+      radial-gradient(
+          farthest-side at 100% 50%,
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0)
+      ) right center;
+
+  background-repeat: no-repeat;
+  background-size: 40px 300%, 40px 300%, 14px 300%, 14px 300%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@utility scroll-shadow-y {
+  background:
+      /* Shadow Cover TOP */
+      linear-gradient(
+          var(--wu-scroll-shadow-bg) 30%,
+          rgba(255, 255, 255, 0)
+      ) center top,
+  
+      /* Shadow Cover BOTTOM */
+      linear-gradient(
+          rgba(255, 255, 255, 0), 
+          var(--wu-scroll-shadow-bg) 70%
+      ) center bottom,
+  
+      /* Shadow TOP */
+      radial-gradient(
+          farthest-side at 50% 0,
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0)
+      ) center top,
+  
+      /* Shadow BOTTOM */
+      radial-gradient(
+          farthest-side at 50% 100%,
+          rgba(0, 0, 0, 0.4),
+          rgba(0, 0, 0, 0)
+      ) center bottom;
+
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@utility scroll-shadow-* {
+  --wu-scroll-shadow-bg: --value(--color-*);
+}
+
 /* wu.component.tabs
 Used to show a list of links in a tabbed format.
 
