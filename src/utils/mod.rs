@@ -372,3 +372,12 @@ where
 	Msg: Clone + Send + Sync + 'static,
 {
 }
+
+/// Component flavor.
+///
+/// Designed to select the component to be rendered as an icon or by text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Flavor {
+	Icon,
+	Text,
+}
