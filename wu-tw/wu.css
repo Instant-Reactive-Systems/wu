@@ -2642,6 +2642,50 @@ Used to show the progress of a task or to show the passing of time.
       appearance: none;
     }
 
+    &:before {
+      position: absolute;
+      border-radius: calc(infinity * 1px);
+      content: '';
+      z-index: 2;
+    }
+
+    &:before {
+      inset: 0;
+      background: conic-gradient(currentColor calc(var(--wu-radial-value) * 1%), #0000 0);
+      -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+      mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+    }
+  }
+
+  .radial-rounded {
+    --wu-radial-value: 0;
+    --wu-radial-size: 5rem;
+    --wu-radial-thickness: calc(var(--wu-radial-size) / 10);
+    width: var(--wu-radial-size);
+    height: var(--wu-radial-size);
+    background-color: transparent;
+    border-radius: calc(infinity * 1px);
+    display: inline-grid;
+    place-content: center;
+    position: relative;
+    vertical-align: middle;
+    box-sizing: content-box;
+
+    &::-moz-progress-bar {
+      background-color: transparent;
+      appearance: none;
+    }
+
+    &::-webkit-progress-value {
+      background-color: transparent;
+      appearance: none;
+    }
+
+    &::-webkit-progress-bar {
+      background-color: transparent;
+      appearance: none;
+    }
+
     &:before, &:after {
       position: absolute;
       border-radius: calc(infinity * 1px);
@@ -2654,11 +2698,13 @@ Used to show the progress of a task or to show the passing of time.
   		background: radial-gradient(farthest-side, currentColor 98%, #0000) top/var(--wu-radial-thickness) var(--wu-radial-thickness) no-repeat, conic-gradient(currentColor calc(var(--wu-radial-value) * 1%), #0000 0);
   		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
   		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+      opacity: calc(100% * var(--wu-radial-value));
     }
 
     &:after {
       background-color: currentColor;
       inset: calc(50% - var(--wu-radial-thickness) / 2);
+      opacity: calc(100% * var(--wu-radial-value));
       transform: rotate(calc(var(--wu-radial-value) * 3.6deg - 90deg)) translate(calc(var(--wu-radial-size) / 2 - 50%));
     }
   }
