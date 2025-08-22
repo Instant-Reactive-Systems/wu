@@ -1025,8 +1025,6 @@ A button style that highlights the surrounding area on hover.
 @utility highlight {
   --wu-highlight-border-color: --alpha(var(--color-surface-content) / 20%);
   --wu-highlight-bg-color: --alpha(var(--color-surface-content) / 10%);
-  border-width: 1px;
-  box-sizing: border-box;
   --wu-divider-color: var(--wu-highlight-border-color);
   
   @variant hover {
@@ -1353,38 +1351,42 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     }
 
     & tr, & .table-row {
-      & > :not(:last-child) {
-        border-color: var(--wu-table-border-color);
+      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
         border-inline-start-width: 0px;
         border-inline-end-width: var(--wu-table-border-width);
       }
     }
 
-    & tbody, & .table-row-group,
-    & thead, & .table-header-group,
     & tfoot, & .table-footer-group {
-      & > :not(:last-child) {
+      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
         border-top-width: 0px;
         border-bottom-width: var(--wu-table-border-width);
-      }
-    }
-
-    & thead tr, & .table-header-group .table-row {
-      & > :not(:last-child) {
         border-color: var(--wu-table-border-color);
       }
     }
 
-    & tfoot tr, & .table-footer-group .table-row {
-      & > :not(:last-child) {
+    &:not(:has(tfoot, .table-footer-group)) tbody, &:not(:has(tfoot, .table-footer-group)) .table-row-group,
+    &:not(:has(tbody, .table-row-group)) thead, &:not(:has(tfoot, .table-footer-group)) .table-header-group {
+      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
+        border-top-width: 0px;
+        border-bottom-width: var(--wu-table-border-width);
+        border-color: var(--wu-table-border-color);
+      }
+    }
+
+    &:has(tfoot, .table-footer-group) tbody, &:has(tfoot, .table-footer-group) .table-row-group,
+    &:has(tbody, .table-row-group) thead, &:has(tfoot, .table-footer-group) .table-header-group {
+      & > :not(.absolute, .overlay, .hidden, .invisible) {
+        border-top-width: 0px;
+        border-bottom-width: var(--wu-table-border-width);
         border-color: var(--wu-table-border-color);
       }
     }
 
     td, .table-cell {
       background-color: var(--wu-table-body-bg-color);
-      border-color: var(--wu-table-border-color);
       color: var(--wu-table-body-text-color);
+      border-color: var(--wu-table-border-color);
     }
 
     tbody, .table-row-group {
@@ -1397,7 +1399,6 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     thead, .table-header-group {
       & td, & th, & .table-cell {
         background-color: var(--wu-table-header-bg-color);
-        border-color: var(--wu-table-border-color);
         color: var(--wu-table-header-text-color);
       }
     }
@@ -1405,7 +1406,6 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     tfoot, .table-footer-group {
       & td, & th, & .table-cell {
         background-color: var(--wu-table-footer-bg-color);
-        border-color: var(--wu-table-border-color);
         color: var(--wu-table-footer-text-color);
       }
     }
