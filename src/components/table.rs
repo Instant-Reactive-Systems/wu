@@ -85,7 +85,7 @@ where
 											</span>
 										</div>
 										// Next
-										{move || match offset.get() + limit >= total_count {
+										{move || match offset.get() * limit >= total_count {
 											true => Either::Left(view! { <div class="flex-none size-8"/> }),
 											false => Either::Right(view ! {
 												<button
