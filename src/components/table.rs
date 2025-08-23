@@ -5,7 +5,7 @@ use crate::utils::{Text, ViewFnWithArgs};
 /// A table component displaying paginated records and providing a way to view into
 /// windows of records via a footer control part.
 #[component]
-pub fn Table<F, T>(
+pub fn Table<T, E, Fut, F>(
 	/// Source for getting the data.
 	///
 	/// # Note
@@ -16,10 +16,13 @@ pub fn Table<F, T>(
 	/// The limit on the number of records to fetch.
 	limit: u64,
 	/// Table header view.
+	#[prop(into)]
 	header: ViewFn,
 	/// Table row view.
+	#[prop(into)]
 	row: ViewFnWithArgs<T>,
 	/// Fallback (loading) view.
+	#[prop(optional, into)]
 	fallback: ViewFn,
 	/// Corresponds to the 'class' attribute of elements.
 	#[prop(optional, into)]
@@ -29,69 +32,97 @@ pub fn Table<F, T>(
 	style: Text,
 ) -> impl IntoView
 where
-	F: Fn(u32, u32) -> std::future::Future<Output = (u64, Vec<T>)>,
-	T: Send + Sync + 'static,
+	T: Clone + Send + Sync + 'static,
+	E: std::fmt::Debug + Clone + Send + Sync + 'static,
+	Fut: std::future::Future<Output = Result<(u64, Vec<T>), E>> + 'static,
+	F: Fn(u64, u64) -> Fut + 'static,
 {
 	// vars
 	let offset: RwSignal<u64> = RwSignal::new(0);
 	let data_resource = LocalResource::new(move || data_source(offset.get(), limit));
 
 	view! {
-		<div class=move || format!("wtable {class}") style=style>
+		<div class=move || format!("wtable {}", class.get().into_owned()) style=move || style.get().into_owned()>
 			<table>
 				<thead>
 					{move || header.run()}
 				</thead>
 				{move || match data_resource.get() {
-					Some((total_count, records)) => Either::Left(view! {
-						<tbody>
-							{
-								records
-									.into_iter()
-									.map(move |record| row.run(record))
-									.collect::<Vec<_>>()
-							}
-						</tbody>
-						<tfoot>
-							<td class="grow center">
-								<div class="horizontal gap-2">
-									// Previous
-									{move || match offset.get() == 0 {
-										true => Either::Left(view! { <div class="flex-none size-10"/> }),
-										false => Either::Right(view ! {
-											<button
-												on:click=move |_| offset.write().saturating_sub(1)
-												class="btn-icon btn-primary size-10"
-											>
-												<span class="icon i-o-arrow-left" />
-											</button>
-										}),
-									}}
-									// Current pages
-									<div class="h-10 flex vcenter">
-										<span class="text-lg">
-											{move || offset.get()}
-											" / "
-											{total_count}
+					Some(res) => Either::Left(match res {
+						Ok((total_count, records)) => Either::Left(view! {
+							<tbody style=format!("\
+								height: calc(var(--spacing) * 10 * {limit});\
+							")>
+								{
+									let row = row.clone();
+									records
+										.into_iter()
+										.map(move |record| row.clone().run(record))
+										.collect::<Vec<_>>()
+								}
+							</tbody>
+							<tfoot>
+								<td class="grow center">
+									<div class="horizontal gap-2">
+										// Previous
+										{move || match offset.get() == 0 {
+											true => Either::Left(view! { <div class="flex-none size-8"/> }),
+											false => Either::Right(view ! {
+												<button
+													on:click=move |_| offset.update(move |offset| *offset = offset.saturating_sub(1))
+													class="btn-icon btn-primary size-8"
+												>
+													<span class="icon i-o-arrow-left" />
+												</button>
+											}),
+										}}
+										// Current pages
+										<div class="h-10 flex vcenter">
+											<span class="text-lg">
+												{move || offset.get() + 1}
+												" / "
+												{(total_count / limit) + 1}
+											</span>
+										</div>
+										// Next
+										{move || match offset.get() + limit >= total_count {
+											true => Either::Left(view! { <div class="flex-none size-8"/> }),
+											false => Either::Right(view ! {
+												<button
+													on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
+													class="btn-icon btn-primary size-8"
+												>
+													<span class="icon i-o-arrow-right" />
+												</button>
+											}),
+										}}
+									</div>
+								</td>
+							</tfoot>
+						}),
+						Err(err) => Either::Right(view! {
+							<tbody>
+								<div class="cover flex center">
+									<div class="vertical gap-2">
+										<span class="icon i-o-exclamation-triangle icon-error-500"/>
+										<span class="font-semibold text-content-emph">
+											{format!("{err:?}")}
 										</span>
 									</div>
-									// Next
-									{move || match offset.get() + limit >= total_count {
-										true => Either::Left(view! { <div class="flex-none size-10"/> }),
-										false => Either::Right(view ! {
-											<button
-												on:click=move |_| offset.write().saturating_add(limit)
-												class="btn-icon btn-primary size-10"
-											>
-												<span class="icon i-o-arrow-right" />
-											</button>
-										}),
-									}}
 								</div>
-							</td>
-						</tfoot>
-					}),,
-					None => Either::Right(fallback.run()),
+							</tbody>
+						}),
+					}),
+					None => Either::Right(view! {
+						<tbody
+							class="flex center"
+							style=format!("\
+								height: calc(var(--spacing) * 10 * {limit});\
+							")
+						>
+							{fallback.run()}
+						</tbody>
+					}),
 				}}
 			</table>
 		</div>
