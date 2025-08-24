@@ -68,12 +68,14 @@ where
 										{move || match offset.get() == 0 {
 											true => Either::Left(view! { <div class="flex-none size-8"/> }),
 											false => Either::Right(view ! {
-												<button
-													on:click=move |_| offset.update(move |offset| *offset = offset.saturating_sub(1))
-													class="btn-icon btn-primary size-8"
-												>
-													<span class="icon i-o-arrow-left" />
-												</button>
+												<div class="flex center">
+													<button
+														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_sub(1))
+														class="btn-icon btn-primary size-8"
+													>
+														<span class="icon i-o-arrow-left" />
+													</button>
+												</div>
 											}),
 										}}
 										// Current pages
@@ -85,15 +87,17 @@ where
 											</span>
 										</div>
 										// Next
-										{move || match offset.get() * limit >= total_count {
+										{move || match (offset.get() + 1) * limit >= total_count {
 											true => Either::Left(view! { <div class="flex-none size-8"/> }),
 											false => Either::Right(view ! {
-												<button
-													on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
-													class="btn-icon btn-primary size-8"
-												>
-													<span class="icon i-o-arrow-right" />
-												</button>
+												<div class="flex center">
+													<button
+														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
+														class="btn-icon btn-primary size-8"
+													>
+														<span class="icon i-o-arrow-right" />
+													</button>
+												</div>
 											}),
 										}}
 									</div>
