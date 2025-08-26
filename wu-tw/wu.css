@@ -941,7 +941,7 @@ Used to expand an element with regards to the viewport width.
   max-width: calc(100lvw - --value([length]));
 
   /* heavily relies on the fact that the user won't change breakpoints, modify this if you do !!! */
-  &:where(.container *, .sm\:container *, .md\:container *, .lg\:container *, .xl\:container *, .2xl\:container *) {
+  :where(.container, .sm\:container) & {
     @variant sm {
       max-width: calc(var(--breakpoint-sm) - var(--spacing) * --value(integer));
       max-width: calc(var(--breakpoint-sm) - --value([length]));
@@ -962,6 +962,64 @@ Used to expand an element with regards to the viewport width.
       max-width: calc(var(--breakpoint-xl) - --value([length]));
     }
 
+    @variant 2xl {
+      max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-2xl) - --value([length]));
+    }
+  }
+
+  :where(.md\:container) & {
+    @variant md {
+      max-width: calc(var(--breakpoint-md) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-md) - --value([length]));
+    }
+
+    @variant lg {
+      max-width: calc(var(--breakpoint-lg) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-lg) - --value([length]));
+    }
+
+    @variant xl {
+      max-width: calc(var(--breakpoint-xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-xl) - --value([length]));
+    }
+
+    @variant 2xl {
+      max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-2xl) - --value([length]));
+    }
+  }
+
+  :where(.lg\:container) & {
+    @variant lg {
+      max-width: calc(var(--breakpoint-lg) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-lg) - --value([length]));
+    }
+
+    @variant xl {
+      max-width: calc(var(--breakpoint-xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-xl) - --value([length]));
+    }
+
+    @variant 2xl {
+      max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-2xl) - --value([length]));
+    }
+  }
+
+  :where(.xl\:container) & {
+    @variant xl {
+      max-width: calc(var(--breakpoint-xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-xl) - --value([length]));
+    }
+
+    @variant 2xl {
+      max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
+      max-width: calc(var(--breakpoint-2xl) - --value([length]));
+    }
+  }
+
+  :where(.2xl\:container) & {
     @variant 2xl {
       max-width: calc(var(--breakpoint-2xl) - var(--spacing) * --value(integer));
       max-width: calc(var(--breakpoint-2xl) - --value([length]));
