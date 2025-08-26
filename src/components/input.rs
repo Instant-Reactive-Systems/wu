@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-use crate::utils::Text;
+use crate::utils::{ShowError, Text};
 
 /// A wrapper around a `<input>` with a `String` value that handles reactive
 /// interactivity automatically and displays an error if error occurs.
@@ -33,47 +33,24 @@ pub fn FallibleReactiveInput(
 	#[prop(optional, into)]
 	class: Text,
 ) -> impl IntoView {
+	// vars
+	let error = Memo::new(move |_| errors.get(error_id.get()));
+
 	view! {
-		<div class="relative vertical">
-			// if mobile
-			<div class="flex xl:hidden relative">
-				{move || errors.get(error_id.get()).map(move |err| view! {
-					<div
-						class=
-						"
-							input-error border w-fit text-nowrap py-1 px-2 mb-2 rounded-md rounded-bl-none \
-							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 \
-							before:left-[2px] before:top-[calc(100%_-_12px)] before:rotate-45 before:border-r before:border-b \
-						"
-					>
-						{err}
-					</div>
-				})}
-			</div>
-
-			// if >mobile
-			<div class="hidden xl:flex relative">
-				{move || errors.get(error_id.get()).map(move |err| view! {
-					<div
-						class=
-						"
-							absolute end-0 left-[calc(100%_+_12px)] input-error border w-fit text-nowrap py-1 px-2 rounded-md rounded-tl-none \
-							before:content-[''] before:absolute before:bg-inherit before:border-inherit before:size-2 \
-							before:left-[-5px] before:top-[1px] before:rotate-45 before:border-l before:border-b \
-						"
-					>
-						{err}
-					</div>
-				})}
-			</div>
-
-			// all
+		<div class="vertical gap-1">
+			// Error description
+			<ShowError errors error_id />
+			// Input field
 			<input
 				type=r#type
 				bind:value=value
-				class=move || format!("{} {}", class.get(), errors.get(error_id.get()).map(move |_| "input-error").unwrap_or(""))
+				class=move || format!("{} {}", class.get(), error.get().map(move |_| "input-error").unwrap_or(""))
 				placeholder=placeholder
 				required=move || required.get()
+				on:input=move |_| {
+					errors.remove(error_id.get());
+					errors.remove("default");
+				}
 			/>
 		</div>
 	}
@@ -97,6 +74,11 @@ pub fn InputCode(
 	/// Signal used for getting/setting the value.
 	#[prop(into)]
 	value: RwSignal<String>,
+	/// Errors of the form.
+	errors: crate::ReactiveErrors,
+	/// Error ID of the field.
+	#[prop(into)]
+	error_id: Text,
 	/// How long is the code.
 	#[prop(into)]
 	code_length: i32,
@@ -148,6 +130,10 @@ pub fn InputCode(
 					class=move || format!("selection:bg-transparent {class}")
 					placeholder=placeholder
 					required=move || required.get()
+					on:input=move |_| {
+						errors.remove(error_id.get());
+						errors.remove("default");
+					}
 				/>
 			</div>
 		</div>

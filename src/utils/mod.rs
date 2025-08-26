@@ -3,7 +3,7 @@ mod errors;
 mod states;
 mod theme;
 pub use focus_trap::*;
-pub use errors::{error, Errors, ReactiveErrors, ShowError};
+pub use errors::{error, errors, Errors, ReactiveErrors, ShowError};
 use leptos_router::NavigateOptions;
 pub use states::*;
 pub use theme::*;

@@ -1,5 +1,7 @@
 use leptos::prelude::*;
 
+use crate::utils::Text;
+
 /// A typedef over a [`std::collections::HashMap`].
 pub type Errors = std::collections::HashMap<std::borrow::Cow<'static, str>, ArcSignal<String>>;
 
@@ -23,6 +25,16 @@ impl ReactiveErrors {
 		self.errors.read().get(&name.into()).cloned()
 	}
 
+	/// Gets the error with the specified name, if it exists.
+	pub fn get_untracked(&self, name: impl Into<std::borrow::Cow<'static, str>>) -> Option<ArcSignal<String>> {
+		self.errors.read_untracked().get(&name.into()).cloned()
+	}
+
+	/// Removes an error from the list.
+	pub fn remove(&self, name: impl Into<std::borrow::Cow<'static, str>>) {
+		_ = self.errors.write().remove(&name.into())
+	}
+
 	/// Replaces this with another [`Errors`].
 	pub fn replace(&self, other: Errors) {
 		self.errors.set(other);
@@ -42,14 +54,25 @@ pub fn error(key: String, value: ArcSignal<String>) -> Errors {
 	errors
 }
 
+/// Creates a [`Errors`] with an iterator of errors.
+pub fn errors(iter: impl IntoIterator<Item = (std::borrow::Cow<'static, str>, ArcSignal<String>)>) -> Errors {
+	Errors::from_iter(iter)
+}
+
 /// Shows an error as an injected message.
 #[component]
-pub fn ShowError(errors: ReactiveErrors, #[prop(into)] id: std::borrow::Cow<'static, str>) -> impl IntoView {
-	view! {
-		{move || errors.get(id.clone()).map(move |err| view! {
-			<div class="input-error border rounded-md py-1 px-2">
-				{err}
-			</div>
-		})}
+pub fn ShowError(errors: ReactiveErrors, #[prop(into)] error_id: Text) -> impl IntoView {
+	// vars
+	let error = Memo::new(move |_| errors.get(error_id.get()));
+
+	move || {
+		error.get().map(move |err| {
+			view! {
+				<div class="horizontal gap-1 text-sm">
+					<span class="flex-none icon i-o-exclamation-circle icon-error-500 size-5" />
+					<span class="grow text-error-500">{err}</span>
+				</div>
+			}
+		})
 	}
 }
