@@ -127,7 +127,7 @@ widths based on device orientation.
 /* wu.variant.hocus
 Applies a class on hover, focus or focus-within.
 */
-@custom-variant hocus (&:is(:hover, :focus, :focus-within), &:has(:hover));
+@custom-variant hocus (&:is(:hover, :focus, :focus-within), &:has(:hover, :focus, :focus-within));
 
 /* wu.preflight
 Additional preflight styles.
@@ -1084,23 +1084,13 @@ A button style that highlights the surrounding area on hover.
   --wu-highlight-border-color: --alpha(var(--color-surface-content) / 20%);
   --wu-highlight-bg-color: --alpha(var(--color-surface-content) / 10%);
   --wu-divider-color: var(--wu-highlight-border-color);
-  
-  @variant hover {
+
+  @variant hocus {
     background-color: var(--wu-highlight-bg-color);
     border-color: var(--wu-highlight-border-color);
   }
 
-  @variant focus-within {
-    background-color: var(--wu-highlight-bg-color);
-    border-color: var(--wu-highlight-border-color);
-  }
-
-  @variant group-hover {
-    background-color: var(--wu-highlight-bg-color);
-    border-color: var(--wu-highlight-border-color);
-  }
-
-  @variant group-focus-within {
+  @variant group-hocus {
     background-color: var(--wu-highlight-bg-color);
     border-color: var(--wu-highlight-border-color);
   }
