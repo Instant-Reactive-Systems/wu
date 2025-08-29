@@ -1094,6 +1094,16 @@ A button style that highlights the surrounding area on hover.
     background-color: var(--wu-highlight-bg-color);
     border-color: var(--wu-highlight-border-color);
   }
+
+  @variant group-hover {
+    background-color: var(--wu-highlight-bg-color);
+    border-color: var(--wu-highlight-border-color);
+  }
+
+  @variant group-focus-within {
+    background-color: var(--wu-highlight-bg-color);
+    border-color: var(--wu-highlight-border-color);
+  }
 }
 
 @utility highlight-bright {
@@ -3288,6 +3298,7 @@ Shows an animation to indicate that something is loading.
   --wu-icon-outline-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m4.5 12.75 6 6 9-13.5'/%3E%3C/svg%3E");
   --wu-icon-outline-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18' /%3E%3C/svg%3E");
   --wu-icon-outline-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3' /%3E%3C/svg%3E");
+  --wu-icon-outline-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 12h14' /%3E%3C/svg%3E");
 
   /* solid icons */
 
