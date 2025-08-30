@@ -453,7 +453,7 @@ Custom styling for the radio and checkbox element.
 */
 @theme inline {
   --wu-forms-radio-size: --spacing(5);
-  --wu-forms-radio-accent-color: var(--color-highlight);
+  --wu-forms-radio-accent-color: var(--color-primary);
 }
 
 @layer base {
