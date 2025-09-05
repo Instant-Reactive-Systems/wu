@@ -381,3 +381,16 @@ pub enum Flavor {
 	Icon,
 	Text,
 }
+
+/// A signal to check whether the current page is in a given set.
+///
+/// # Safety
+/// Needs to be called in a owner context since it relies on `Location`.
+pub fn is_route_in_set(iter: impl IntoIterator<Item = &'static str>) -> Memo<bool> {
+	let location = leptos_router::hooks::use_location();
+	let set: std::collections::HashSet<&'static str> = std::collections::HashSet::from_iter(iter);
+	Memo::new(move |_| {
+		let path = location.pathname.get();
+		set.contains(path.as_str())
+	})
+}

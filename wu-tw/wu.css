@@ -15,16 +15,16 @@ html.dark {
 	/* surface */
 	--color-light-1: oklch(0.9015 0.015 273.83);
 	--color-light-2: oklch(0.8769 0.018 272.29);
-	--color-light-3: oklch(0.7995 0.031 271.01);
-	--color-light-4: oklch(0.6439 0.057 270.73);
-	--color-dark-1: oklch(0.2986 0.049 270.23);
-	--color-dark-2: oklch(0.3395 0.058 269.92);
-	--color-dark-3: oklch(0.3939 0.068 269.10);
-	--color-dark-4: oklch(0.4448 0.081 269.72);
+	--color-light-3: oklch(0.8495 0.025 271.01);
+	--color-light-4: oklch(0.7439 0.045 270.73);
+	--color-dark-1: oklch(0.20 0 0);
+	--color-dark-2: oklch(0.23 0 0);
+	--color-dark-3: oklch(0.26 0 0);
+	--color-dark-4: oklch(0.29 0 0);
 	--color-content-light-emph: oklch(0.1774 0.000 269.52);
 	--color-content-light-noemph: --alpha(var(--color-content-light-emph) / 50%);
 	--color-content-light-sideinfo: --alpha(var(--color-content-light-emph) / 35%);
-	--color-content-dark-emph: oklch(0.9015 0.015 273.83);
+	--color-content-dark-emph: oklch(0.95 0 0);
 	--color-content-dark-noemph: --alpha(var(--color-content-dark-emph) / 50%);
 	--color-content-dark-sideinfo: --alpha(var(--color-content-dark-emph) / 35%);
 	--color-content-emph: light-dark(var(--color-content-light-emph), var(--color-content-dark-emph));
@@ -153,7 +153,7 @@ Additional preflight styles.
 	::backdrop, :modal::backdrop, dialog::backdrop {
 		filter: blur(var(--blur-sm));
 		backdrop-filter: blur(var(--blur-sm));
-		background-color: --alpha(var(--color-black) / 50%);
+		background-color: light-dark(rgba(0, 0, 0, 50%), rgba(255, 255, 255, 10%));
 		background-size: 120% 120%;
 		background-position: center;
 	}
@@ -1405,39 +1405,28 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
 
     tr, .table-row {
       display: flex;
-      border-color: var(--wu-table-border-color);
-    }
 
-    & tr, & .table-row {
-      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
+      & > * {
         border-inline-start-width: 0px;
         border-inline-end-width: var(--wu-table-border-width);
+
+        &:last-child:not(.absolute, .overlay, .invisible, .not-has-checked\:hidden:not(:has(:checked))),
+        &:is(.absolute, .overlay, .invisible) {
+          border-inline-end-width: 0px;
+        }
       }
     }
 
-    & tfoot, & .table-footer-group {
-      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
+    tbody, .table-row-group, thead, .table-header-group, tfoot, .table-footer-group {
+      & > * {
+        border-color: var(--wu-table-border-color);
         border-top-width: 0px;
         border-bottom-width: var(--wu-table-border-width);
-        border-color: var(--wu-table-border-color);
-      }
-    }
 
-    &:not(:has(tfoot, .table-footer-group)) tbody, &:not(:has(tfoot, .table-footer-group)) .table-row-group,
-    &:not(:has(tbody, .table-row-group)) thead, &:not(:has(tfoot, .table-footer-group)) .table-header-group {
-      & > :not(:last-child:not(.absolute, .overlay, .hidden, .invisible), .absolute, .overlay, .hidden, .invisible) {
-        border-top-width: 0px;
-        border-bottom-width: var(--wu-table-border-width);
-        border-color: var(--wu-table-border-color);
-      }
-    }
-
-    &:has(tfoot, .table-footer-group) tbody, &:has(tfoot, .table-footer-group) .table-row-group,
-    &:has(tbody, .table-row-group) thead, &:has(tfoot, .table-footer-group) .table-header-group {
-      & > :not(.absolute, .overlay, .hidden, .invisible) {
-        border-top-width: 0px;
-        border-bottom-width: var(--wu-table-border-width);
-        border-color: var(--wu-table-border-color);
+        &:last-child:not(.absolute, .overlay, .invisible, .not-has-checked\:hidden:not(:has(:checked))),
+        &:is(.absolute, .overlay, .invisible) {
+          border-bottom-width: 0px;
+        }
       }
     }
 
@@ -1455,6 +1444,9 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     }
 
     thead, .table-header-group {
+      border-color: var(--wu-table-border-color);
+      border-bottom-width: var(--wu-table-border-width);
+      
       & td, & th, & .table-cell {
         background-color: var(--wu-table-header-bg-color);
         color: var(--wu-table-header-text-color);
@@ -1462,6 +1454,9 @@ Wrapper class for a <div> surrounding a <table> for unique styling.
     }
 
     tfoot, .table-footer-group {
+      border-color: var(--wu-table-border-color);
+      border-top-width: var(--wu-table-border-width);
+      
       & td, & th, & .table-cell {
         background-color: var(--wu-table-footer-bg-color);
         color: var(--wu-table-footer-text-color);

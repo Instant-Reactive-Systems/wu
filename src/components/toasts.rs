@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*};
+
 use crate::utils::Text;
 
 /// A toast message.
@@ -182,7 +183,7 @@ where
 							};
 
 							view! {
-								<wu-toast class="flex flex-row vcenter gap-4 max-w-lvw min-h-10 px-2 py-1 last:rounded-bl-md">
+								<wu-toast class="flex flex-row vcenter gap-4 max-w-lvw min-h-10 px-2 py-1 first:rounded-tl-md last:rounded-bl-md">
 									// content
 									<div class=move || format!("grow {class}")>
 										{toast.msg.clone()}
