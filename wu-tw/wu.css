@@ -2413,7 +2413,7 @@ Styling of form elements.
 	}
 
 	&::placeholder {
-		--wu-forms-input-placeholder-color: var(--color-success-content);
+		--wu-forms-input-placeholder-color: var(--wu-forms-input-text-color);
 	}
 }	
 
@@ -2430,7 +2430,7 @@ Styling of form elements.
 	}
 
 	&::placeholder {
-		--wu-forms-input-placeholder-color: var(--color-warning-content);
+		--wu-forms-input-placeholder-color: var(--wu-forms-input-text-color);
 	}
 }
 	
@@ -2447,7 +2447,7 @@ Styling of form elements.
 	}
 
 	&::placeholder {
-		--wu-forms-input-placeholder-color: var(--color-color-content);
+		--wu-forms-input-placeholder-color: var(--wu-forms-input-text-color);
 	}
 }
 	
