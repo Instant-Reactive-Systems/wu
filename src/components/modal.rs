@@ -57,10 +57,10 @@ pub fn Modal(
 						box-shadow: var(--wu-dynamic-modal-shadow);\
 						padding: var(--wu-dynamic-modal-padding);\
 					"
-					class=move || format!("overlay overlay-center overlay-container sm:w-auto h-auto max-h-svh transition starting:group-open/modal:opacity-0 {container_class}")
+					class=move || format!("overlay overlay-center overlay-container flex sm:w-auto h-auto max-h-svh transition starting:group-open/modal:opacity-0 {container_class}")
 				>
 					// Content
-					<div class=move || format!("w-full {class}")>
+					<div class=move || format!("w-full grow {class}")>
 						{children()}
 					</div>
 					// Close button
