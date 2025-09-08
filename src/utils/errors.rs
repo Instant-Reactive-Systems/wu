@@ -17,6 +17,14 @@ impl ReactiveErrors {
 		Self { errors: RwSignal::new(errors) }
 	}
 
+	/// Gets all the errors as a `HashMap`.
+	///
+	/// # Note
+	/// Call in a signal for reactivity.
+	pub fn get_all(&self) -> Errors {
+		self.errors.get()
+	}
+
 	/// Gets the error with the specified name, if it exists.
 	///
 	/// # Note

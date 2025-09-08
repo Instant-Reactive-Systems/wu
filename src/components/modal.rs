@@ -5,15 +5,15 @@ use crate::utils::Text;
 /// A modal that provides an ergonomic wrapper around `<dialog>`.
 #[component]
 pub fn Modal(
-	/// Specifies the default 'class' attribute for all modals.
+	/// Specifies the default 'class' attribute for the modal.
 	#[prop(optional, into)]
 	class: Text,
-	/// Signal that opens or closes the modal.
+	/// Specifies the default 'class' attribute for the modal container.
+	#[prop(optional, into)]
+	container_class: Text,
+	/// Signal that opens or closes the modal programmatically.
 	#[prop(into)]
-	toggle: Signal<bool>,
-	/// Signal that indicates whether the background should be blurred.
-	#[prop(default = false, into)]
-	no_blur_bg: bool,
+	open: Signal<bool>,
 	/// Signal that indicates whether the modal is closeable.
 	#[prop(default = true, into)]
 	closeable: bool,
@@ -26,7 +26,7 @@ pub fn Modal(
 
 	// logic
 	Effect::new(move |_| {
-		is_open.set(toggle.get());
+		is_open.set(open.get());
 	});
 	Effect::new(move |_| match is_open.get() {
 		true => {
@@ -46,32 +46,39 @@ pub fn Modal(
 	});
 
 	view! {
-		<dialog node_ref=dialog_ref>
-			<div class=format!("overlay-viewport-container flex hcenter h-sm:vcenter bg-transparent z-9999 {}", if !no_blur_bg { "backdrop:blur-sm backdrop:backdrop-blur-sm backdrop:bg-black/50" } else { "backdrop:bg-transparent" })>
-				<div class="overlay-container px-4 not-md:w-full">
+		<wu-modal class="contents">
+			<dialog node_ref=dialog_ref class="group/modal overlay overlay-container">
+				<div
+					style="\
+						background-color: var(--wu-dynamic-modal-bg-color);\
+						border-color: var(--wu-dynamic-modal-border-color);\
+						border-width: var(--wu-dynamic-modal-border-width);\
+						border-radius: var(--wu-dynamic-modal-border-radius);\
+						box-shadow: var(--wu-dynamic-modal-shadow);\
+						padding: var(--wu-dynamic-modal-padding);\
+					"
+					class=move || format!("overlay overlay-center overlay-container sm:w-auto h-auto max-h-svh transition starting:group-open/modal:opacity-0 {container_class}")
+				>
 					// Content
-					<div class=move || format!("overlay p-4 not-md:w-full max-w-lvw not-h-sm:h-fit max-h-lvh {class}")>
+					<div class=move || format!("w-full {class}")>
 						{children()}
 					</div>
 					// Close button
 					{closeable.then(move || view! {
-						<div class="overlay p-4 flex justify-end">
-							<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
-								<div class="hidden xl:inline-flex gap-2 vcenter">
-									<span class="kbd">"ESC"</span>
-									<span class="text-xs">"or"</span>
-								</div>
-								<button
-									class="btn-icon size-8 highlight"
-									on:click=move |_| is_open.set(false)
-								>
-									<span class="icon i-o-x-mark"/>
-								</button>
-							</div>
+						<div
+							style="\
+								margin-top: var(--wu-dynamic-modal-padding);\
+								margin-right: var(--wu-dynamic-modal-padding);\
+							"
+							class="overlay overlay-tr size-fit"
+						>
+							<button on:click=move |_| is_open.set(false) class="btn-icon size-8 autohighlight text-content-sideinfo">
+								<span class="icon i-o-x-mark"/>
+							</button>
 						</div>
 					})}
 				</div>
-			</div>
-		</dialog>
+			</dialog>
+		</wu-modal>
 	}
 }

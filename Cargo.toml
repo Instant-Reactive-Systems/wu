@@ -36,6 +36,7 @@ thiserror = "1.0"
 serde = "1.0"
 uuid = { version = "1.10", default-features = false, features = ["v4", "js"] }
 serde_json = { version = "1.0" }
+send_wrapper = "0.6"
 
 [features]
 default = [

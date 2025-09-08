@@ -1,31 +1,25 @@
 use leptos::{html, prelude::*};
 
-use crate::utils::Text;
-
-/// All possible drawer positions.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum DrawerPosition {
-	Left,
-	Right,
-	Top,
-	Bottom,
-}
+use crate::utils::{Text, Position};
 
 /// Displays a panel on an arbitrary side of the screen.
 #[component]
 pub fn Drawer(
 	/// What side to put the drawer on.
-	#[prop(default = DrawerPosition::Right)]
-	position: DrawerPosition,
+	///
+	/// # Note
+	/// Anything other than `Left`, `Right`, `Top` and `Bottom` will be ignored.
+	#[prop(default = Position::Right)]
+	position: Position,
 	/// Signal to open or close the drawer programmatically.
+	#[prop(into)]
+	open: Signal<bool>,
+	/// Specifies the default 'class' attribute for the drawer.
 	#[prop(optional, into)]
-	toggle: Signal<bool>,
-	/// Size of the drawer in px.
-	#[prop(default = 300)]
-	size: i32,
-	/// Drawer class.
-	#[prop(default = "".into(), into)]
 	class: Text,
+	/// Specifies the default 'class' attribute for the drawer container.
+	#[prop(optional, into)]
+	container_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
@@ -35,7 +29,9 @@ pub fn Drawer(
 	let is_open = RwSignal::new(false);
 
 	// logic
-	Effect::new(move |_| is_open.set(toggle.get()));
+	Effect::new(move |_| {
+		is_open.set(open.get());
+	});
 	Effect::new(move |_| match is_open.get() {
 		true => {
 			if let Some(dialog) = dialog_ref.get() {
@@ -48,66 +44,74 @@ pub fn Drawer(
 			}
 		},
 	});
-	_ = leptos_use::use_event_listener(dialog_ref, leptos::ev::close, move |_| is_open.set(false));
 	Effect::new(move |_| {
 		location.pathname.track();
 		is_open.set(false);
 	});
 
-	let get_initial_position = move || -> String {
-		match position {
-			DrawerPosition::Left => format!("left: {}px; top: 0; height: 100%; width: {}px;", -size, size),
-			DrawerPosition::Right => format!("right: {}px; top: 0; height: 100%; width: {}px;", -size, size),
-			DrawerPosition::Top => format!("top: {}px; left: 0; width: 100%; height: {}px;", -size, size),
-			DrawerPosition::Bottom => format!("bottom: {}px; left: 0; width: 100%; height: {}px;", -size, size),
-		}
+	// default to Right if no valid position was passed
+	let position = match position {
+		Position::Left => Position::Left,
+		Position::Top => Position::Top,
+		Position::Bottom => Position::Bottom,
+		_ => Position::Right,
 	};
 
-	let get_transform = Signal::derive(move || -> String {
-		let translate = match position {
-			DrawerPosition::Left => format!("translateX({}px)", if is_open.get() { size as f64 } else { 0.0 }),
-			DrawerPosition::Right => format!("translateX({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
-			DrawerPosition::Top => format!("translateY({}px)", if is_open.get() { size as f64 } else { 0.0 }),
-			DrawerPosition::Bottom => format!("translateY({}px)", if is_open.get() { -size as f64 } else { 0.0 }),
-		};
-		translate
-	});
+	#[rustfmt::skip]
+	let (position_class, border_class, shadow_class, size_class) = match position {
+		Position::Left => (
+			"overlay-tl",
+			"border-r-(--wu-dynamic-drawer-border-width) rounded-r-(--wu-dynamic-drawer-border-radius)",
+			"shadow-right-lg",
+			"w-(--wu-dynamic-drawer-size)",
+		),
+		Position::Right => (
+			"overlay-tr",
+			"border-l-(--wu-dynamic-drawer-border-width) rounded-l-(--wu-dynamic-drawer-border-radius)",
+			"shadow-left-lg",
+			"w-(--wu-dynamic-drawer-size)",
+		),
+		Position::Top => (
+			"overlay-tl",
+			"border-b-(--wu-dynamic-drawer-border-width) rounded-b-(--wu-dynamic-drawer-border-radius)",
+			"shadow-lg",
+			"h-(--wu-dynamic-drawer-size)",
+		),
+		Position::Bottom => (
+			"overlay-bl",
+			"border-t-(--wu-dynamic-drawer-border-width) rounded-t-(--wu-dynamic-drawer-border-radius)",
+			"shadow-top-lg",
+			"h-(--wu-dynamic-drawer-size)",
+		),
+		_ => unreachable!("cannot happen since we limited the position to the 4 main ones"),
+	};
 
 	view! {
 		<wu-drawer class="contents">
-			<dialog node_ref=dialog_ref>
-				<div class="overlay-viewport-container">
+			<dialog node_ref=dialog_ref class="group/drawer overlay overlay-container overflow-hidden">
+				<div
+					style="\
+						background-color: var(--wu-dynamic-drawer-bg-color);\
+						border-color: var(--wu-dynamic-drawer-border-color);\
+						padding: var(--wu-dynamic-drawer-padding);\
+					"
+					class=move || format!("overlay overlay-container max-w-lvw max-h-svh transition transition-discrete {position_class} {border_class} {shadow_class} {size_class} {container_class}")
+				>
 					// Content
-					<div
-						class=move || format!("overlay {class}")
-						style=move || format!(
-							"position: absolute; \
-							overflow: hidden; \
-							{} \
-							transform: {}; \
-							transition: transform 0.3s ease-out; \
-							transition-behavior: allow-discrete; \
-							box-shadow: 0 0 10px rgba(0,0,0,0.2);",
-							get_initial_position(),
-							get_transform.get(),
-						)
-					>
+					<div class=move || format!("cover {class}")>
 						{children()}
 					</div>
 					// Close button
-					<div class="overlay flex justify-end p-2">
-						<div class="horizontal w-fit h-fit vcenter gap-2 opacity-50">
-							<div class="hidden xl:inline-flex gap-2 vcenter">
-								<span class="kbd">"ESC"</span>
-								<span class="text-xs">"or"</span>
-							</div>
-							<button
-								class="btn-icon size-8 highlight"
-								on:click=move |_| is_open.set(false)
-							>
-								<span class="icon i-o-x-mark"/>
-							</button>
-						</div>
+					<div
+						style="\
+							margin-top: var(--wu-dynamic-drawer-padding);\
+							margin-right: var(--wu-dynamic-drawer-padding);\
+						"
+						class="overlay overlay-tr size-fit"
+					>
+						<button on:click=move |_| is_open.set(false) class="btn-icon size-8 autohighlight text-content-sideinfo">
+							<span class="icon i-o-x-mark"/>
+						</button>
 					</div>
 				</div>
 			</dialog>

@@ -143,22 +143,14 @@ where
 
 /// A utility function to push a new shell onto the stack only for the duration of the
 /// current reactive owner.
-#[track_caller]
 pub fn push_new_shell_ctx<M>(ctx: ShellCtx)
 where
 	M: Send + Sync + 'static,
 {
-	let location = std::panic::Location::caller();
 	let push_shell_cx = expect_context::<PushShell<M>>();
 	let pop_shell_cx = expect_context::<PopShell<M>>();
-	Effect::new(move |_| {
-		log::trace!("{location} | pushing a new shell ctx");
-		push_shell_cx.run(ctx.clone().into());
-	});
-	on_cleanup(move || {
-		log::trace!("{location} | popping a shell ctx");
-		pop_shell_cx.run(());
-	});
+	Effect::new(move |_| push_shell_cx.run(ctx.clone().into()));
+	on_cleanup(move || pop_shell_cx.run(()));
 }
 
 /// Holds all slots for a context.

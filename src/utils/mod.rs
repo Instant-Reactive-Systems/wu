@@ -153,6 +153,15 @@ where
 	}
 }
 
+impl<S> std::convert::From<ArcSignal<S>> for Text
+where
+	S: std::convert::Into<std::borrow::Cow<'static, str>> + Clone + Send + Sync + 'static,
+{
+	fn from(value: ArcSignal<S>) -> Self {
+		Self(Signal::derive(move || value.get().into()))
+	}
+}
+
 impl<F, S> std::convert::From<F> for Text
 where
 	F: Fn() -> S + Send + Sync + 'static,
@@ -384,13 +393,88 @@ pub enum Flavor {
 
 /// A signal to check whether the current page is in a given set.
 ///
+/// # Note
+/// You can specify a wildcard at the end of the route in order to match a parametered route.
+///
 /// # Safety
 /// Needs to be called in a owner context since it relies on `Location`.
 pub fn is_route_in_set(iter: impl IntoIterator<Item = &'static str>) -> Memo<bool> {
 	let location = leptos_router::hooks::use_location();
-	let set: std::collections::HashSet<&'static str> = std::collections::HashSet::from_iter(iter);
+	let routes = Vec::from_iter(iter);
 	Memo::new(move |_| {
 		let path = location.pathname.get();
-		set.contains(path.as_str())
+		routes
+			.iter()
+			.find(|route| match route.ends_with("*") {
+				true => path.starts_with(route.strip_suffix("*").unwrap()),
+				false => **route == path.strip_suffix("/").unwrap_or(&path),
+			})
+			.is_some()
 	})
+}
+
+/// Wraps some functionality in an action.
+pub fn actionize<F, Fu, I, R, T>(ctx: T, f: F) -> (Action<I, bool>, ReactiveErrors)
+where
+	F: Send + Sync + Fn(T, I) -> Fu + 'static,
+	I: Send + Sync + Clone + 'static,
+	R: Send + Sync + 'static,
+	T: Send + Sync + Clone + 'static,
+	Fu: std::future::Future<Output = Result<R, Errors>> + 'static,
+{
+	let errors = ReactiveErrors::default();
+	let f = Callback::new(move |i: I| f(ctx.clone(), i));
+	let action = Action::new(move |i: &I| {
+		let i = i.clone();
+		send_wrapper::SendWrapper::new(async move {
+			match f.run(i).await {
+				Ok(_) => true,
+				Err(err) => {
+					errors.replace(err.into());
+					false
+				},
+			}
+		})
+	});
+
+	(action, errors)
+}
+
+/// Wraps some functionality in an action, with a user-provided `ReactiveErrors`.
+pub fn actionize_with_custom_error_sink<F, Fu, I, R, T>(errors: ReactiveErrors, ctx: T, f: F) -> Action<I, bool>
+where
+	F: Send + Sync + Fn(T, I) -> Fu + 'static,
+	I: Send + Sync + Clone + 'static,
+	R: Send + Sync + 'static,
+	T: Send + Sync + Clone + 'static,
+	Fu: std::future::Future<Output = Result<R, Errors>> + 'static,
+{
+	let f = Callback::new(move |i: I| f(ctx.clone(), i));
+	let action = Action::new(move |i: &I| {
+		let i = i.clone();
+		send_wrapper::SendWrapper::new(async move {
+			match f.run(i).await {
+				Ok(_) => true,
+				Err(err) => {
+					errors.replace(err.into());
+					false
+				},
+			}
+		})
+	});
+
+	action
+}
+
+/// All possible positions inside of a box.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Position {
+	TopLeft,
+	Top,
+	TopRight,
+	Right,
+	BottomRight,
+	Bottom,
+	BottomLeft,
+	Left,
 }

@@ -94,7 +94,7 @@ where
 	#[cfg(debug_assertions)]
 	{
 		// vars
-		let toggle_debug_console = RwSignal::new(false);
+		let open_debug_console = RwSignal::new(false);
 		let cmd_text = RwSignal::new(String::default());
 		let cmd_history: RwSignal<VecDeque<LogItem>> = RwSignal::new(VecDeque::default());
 		let external_cmd: RwSignal<T> = RwSignal::new(T::default());
@@ -150,7 +150,7 @@ where
 			let key = cloned_key.clone();
 			let unsub = leptos_use::use_event_listener(document(), ev::keydown, move |evt| {
 				if evt.key() == key {
-					toggle_debug_console.set(true);
+					open_debug_console.notify();
 				}
 			});
 
@@ -168,7 +168,7 @@ where
 				</div>
 				<div class=move || format!("overlay flex items-end justify-end opacity-75 {dbg_overlay_class}")>
 					// if mobile
-					<button on:click=move |_| toggle_debug_console.set(true) class="inline-flex xl:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
+					<button on:click=move |_| open_debug_console.set(true) class="inline-flex xl:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>
 						<span class="text-xl font-bold">"In debug mode"</span>
 					</button>
@@ -183,7 +183,7 @@ where
 				</div>
 			</wu-debug-console-watermark>
 			<wu-debug-console class="contents">
-				<Modal class="vertical gap-2 border bg-surface-1 border-surface-2 shadow-lg rounded-md" toggle=toggle_debug_console>
+				<Modal class="vertical gap-2 border bg-surface-1 border-surface-2 shadow-lg rounded-md" open=open_debug_console>
 					<h1 class="text-2xl font-bold text-center">
 						"Debugger"
 					</h1>

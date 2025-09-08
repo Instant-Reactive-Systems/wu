@@ -2,107 +2,85 @@ use std::time::Duration;
 
 use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*};
 
-use crate::utils::Text;
+use crate::utils::{Text, Position};
 
-/// A toast message.
-///
-/// Can be either a simple text payload or a complex view.
-#[derive(Clone)]
-pub enum ToastMsg {
-	/// Simple text payload.
-	Text(ArcSignal<String>),
-	/// Info message.
-	Info(ArcSignal<String>),
-	/// Warn message.
-	Warn(ArcSignal<String>),
-	/// Error message.
-	Error(ArcSignal<String>),
-	/// Complex view.
-	View(ViewFn),
-	/// Info message with an additional complex view.
-	InfoView(ViewFn),
-	/// Warn message with an additional complex view.
-	WarnView(ViewFn),
-	/// Error message with an additional complex view.
-	ErrorView(ViewFn),
-}
-
-impl IntoRender for ToastMsg {
-	type Output = AnyView;
-
-	fn into_render(self) -> Self::Output {
-		match self {
-			ToastMsg::Text(text) => view! {
-				<p class="overflow-hidden grow">{text}</p>
-			}
-			.into_any(),
-			ToastMsg::Info(text) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-info-circle"/>
-					<p class="overflow-hidden grow">{text}</p>
-				</div>
-			}
-			.into_any(),
-			ToastMsg::Warn(text) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-exclamation-circle icon-warning-500"/>
-					<p class="overflow-hidden grow">{text}</p>
-				</div>
-			}
-			.into_any(),
-			ToastMsg::Error(text) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-exclamation-triangle icon-error-500"/>
-					<p class="overflow-hidden grow">{text}</p>
-				</div>
-			}
-			.into_any(),
-			ToastMsg::View(vw) => view! {
-				<div class="overflow-hidden grow">{vw.run()}</div>
-			}
-			.into_any(),
-			ToastMsg::InfoView(vw) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-info-circle"/>
-					<p class="overflow-hidden grow">{vw.run()}</p>
-				</div>
-			}
-			.into_any(),
-			ToastMsg::WarnView(vw) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-exclamation-circle icon-warning-500"/>
-					<p class="overflow-hidden grow">{vw.run()}</p>
-				</div>
-			}
-			.into_any(),
-			ToastMsg::ErrorView(vw) => view! {
-				<div class="horizontal vcenter gap-4">
-					<span class="icon i-o-exclamation-triangle icon-error-500"/>
-					<p class="overflow-hidden grow">{vw.run()}</p>
-				</div>
-			}
-			.into_any(),
-		}
-	}
+/// All possible toast levels.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToastLevel {
+	Info,
+	Warn,
+	Error,
 }
 
 /// A message to display for a set amount of time.
 #[derive(Clone)]
 pub struct Toast {
-	/// Message being displayed.
-	pub msg: ToastMsg,
+	/// Toast view.
+	view: ViewFn,
 	/// Duration of the close timeout.
-	pub timeout: Duration,
+	timeout: Duration,
 	/// Is the toast dismissable?
-	pub dismissable: bool,
+	dismissable: bool,
 }
 
-impl Default for Toast {
-	fn default() -> Self {
+impl Toast {
+	const DEFAULT_TOAST_TIMEOUT: Duration = Duration::from_secs(3);
+
+	/// Creates a toast from a view with default options.
+	pub fn from_view(level: ToastLevel, view_fn: impl Into<ViewFn>) -> Self {
+		Self::from_view_with(level, view_fn, Self::DEFAULT_TOAST_TIMEOUT, true)
+	}
+
+	/// Creates a toast from a view with custom options.
+	pub fn from_view_with(level: ToastLevel, view_fn: impl Into<ViewFn>, timeout: Duration, dismissable: bool) -> Self {
+		let (icon_class, color_class) = match level {
+			ToastLevel::Info => ("i-o-info-circle", ""),
+			ToastLevel::Warn => ("i-o-exclamation-circle", "icon-warning-700 dark:icon-warning-500"),
+			ToastLevel::Error => ("i-o-exclamation-triangle", "icon-error-700 dark:icon-error-500"),
+		};
+		let view_fn = view_fn.into();
+
 		Self {
-			msg: ToastMsg::Warn(ArcSignal::stored("No message specified, default toast created".to_string())),
-			timeout: Duration::from_secs(3),
-			dismissable: true,
+			view: ViewFn::from(move || {
+				view! {
+					<div class="horizontal vcenter gap-4">
+						<span class=format!("flex-none icon {icon_class} {color_class}") />
+						<div class="grow overflow-hidden">
+							{view_fn.run()}
+						</div>
+					</div>
+				}
+			}),
+			timeout,
+			dismissable,
+		}
+	}
+
+	/// Creates a toast from text with default options.
+	pub fn from_text(level: ToastLevel, text: impl Into<Text>) -> Self {
+		Self::from_text_with(level, text, Self::DEFAULT_TOAST_TIMEOUT, true)
+	}
+
+	/// Creates a toast from text with custom options.
+	pub fn from_text_with(level: ToastLevel, text: impl Into<Text>, timeout: Duration, dismissable: bool) -> Self {
+		let (icon_class, color_class) = match level {
+			ToastLevel::Info => ("i-o-info-circle", ""),
+			ToastLevel::Warn => ("i-o-exclamation-circle", "icon-warning-700 dark:icon-warning-500"),
+			ToastLevel::Error => ("i-o-exclamation-triangle", "icon-error-700 dark:icon-error-500"),
+		};
+		let text = text.into();
+
+		Self {
+			view: ViewFn::from(move || {
+				view! {
+					<div class="horizontal vcenter gap-4">
+						<span class=format!("flex-none icon {icon_class} {color_class}") />
+						<p class="grow overflow-hidden">{text}</p>
+					</div>
+				}
+			}),
+			timeout,
+			dismissable,
 		}
 	}
 }
@@ -138,9 +116,15 @@ impl ToastHandle {
 #[component]
 pub fn ToastHook<M>(
 	#[prop(optional)] _phant: std::marker::PhantomData<M>,
+	/// Toast position in the overlay.
+	#[prop(default = Position::TopRight, into)]
+	position: Position,
 	/// Toast class.
 	#[prop(optional, into)]
 	class: Text,
+	/// Toast container class.
+	#[prop(optional, into)]
+	container_class: Text,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView
@@ -167,43 +151,60 @@ where
 		toast_handle
 	})));
 
+	let (position_class, radius_class) = match position {
+		Position::TopLeft => ("overlay-tl", "last:rounded-br-(--wu-dynamic-toast-border-radius)"),
+		Position::Top => ("overlay-t", "last:rounded-b-(--wu-dynamic-toast-border-radius)"),
+		Position::TopRight => ("overlay-tr", "last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
+		Position::Right => ("overlay-r", "first:rounded-tl-(--wu-dynamic-toast-border-radius) last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
+		Position::BottomRight => ("overlay-br", "first:rounded-tl-(--wu-dynamic-toast-border-radius)"),
+		Position::Bottom => ("overlay-b", "first:rounded-t-(--wu-dynamic-toast-border-radius)"),
+		Position::BottomLeft => ("overlay-bl", "first:rounded-tr-(--wu-dynamic-toast-border-radius)"),
+		Position::Left => ("overlay-l", "first:rounded-tr-(--wu-dynamic-toast-border-radius) last:rounded-br-(--wu-dynamic-toast-border-radius)"),
+	};
+
 	view! {
 		{children()}
-		<wu-toast-hook class="overlay overlay-container overflow-clip">
-			<div class="overlay flex justify-end">
-				<wu-toasts class="h-fit divide-y border bg-surface-2 border-surface-3 divide-surface-3 rounded-bl-lg shadow-lg z-100">
-					<For
-						each=move || toasts.get()
-						key=move |toast| toast.id
-						children=move |toast| {
-							let toast_handle = ToastHandle {
-								toasts_ref: toasts,
-								toast_id: toast.id,
-								timeout_handle: toast.timeout_handle,
-							};
+		<wu-toasts class="overlay overlay-container">
+			<ul class=format!("overlay w-fit {position_class}")>
+				<For
+					each=move || toasts.get()
+					key=move |toast| toast.id
+					children=move |toast| {
+						let toast_handle = ToastHandle {
+							toasts_ref: toasts,
+							toast_id: toast.id,
+							timeout_handle: toast.timeout_handle,
+						};
 
-							view! {
-								<wu-toast class="flex flex-row vcenter gap-4 max-w-lvw min-h-10 px-2 py-1 first:rounded-tl-md last:rounded-bl-md">
-									// content
-									<div class=move || format!("grow {class}")>
-										{toast.msg.clone()}
-									</div>
-									// close
-									{toast.dismissable.then(move || view! {
-										<button
-											class="btn-icon highlight size-6"
-											on:click=move |_| toast_handle.cancel()
-										>
-											<span class="icon i-o-x-mark"/>
-										</button>
-									})}
-								</wu-toast>
-							}
+						view! {
+							<wu-toast
+								style="\
+									background-color: var(--wu-dynamic-toast-bg-color);\
+									border-color: var(--wu-dynamic-toast-border-color);\
+									border-width: var(--wu-dynamic-toast-border-width);\
+									box-shadow: var(--wu-dynamic-toast-shadow);\
+								"
+								class=format!("horizontal vcenter gap-4 max-w-lvw min-h-(--wu-dynamic-toast-min-height) p-(--wu-dynamic-toast-padding) {radius_class}")
+							>
+								// content
+								<div class=move || format!("grow {class}")>
+									{toast.view.run()}
+								</div>
+								// close
+								{toast.dismissable.then(move || view! {
+									<button
+										class="flex-none btn-icon autohighlight size-6"
+										on:click=move |_| toast_handle.cancel()
+									>
+										<span class="icon i-o-x-mark"/>
+									</button>
+								})}
+							</wu-toast>
 						}
-					/>
-				</wu-toasts>
-			</div>
-		</wu-toast-hook>
+					}
+				/>
+			</ul>
+		</wu-toasts>
 	}
 }
 

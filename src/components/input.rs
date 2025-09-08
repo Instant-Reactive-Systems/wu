@@ -38,8 +38,6 @@ pub fn FallibleReactiveInput(
 
 	view! {
 		<div class="vertical gap-1">
-			// Error description
-			<ShowError errors error_id />
 			// Input field
 			<input
 				type=r#type
@@ -52,6 +50,8 @@ pub fn FallibleReactiveInput(
 					errors.remove("default");
 				}
 			/>
+			// Error description
+			<ShowError errors error_id />
 		</div>
 	}
 }

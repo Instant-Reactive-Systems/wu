@@ -51,7 +51,7 @@ where
 					Some(res) => Either::Left(match res {
 						Ok((total_count, records)) => Either::Left(view! {
 							<tbody style=format!("\
-								height: calc((var(--spacing) * 10 + var(--wu-table-border-width)) * {limit});\
+								height: calc((var(--spacing) * var(--wu-table-row-height) + var(--wu-table-border-width)) * {limit});\
 							")>
 								{
 									let row = row.clone();
@@ -121,7 +121,7 @@ where
 						<tbody
 							class="flex center"
 							style=format!("\
-								height: calc(var(--spacing) * 10 * {limit});\
+								height: calc((var(--spacing) * var(--wu-table-row-height) + var(--wu-table-border-width)) * {limit});\
 							")
 						>
 							{fallback.run()}
