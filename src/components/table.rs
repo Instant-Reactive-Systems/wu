@@ -1,6 +1,6 @@
 use leptos::{either::*, prelude::*};
 
-use crate::utils::{Text, ViewFnWithArgs};
+use crate::utils::*;
 
 /// A table component displaying paginated records and providing a way to view into
 /// windows of records via a footer control part.
@@ -20,7 +20,7 @@ pub fn Table<T, E, Fut, F>(
 	header: ViewFn,
 	/// Table row view.
 	#[prop(into)]
-	row: ViewFnWithArgs<T>,
+	row: LocatableViewFnWithArgs<T>,
 	/// Fallback (loading) view.
 	#[prop(optional, into)]
 	fallback: ViewFn,
@@ -42,7 +42,7 @@ where
 	let data_resource = LocalResource::new(move || data_source(offset.get(), limit));
 
 	view! {
-		<div class=move || format!("wtable {}", class.get().into_owned()) style=move || style.get().into_owned()>
+		<div class=move || format!("wtable {class}") style=move || style.get().into_owned()>
 			<table>
 				<thead>
 					{move || header.run()}
@@ -50,9 +50,7 @@ where
 				{move || match data_resource.get() {
 					Some(res) => Either::Left(match res {
 						Ok((total_count, records)) => Either::Left(view! {
-							<tbody style=format!("\
-								height: calc((var(--spacing) * var(--wu-table-row-height) + var(--wu-table-border-width)) * {limit});\
-							")>
+							<tbody>
 								{
 									let row = row.clone();
 									records
@@ -63,23 +61,23 @@ where
 							</tbody>
 							<tfoot>
 								<td class="grow center">
-									<div class="horizontal gap-2">
+									<div class="horizontal gap-4">
 										// Previous
-										{move || match offset.get() == 0 {
-											true => Either::Left(view! { <div class="flex-none size-8"/> }),
-											false => Either::Right(view ! {
-												<div class="flex center">
+										<div class="flex center">
+											{move || match offset.get() == 0 {
+												true => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
+												false => Either::Right(view ! {
 													<button
 														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_sub(1))
-														class="btn-icon btn-primary size-8"
+														class="btn-icon autohighlight size-6 pointer-coarse:size-8"
 													>
-														<span class="icon i-o-arrow-left" />
+														<span class="icon i-o-arrow-left size-4" />
 													</button>
-												</div>
-											}),
-										}}
+												}),
+											}}
+										</div>
 										// Current pages
-										<div class="h-10 flex vcenter">
+										<div class="flex vcenter">
 											<span class="text-lg">
 												{move || offset.get() + 1}
 												" / "
@@ -87,19 +85,19 @@ where
 											</span>
 										</div>
 										// Next
-										{move || match (offset.get() + 1) * limit >= total_count {
-											true => Either::Left(view! { <div class="flex-none size-8"/> }),
-											false => Either::Right(view ! {
-												<div class="flex center">
+										<div class="flex center">
+											{move || match (offset.get() + 1) * limit >= total_count {
+												true => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
+												false => Either::Right(view ! {
 													<button
 														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
-														class="btn-icon btn-primary size-8"
+														class="btn-icon autohighlight size-6 pointer-coarse:size-8"
 													>
-														<span class="icon i-o-arrow-right" />
+														<span class="icon i-o-arrow-right size-4" />
 													</button>
-												</div>
-											}),
-										}}
+												}),
+											}}
+										</div>
 									</div>
 								</td>
 							</tfoot>
@@ -118,12 +116,7 @@ where
 						}),
 					}),
 					None => Either::Right(view! {
-						<tbody
-							class="flex center"
-							style=format!("\
-								height: calc((var(--spacing) * var(--wu-table-row-height) + var(--wu-table-border-width)) * {limit});\
-							")
-						>
+						<tbody>
 							{fallback.run()}
 						</tbody>
 					}),

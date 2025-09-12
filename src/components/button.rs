@@ -1,6 +1,6 @@
-use std::time::Duration;
-
 use leptos::prelude::*;
+use std::time::Duration;
+use crate::utils::*;
 
 /// A wrapper around a `<button>` that automatically
 /// handles actions.
@@ -34,7 +34,7 @@ pub fn ActionButton<I, O>(
 	pending_view: ViewFn,
 	/// View to display during finished state.
 	#[prop(optional, into)]
-	finished_view: crate::utils::ViewFnWithArgs<O>,
+	finished_view: LocatableViewFnWithArgs<O>,
 	/// Logic to run after the finished state.
 	#[prop(default=(|_: O| ()).into(), into)]
 	on_finish: Callback<(O,), ()>,

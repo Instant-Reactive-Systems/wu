@@ -161,11 +161,6 @@ Additional preflight styles.
 		-webkit-tap-highlight-color: rgba(128, 128, 128 / 0.5);
 	}
 
-	ul, ol, nav {
-		overflow: auto;
-	}
-
-
 	:focus-visible {
 		outline: none;
 	}
@@ -767,7 +762,8 @@ Provides with a set of custom backgrounds.
 ```
 */
 @utility bgi-stripes-* {
-	background-image: linear-gradient(135deg, --value(--color-*) 10%, transparent 10%, transparent 50%, --value(--color-*) 50%, --value(--color-*) 60%, transparent 60%, transparent 100%);
+    --modifier: calc(--modifier(integer) * 1%);
+	background-image: linear-gradient(135deg, --alpha(--value(--color-*) / var(--modifier, 100%)) 10%, transparent 10%, transparent 50%, --alpha(--value(--color-*) / var(--modifier, 100%)) 50%, --alpha(--value(--color-*) / var(--modifier, 100%)) 60%, transparent 60%, transparent 100%);
 }
 
 /* wu.center
@@ -907,7 +903,8 @@ Used to separate content vertically or horizontally.
 }
 
 @utility divider-* {
-	--wu-divider-color: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-divider-color: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.focusable
@@ -1052,25 +1049,25 @@ Used to fixate the height of an element.
 @utility h-fixed-* {
 	min-height: calc(var(--spacing) * --value(integer));
 	height: calc(var(--spacing) * --value(integer));
-	min-height: --value([length]);
-	height: --value([length]);
+	min-height: --value([length], [*]);
+	height: --value([length], [*]);
 }
 
 /* wu.h-max
 Used to expand an element with regards to the viewport height.
 */
 @utility h-max-* {
-	height: 100svh;
-	max-height: calc(100svh - var(--spacing) * --value(integer));
-	max-height: calc(100svh - --value([length]));
+	height: 100dvh;
+	max-height: calc(100dvh - var(--spacing) * --value(integer));
+	max-height: calc(100dvh - --value([length], [*]));
 }
 
 /* wu.h-min
 Used to expand an element to a minimal height with regards to the viewport height.
 */
 @utility h-min-* {
-	min-height: calc(100svh - var(--spacing) * --value(integer));
-	min-height: calc(100svh - --value([length]));
+	min-height: calc(100dvh - var(--spacing) * --value(integer));
+	min-height: calc(100dvh - --value([length], [*]));
 }
 
 /* wu.hide-scrollbar
@@ -1141,32 +1138,28 @@ Fancy styling for links.
 --wu-link-color: var(--color-surface-content);
 --wu-link-aria-current-color: var(--wu-link-color, var(--color-surface-content));
 */
-@layer components {
-	.link {
-		cursor: pointer;
-		text-decoration-thickness: 2px;
-		text-underline-offset: 1px;
-		text-decoration-line: none;
-		text-decoration-color: var(--wu-link-color, var(--color-surface-content));
-		color: var(--wu-link-color, var(--color-surface-content));
-		filter: brightness(95%);
+@utility link {
+	cursor: pointer;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 1px;
+	text-decoration-line: none;
+	text-decoration-color: var(--wu-link-color, var(--color-surface-content));
+	color: var(--wu-link-color, var(--color-surface-content));
 
-		@variant hocus {
-			filter: brightness(98%);
-			text-decoration-line: underline;
-		}
+	@variant hocus {
+		text-decoration-line: underline;
+	}
 
-		&[aria-current="page"] {
-			filter: brightness(98%);
-			text-decoration-line: underline;
-			text-decoration-color: var(--wu-link-aria-current-color, var(--wu-link-color, var(--color-surface-content)));
-			color: var(--wu-link-aria-current-color, var(--wu-link-color, var(--color-surface-content)));
-		}
+	&[aria-current="page"] {
+		text-decoration-line: underline;
+		text-decoration-color: var(--wu-link-aria-current-color, var(--wu-link-color, var(--color-surface-content)));
+		color: var(--wu-link-aria-current-color, var(--wu-link-color, var(--color-surface-content)));
 	}
 }
 
 @utility link-* {
-	--wu-link-color: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-link-color: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.mask
@@ -1217,11 +1210,13 @@ Styles the colors for a scrollbar cross-browser.
 ```
 */
 @utility track-* {
-	--wu-scrollbar-track: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-scrollbar-track: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 @utility thumb-* {
-	--wu-scrollbar-thumb: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-scrollbar-thumb: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.stack
@@ -1511,7 +1506,8 @@ Adds outline to text.
 @utility text-outline-* {
 	-webkit-text-stroke-width: --value([length]);
 	-webkit-text-stroke-width: calc(var(--spacing) * --value(integer));
-	-webkit-text-stroke-color: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    -webkit-text-stroke-color: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.thin-scrollbar
@@ -1622,10 +1618,11 @@ Avatar component with optional slots on its circumference at 8 points.
 */
 @layer components {
 	.avatar {
-		height: var(--wu-avatar-height, 100%);
-		width: var(--wu-avatar-width, 100%);
+		height: var(--wu-avatar-height, --spacing(8));
+		width: var(--wu-avatar-width, --spacing(8));
 		display: grid;
 		grid-template-columns: 1fr;
+		aspect-ratio: 1/1;
 		pointer-events: none !important;
 		border-radius: calc(infinity * 1px);
 		& > * {
@@ -1638,7 +1635,7 @@ Avatar component with optional slots on its circumference at 8 points.
 			grid-row-start: 1;
 			grid-column-start: 1;
 			pointer-events: none !important;
-			transform: translate(calc(var(--wu-avatar-width, 100%) * 0.5 * var(--wu-avatar-cos, 0)), calc(var(--wu-avatar-height, 100%) * 0.5 * var(--wu-avatar-sin, -1)));
+			transform: translate(calc(var(--wu-avatar-width, --spacing(8)) * 0.5 * var(--wu-avatar-cos, 0)), calc(var(--wu-avatar-height, --spacing(8)) * 0.5 * var(--wu-avatar-sin, -1)));
 
 			& > * {
 				pointer-events: auto;
@@ -2539,12 +2536,6 @@ Used to overlay a new plane over an existing one.
 @layer components {
 	.overlay-container {
 		position: relative;
-		pointer-events: none !important;
-		width: 100%;
-		height: 100%;
-		& > * {
-			pointer-events: auto;
-		}
 	}
 
 	.overlay {
@@ -2826,17 +2817,18 @@ Used to show the progress of a task or to show the passing of time.
 }
 
 @utility radial-size-* {
-	--wu-radial-size: --value([length], [percentage]);
+	--wu-radial-size: --value([length], [percentage], [*]);
 	--wu-radial-size: calc(var(--spacing) * --value(integer));
 }
 
 @utility radial-thickness-* {
-	--wu-radial-thickness: --value([length]);
+	--wu-radial-thickness: --value([length], [percentage], [*]);
 	--wu-radial-thickness: calc(var(--spacing) * --value(integer));
 }
 
 @utility radial-* {
-	--wu-radial-color: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-radial-color: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.steps
@@ -3092,7 +3084,8 @@ Used to enable visible shadows when a container overflows and is scrollable.
 }
 
 @utility scroll-shadow-* {
-	--wu-scroll-shadow-bg: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-scroll-shadow-bg: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 /* wu.tabs
@@ -3355,7 +3348,8 @@ Shows an animation to indicate that something is loading.
 }
 
 @utility icon-* {
-	--wu-icon-color: --value(--color-*);
+    --modifier: calc(--modifier(integer) * 1%);
+    --wu-icon-color: --alpha(--value(--color-*) / var(--modifier, 100%));
 }
 
 @utility i-o-* {

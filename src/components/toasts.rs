@@ -164,7 +164,7 @@ where
 
 	view! {
 		{children()}
-		<wu-toasts class="overlay overlay-container">
+		<wu-toasts class=move || format!("overlay {container_class}")>
 			<ul class=format!("overlay w-fit {position_class}")>
 				<For
 					each=move || toasts.get()
