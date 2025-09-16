@@ -8,7 +8,7 @@ Styling for `wu::Modal`.
 	--wu-dynamic-modal-bg-color: var(--color-surface-1);
 	--wu-dynamic-modal-border-color: var(--color-surface-emph-1);
 	--wu-dynamic-modal-border-width: 1px;
-	--wu-dynamic-modal-border-radius: var(--radius-md);
+	--wu-dynamic-modal-border-radius: var(--radius-lg);
 	--wu-dynamic-modal-shadow: var(--shadow-lg);
 	--wu-dynamic-modal-padding: --spacing(4);
 }
@@ -21,7 +21,7 @@ Styling for `wu::Drawer`.
 	--wu-dynamic-drawer-bg-color: var(--color-surface-1);
 	--wu-dynamic-drawer-border-color: var(--color-surface-emph-1);
 	--wu-dynamic-drawer-border-width: 1px;
-	--wu-dynamic-drawer-border-radius: var(--radius-md);
+	--wu-dynamic-drawer-border-radius: var(--radius-lg);
 	--wu-dynamic-drawer-padding: --spacing(4);
 }
 
