@@ -896,7 +896,7 @@ Used to separate content vertically or horizontally.
 		gap: var(--wu-divider-gap, --spacing(2));
 	}
 
-	& > * {
+	&, & > * {
 		color: var(--wu-divider-color, var(--color-content-sideinfo));
 		flex: none;
 	}
@@ -1041,6 +1041,15 @@ Used to expand an element with regards to the viewport width.
 			max-width: calc(var(--breakpoint-2xl) - --value([length], [*]));
 		}
 	}
+}
+
+/* wu.cw-max
+Used to expand an element with regards to the container width.
+*/
+@utility cw-max-* {
+	width: 100cqw;
+	max-width: calc(100cqw - var(--spacing) * --value(integer));
+	max-width: calc(100cqw - --value([length], [*]));
 }
 
 /* wu.h-fixed
@@ -1611,8 +1620,10 @@ Avatar component with optional slots on its circumference at 8 points.
 ```
 
 # Design variables
---wu-avatar-height: 100%;
---wu-avatar-width: 100%;
+--wu-avatar-height: --spacing(8);
+--wu-avatar-width: --spacing(8);
+--wu-avatar-max-height: auto;
+--wu-avatar-max-width: auto;
 --wu-avatar-cos: 0;
 --wu-avatar-sin: -1;
 */
@@ -1929,7 +1940,7 @@ Styling for elements that provide the user to take an action.
 
 		&:disabled {
 			cursor: not-allowed;
-			opacity: 75%;
+			filter: brightness(80%);
 
 			@variant hover {
 				filter: brightness(98%);
@@ -2710,14 +2721,14 @@ Used to show the progress of a task or to show the passing of time.
 ```
 
 # Design variables
---wu-radial-color
+--wu-radial-color: transparent;
+--wu-radial-width: --spacing(8);
+--wu-radial-height: --spacing(8);
+--wu-radial-thickness: --spacing(1);
 */
 @utility radial {
-	--wu-radial-value: 0;
-	--wu-radial-size: 5rem;
-	--wu-radial-thickness: calc(var(--wu-radial-size) / 10);
-	width: var(--wu-radial-size);
-	height: var(--wu-radial-size);
+	width: var(--wu-radial-width, --spacing(8));
+	height: var(--wu-radial-height, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
 	display: inline-grid;
@@ -2750,18 +2761,15 @@ Used to show the progress of a task or to show the passing of time.
 
 	&:before {
 		inset: 0;
-		background: conic-gradient(var(--wu-radial-color) calc(var(--wu-radial-value) * 1%), #0000 0);
-		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
-		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
+		background: conic-gradient(var(--wu-radial-color, transparent) calc(var(--wu-radial-value, 0) * 1%), #0000 0);
+		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
+		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
 	}
 }
 
 @utility radial-rounded {
-	--wu-radial-value: 0;
-	--wu-radial-size: 5rem;
-	--wu-radial-thickness: calc(var(--wu-radial-size) / 10);
-	width: var(--wu-radial-size);
-	height: var(--wu-radial-size);
+	height: var(--wu-radial-height, --spacing(8));
+	width: var(--wu-radial-width, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
 	display: inline-grid;
@@ -2794,25 +2802,24 @@ Used to show the progress of a task or to show the passing of time.
 
 	&:before {
 		inset: 0;
-		background: radial-gradient(farthest-side, var(--wu-radial-color) 98%, #0000) top/var(--wu-radial-thickness) var(--wu-radial-thickness) no-repeat, conic-gradient(var(--wu-radial-color) calc(var(--wu-radial-value) * 1%), #0000 0);
-		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
-		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
-		opacity: calc(100% * var(--wu-radial-value));
+		background: radial-gradient(farthest-side, var(--wu-radial-color, transparent) 98%, #0000) top / var(--wu-radial-thickness, --spacing(1)) var(--wu-radial-thickness, --spacing(1)) no-repeat, conic-gradient(var(--wu-radial-color, transparent) calc(var(--wu-radial-value, 0) * 1%), #0000 0);
+		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
+		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
+		opacity: calc(100% * var(--wu-radial-value, 0));
 	}
 
 	&:after {
-		background-color: var(--wu-radial-color);
-		inset: calc(50% - var(--wu-radial-thickness) / 2);
-		opacity: calc(100% * var(--wu-radial-value));
-		transform: rotate(calc(var(--wu-radial-value) * 3.6deg - 90deg)) translate(calc(var(--wu-radial-size) / 2 - 50%));
+		background-color: var(--wu-radial-color, transparent);
+		inset: calc(50% - var(--wu-radial-thickness, --spacing(1)) / 2);
+		opacity: calc(100% * var(--wu-radial-value, 0));
+		transform: rotate(calc(var(--wu-radial-value, 0) * 3.6deg - 90deg)) translate(calc(var(--wu-radial-width, --spacing(8)) / 2 - 50%, calc(var(--wu-radial-height, --spacing(8)) / 2 - 50%)));
+		z-index: 2;
 	}
 }
 
 @utility radial-bg {
-	--wu-radial-size: 5rem;
-	--wu-radial-thickness: calc(var(--wu-radial-size) / 10);
-	width: var(--wu-radial-size);
-	height: var(--wu-radial-size);
+	width: var(--wu-radial-width, --spacing(8));
+	height: var(--wu-radial-height, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
 	display: inline-grid;
@@ -2836,30 +2843,34 @@ Used to show the progress of a task or to show the passing of time.
 		appearance: none;
 	}
 
-	&:before, &:after {
+	&:before {
 		position: absolute;
 		border-radius: calc(infinity * 1px);
 		content: '';
 		z-index: 1;
-	}
-
-	&:before {
 		inset: 0;
-		background: radial-gradient(farthest-side, var(--wu-radial-color) 98%, #0000) top/var(--wu-radial-thickness) var(--wu-radial-thickness) no-repeat, conic-gradient(var(--wu-radial-color) 100%, #0000 0);
-		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
-		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness)), #000 calc(100% - var(--wu-radial-thickness)));
-	}
-
-	&:after {
-		background-color: var(--wu-radial-color);
-		inset: calc(50% - var(--wu-radial-thickness) / 2);
-		transform: rotate(calc(100 * 3.6deg - 90deg)) translate(calc(var(--wu-radial-size) / 2 - 50%));
+		background: conic-gradient(var(--wu-radial-color, transparent) calc(var(--wu-radial-value, 100) * 1%), #0000 0);
+		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
+		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
+		opacity: calc(100% * var(--wu-radial-value, 100));
 	}
 }
 
 @utility radial-size-* {
-	--wu-radial-size: --value([length], [percentage], [*]);
-	--wu-radial-size: calc(var(--spacing) * --value(integer));
+	--wu-radial-width: --value([length], [percentage], [*]);
+	--wu-radial-width: calc(var(--spacing) * --value(integer));
+	--wu-radial-height: --value([length], [percentage], [*]);
+	--wu-radial-height: calc(var(--spacing) * --value(integer));
+}
+
+@utility radial-w-* {
+	--wu-radial-width: --value([length], [percentage], [*]);
+	--wu-radial-width: calc(var(--spacing) * --value(integer));
+}
+
+@utility radial-h-* {
+	--wu-radial-height: --value([length], [percentage], [*]);
+	--wu-radial-height: calc(var(--spacing) * --value(integer));
 }
 
 @utility radial-thickness-* {
