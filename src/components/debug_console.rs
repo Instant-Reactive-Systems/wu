@@ -1,8 +1,8 @@
 use std::collections::VecDeque;
+
 use leptos::{ev, prelude::*};
 
-use crate::components::Modal;
-use crate::utils::Text;
+use crate::{components::Modal, utils::Text};
 
 /// A trait that debugging commands should implement in order to execute their commands.
 pub trait DebugCommand {
@@ -166,7 +166,7 @@ where
 				<div class="overlay">
 					{move || overlay.run()}
 				</div>
-				<div class=move || format!("overlay flex items-end justify-end opacity-75 {dbg_overlay_class}")>
+				<div class=move || format!("overlay flex vend hend opacity-75 {dbg_overlay_class}")>
 					// if mobile
 					<button on:click=move |_| open_debug_console.set(true) class="inline-flex xl:hidden gap-2 vcenter p-2 rounded-lg border bg-surface-2 border-surface-3">
 						<span class="text-xl font-bold text-red-600">"⬤"</span>

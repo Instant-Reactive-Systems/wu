@@ -7,13 +7,7 @@ mod toasts;
 mod avatar;
 
 mod routes {
-	pub use super::drawers::*;
-	pub use super::home::*;
-	pub use super::modals::*;
-	pub use super::shells::*;
-	pub use super::tabs::*;
-	pub use super::toasts::*;
-	pub use super::avatar::*;
+	pub use super::{avatar::*, drawers::*, home::*, modals::*, shells::*, tabs::*, toasts::*};
 }
 
 use crate::prelude::*;
@@ -113,7 +107,7 @@ fn AppHeader() -> impl IntoView {
 			// center
 			// <none>
 			// right
-			<div class="hidden desktop:horizontal flex-1 justify-end gap-2">
+			<div class="hidden desktop:horizontal flex-1 hend gap-2">
 				// links
 				<ul class="horizontal gap-4">
 					<li>
