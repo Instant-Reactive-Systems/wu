@@ -136,7 +136,9 @@ html.dark {
 
 	/* wu.brightness-settings */
 	--wu-brightness-light: 95%;
+	--wu-brightness-light-extra: 70%;
 	--wu-brightness-dark: 120%;
+	--wu-brightness-dark-extra: 150%;
 }
 
 /* wu.variant.breakpoints
@@ -168,6 +170,13 @@ Additional preflight styles.
 	--wu-scrollbar-track: var(--color-surface-3);
 	--wu-scrollbar-thumb: var(--color-surface-4);
 	scrollbar-color: var(--wu-scrollbar-thumb) var(--wu-scrollbar-track);
+
+	--wu-brightness: var(--wu-brightness-light);
+	--wu-brightness-extra: var(--wu-brightness-light-extra);
+	@variant dark {
+		--wu-brightness: var(--wu-brightness-dark);
+		--wu-brightness-extra: var(--wu-brightness-dark-extra);
+	}
 }
 
 @layer base {
@@ -250,11 +259,7 @@ Custom styling for input form elements.
 		transition-duration: var(--wu-global-transition-duration);
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		--tw-inset-ring-shadow: 0 0 0 0;
@@ -392,11 +397,7 @@ Custom styling for the select form element.
 		transition-duration: var(--wu-global-transition-duration);
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		--tw-inset-ring-shadow: 0 0 0 0;
@@ -483,11 +484,7 @@ Custom styling for a color picker element.
 		border-width: 0;
 
 		@variant hover {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 	}
 	[type='color']::-moz-color-swatch {
@@ -877,6 +874,7 @@ Used to separate content vertically or horizontally.
 	flex-direction: row;
 	align-items: center;
 	align-self: stretch;
+	pointer-events: none;
 
 	&:before, &:after {
 		content: "";
@@ -890,9 +888,14 @@ Used to separate content vertically or horizontally.
 		gap: var(--wu-divider-gap, --spacing(2));
 	}
 
-	& > * {
+	&, & > * {
 		color: var(--wu-divider-color, var(--color-content-sideinfo));
 		flex: none;
+		user-select: none;
+	}
+
+	& > * {
+		filter: brightness(var(--wu-brightness-extra));
 	}
 }
 
@@ -902,6 +905,7 @@ Used to separate content vertically or horizontally.
 	flex-direction: column;
 	align-items: center;
 	align-self: stretch;
+	pointer-events: none;
 
 	&:before, &:after {
 		content: "";
@@ -918,6 +922,11 @@ Used to separate content vertically or horizontally.
 	&, & > * {
 		color: var(--wu-divider-color, var(--color-content-sideinfo));
 		flex: none;
+		user-select: none;
+	}
+
+	& > * {
+		filter: brightness(var(--wu-brightness-extra));
 	}
 }
 
@@ -1848,11 +1857,7 @@ Styling for elements that provide the user to take an action.
 		transition-duration: var(--wu-global-transition-duration);
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		--tw-inset-ring-shadow: 0 0 0 0;
@@ -1900,11 +1905,7 @@ Styling for elements that provide the user to take an action.
 		}
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		--tw-inset-ring-shadow: 0 0 0 0;
@@ -1932,16 +1933,15 @@ Styling for elements that provide the user to take an action.
 		white-space: nowrap;
 		text-wrap: nowrap;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		transition-property: var(--wu-global-transition-property);
 		transition-timing-function: var(--wu-global-transition-function);
 		transition-duration: var(--wu-global-transition-duration);
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		--tw-inset-ring-shadow: 0 0 0 0;
@@ -2306,10 +2306,7 @@ Styling of small interactive elements for actions, selection, or filtering.
 		gap: --spacing(2);
 
 		@variant hocus {
-			filter: brightness(var(--wu-brightness-light));
-			@variant dark {
-				filter: brightness(var(--wu-brightness-dark));
-			}
+			filter: brightness(var(--wu-brightness));
 		}
 
 		&:disabled {
