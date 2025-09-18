@@ -88,14 +88,14 @@ pub fn Drawer(
 
 	view! {
 		<wu-drawer class="contents">
-			<dialog node_ref=dialog_ref class="group/drawer overlay overlay-container overflow-hidden">
+			<dialog node_ref=dialog_ref class="group/drawer overlay overflow-hidden">
 				<div
 					style="\
 						background-color: var(--wu-dynamic-drawer-bg-color);\
 						border-color: var(--wu-dynamic-drawer-border-color);\
 						padding: var(--wu-dynamic-drawer-padding);\
 					"
-					class=move || format!("overlay overlay-container max-w-lvw max-h-svh transition transition-discrete {position_class} {border_class} {shadow_class} {size_class} {container_class}")
+					class=move || format!("overlay max-w-lvw max-h-svh transition transition-discrete {position_class} {border_class} {shadow_class} {size_class} {container_class}")
 				>
 					// Content
 					<div class=move || format!("cover {class}")>

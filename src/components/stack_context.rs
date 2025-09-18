@@ -27,7 +27,7 @@ where
 	M: Send + Sync + 'static,
 	T: Send + Sync + Clone + 'static,
 {
-	let stack_cxs = RwSignal::<Vec<T>>::new(Default::default());
+	let stack_cxs: RwSignal<Vec<T>> = RwSignal::default();
 	let active_cx = Signal::derive(move || stack_cxs.with(move |cxs| { !cxs.is_empty() }.then(move || cxs[cxs.len() - 1].clone())));
 	provide_context(PushStackCtx::<M, T>::new(Callback::new(move |cx| {
 		stack_cxs.update(move |cxs| cxs.push(cx));
@@ -40,9 +40,7 @@ where
 		_phant: Default::default(),
 	});
 
-	view! {
-		{children()}
-	}
+	children()
 }
 
 /// Currently active stack context.
