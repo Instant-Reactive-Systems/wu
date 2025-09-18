@@ -64,9 +64,9 @@ where
 									<div class="horizontal gap-4">
 										// Previous
 										<div class="flex center">
-											{move || match offset.get() == 0 {
-												true => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
-												false => Either::Right(view ! {
+											{move || match offset.get() != 0 {
+												false => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
+												true => Either::Right(view ! {
 													<button
 														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_sub(1))
 														class="btn-icon autohighlight size-6 pointer-coarse:size-8"
@@ -86,9 +86,9 @@ where
 										</div>
 										// Next
 										<div class="flex center">
-											{move || match (limit != 0).then_some((offset.get() + 1) * limit).unwrap_or(total_count) >= total_count {
-												true => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
-												false => Either::Right(view! {
+											{move || match offset.get() < total_count.checked_div(limit).unwrap_or(0) {
+												false => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
+												true => Either::Right(view! {
 													<button
 														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
 														class="btn-icon autohighlight size-6 pointer-coarse:size-8"
