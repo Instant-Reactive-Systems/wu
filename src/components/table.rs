@@ -81,14 +81,14 @@ where
 											<span class="text-lg">
 												{move || offset.get() + 1}
 												" / "
-												{(total_count / limit) + 1}
+												{(limit != 0).then_some((total_count / limit) + 1).unwrap_or(1)}
 											</span>
 										</div>
 										// Next
 										<div class="flex center">
-											{move || match (offset.get() + 1) * limit >= total_count {
+											{move || match (limit != 0).then_some((offset.get() + 1) * limit).unwrap_or(total_count) >= total_count {
 												true => Either::Left(view! { <div class="flex-none size-6 pointer-coarse:size-8"/> }),
-												false => Either::Right(view ! {
+												false => Either::Right(view! {
 													<button
 														on:click=move |_| offset.update(move |offset| *offset = offset.saturating_add(1))
 														class="btn-icon autohighlight size-6 pointer-coarse:size-8"
