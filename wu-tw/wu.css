@@ -797,25 +797,28 @@ Utilities for quickly centering the contents of a container.
 	align-items: center;
 }
 
-@utility center-none {
-	justify-content: normal;
-	align-items: flex-start;
-}
-
 @utility hcenter {
 	justify-content: center;
-}
-
-@utility hcenter-none {
-	justify-content: normal;
 }
 
 @utility vcenter {
 	align-items: center;
 }
 
-@utility vcenter-none {
-	align-items: flex-start;
+@utility hstart {
+	justify-content: start;
+}
+
+@utility hend {
+	justify-content: end;
+}
+
+@utility vstart {
+	align-items: start;
+}
+
+@utility vend {
+	align-items: end;
 }
 
 /* wu.cover
