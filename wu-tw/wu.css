@@ -2600,6 +2600,16 @@ Used to overlay a new plane over an existing one.
 		position: relative;
 	}
 
+	.overlay-viewport {
+		position: fixed;
+		pointer-events: none !important;
+		width: 100%;
+		height: 100%;
+		& > * {
+			pointer-events: auto;
+		}
+	}
+
 	.overlay {
 		position: absolute;
 		pointer-events: none !important;

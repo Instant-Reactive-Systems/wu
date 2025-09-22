@@ -12,10 +12,8 @@ pub use theme::*;
 pub use text::Text;
 pub use marked::Marked;
 pub use locatable_view_fn::{LocatableViewFn, LocatableViewFnWithArgs};
-
 use leptos::prelude::*;
 use leptos_router::NavigateOptions;
-use std::sync::Arc;
 
 /// Generates a unit struct that acts as a marker type.
 #[macro_export]

@@ -14,9 +14,12 @@ pub fn Modal(
 	/// Signal that opens or closes the modal programmatically.
 	#[prop(into)]
 	open: Signal<bool>,
-	/// Signal that indicates whether the modal is closeable.
+	/// Indicates whether the modal is closeable.
 	#[prop(default = true, into)]
 	closeable: bool,
+	/// Indicates whether the modal is local or global (within the local container or on the viewport).
+	#[prop(default = true, into)]
+	global: bool,
 	/// Children of the component.
 	children: Children,
 ) -> impl IntoView {
@@ -47,7 +50,7 @@ pub fn Modal(
 
 	view! {
 		<wu-modal class="contents">
-			<dialog node_ref=dialog_ref class="group/modal overlay">
+			<dialog node_ref=dialog_ref class=format!("group/modal {}", global.then_some("overlay-viewport").unwrap_or("overlay"))>
 				<div
 					style="\
 						background-color: var(--wu-dynamic-modal-bg-color);\

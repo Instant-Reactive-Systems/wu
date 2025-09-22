@@ -81,7 +81,11 @@ where
 											<span class="text-lg">
 												{move || offset.get() + 1}
 												" / "
-												{(limit != 0).then_some((total_count / limit) + 1).unwrap_or(1)}
+												{
+													let div = total_count.checked_div(limit).unwrap_or(0);
+													let has_rem = total_count.checked_rem(limit).map(|rem| (rem != 0) as u64).unwrap_or(1);
+													div + has_rem
+												}
 											</span>
 										</div>
 										// Next

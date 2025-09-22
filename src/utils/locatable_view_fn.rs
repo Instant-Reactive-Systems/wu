@@ -1,5 +1,6 @@
-use leptos::prelude::*;
 use std::sync::Arc;
+
+use leptos::prelude::*;
 
 /// A [`ViewFn`] that also knows the location of where it originated in order to use it in a [`Memo`].
 pub struct LocatableViewFn {
@@ -28,6 +29,13 @@ impl LocatableViewFn {
 	/// Removes the wrapper and returns the inner [`ViewFn`].
 	pub fn into_view_fn(self) -> ViewFn {
 		self.view
+	}
+}
+
+impl From<ViewFn> for LocatableViewFn {
+	#[track_caller]
+	fn from(vw: ViewFn) -> Self {
+		Self::new(vw)
 	}
 }
 
