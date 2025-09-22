@@ -2548,7 +2548,7 @@ Shows an animation to indicate that something is loading.
 
 # Design variables
 --wu-loading-color: var(--color-content-emph);
---wu-loading-size: --spacing(6);
+--wu-loading-size: var(--wu-icon-size, --spacing(6));
 --wu-loading-anim: var(--wu-loading-anim-spinner);
 */
 @theme inline {
@@ -2562,8 +2562,8 @@ Shows an animation to indicate that something is loading.
 @utility loading {
 	pointer-events: none;
 	display: inline-block;
-	width: var(--wu-loading-size, --spacing(6));
-	height: var(--wu-loading-size, --spacing(6));
+	width: var(--wu-loading-size, var(--wu-icon-size, --spacing(6)));
+	height: var(--wu-loading-size, var(--wu-icon-size, --spacing(6)));
 	mask-size: 100%;
 	mask-repeat: no-repeat;
 	mask-position: center;
@@ -2574,6 +2574,11 @@ Shows an animation to indicate that something is loading.
 @utility loading-* {
 	--wu-loading-anim: --value(--wu-loading-anim-*);
 }	
+
+@utility loading-size-* {
+	--wu-loading-size: --value([length], [percentage], [*]);
+	--wu-loading-size: calc(var(--spacing) * --value(integer));
+}
 
 /* wu.overlay
 Used to overlay a new plane over an existing one.
@@ -3406,8 +3411,8 @@ Shows an animation to indicate that something is loading.
 @layer components {
 	.icon {
 		pointer-events: none;
-		width: --spacing(6);
-		height: --spacing(6);
+		width: var(--wu-icon-size, --spacing(6));
+		height: var(--wu-icon-size, --spacing(6));
 		display: inline-block;
 		mask-size: 100%;
 		mask-repeat: no-repeat;
@@ -3423,6 +3428,11 @@ Shows an animation to indicate that something is loading.
 @utility icon-* {
     --modifier: calc(--modifier(integer) * 1%);
     --wu-icon-color: --alpha(--value(--color-*) / var(--modifier, 100%));
+}
+
+@utility icon-size-* {
+	--wu-icon-size: --value([length], [percentage], [*]);
+	--wu-icon-size: calc(var(--spacing) * --value(integer));
 }
 
 @utility i-o-* {
