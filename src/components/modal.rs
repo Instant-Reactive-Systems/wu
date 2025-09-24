@@ -50,7 +50,7 @@ pub fn Modal(
 
 	view! {
 		<wu-modal class="contents">
-			<dialog node_ref=dialog_ref class=format!("group/modal {}", global.then_some("overlay-viewport").unwrap_or("overlay"))>
+			<dialog node_ref=dialog_ref class=format!("group/modal {} z-9999", global.then_some("overlay-viewport").unwrap_or("overlay"))>
 				<div
 					style="\
 						background-color: var(--wu-dynamic-modal-bg-color);\
