@@ -1,6 +1,6 @@
 use leptos::{html, prelude::*};
 
-use crate::utils::{Text, Position};
+use crate::utils::{Position, Text};
 
 /// Displays a panel on an arbitrary side of the screen.
 #[component]
@@ -14,6 +14,9 @@ pub fn Drawer(
 	/// Signal to open or close the drawer programmatically.
 	#[prop(into)]
 	open: Signal<bool>,
+	/// Whether the drawer should be on the viewport or in the local container.
+	#[prop(default = true)]
+	global: bool,
 	/// Specifies the default 'class' attribute for the drawer.
 	#[prop(optional, into)]
 	class: Text,
@@ -60,25 +63,25 @@ pub fn Drawer(
 	#[rustfmt::skip]
 	let (position_class, border_class, shadow_class, size_class) = match position {
 		Position::Left => (
-			"overlay-tl",
+			"internal-tl",
 			"border-r-(--wu-dynamic-drawer-border-width) rounded-r-(--wu-dynamic-drawer-border-radius)",
 			"shadow-right-lg",
 			"w-(--wu-dynamic-drawer-size)",
 		),
 		Position::Right => (
-			"overlay-tr",
+			"internal-tr",
 			"border-l-(--wu-dynamic-drawer-border-width) rounded-l-(--wu-dynamic-drawer-border-radius)",
 			"shadow-left-lg",
 			"w-(--wu-dynamic-drawer-size)",
 		),
 		Position::Top => (
-			"overlay-tl",
+			"internal-tl",
 			"border-b-(--wu-dynamic-drawer-border-width) rounded-b-(--wu-dynamic-drawer-border-radius)",
 			"shadow-lg",
 			"h-(--wu-dynamic-drawer-size)",
 		),
 		Position::Bottom => (
-			"overlay-bl",
+			"internal-bl",
 			"border-t-(--wu-dynamic-drawer-border-width) rounded-t-(--wu-dynamic-drawer-border-radius)",
 			"shadow-top-lg",
 			"h-(--wu-dynamic-drawer-size)",
@@ -88,14 +91,14 @@ pub fn Drawer(
 
 	view! {
 		<wu-drawer class="contents">
-			<dialog node_ref=dialog_ref class="group/drawer overlay overflow-hidden">
+			<dialog node_ref=dialog_ref class=move || format!("group/drawer {} overflow-hidden cover", global.then_some("overlay-viewport").unwrap_or("overlay"))>
 				<div
 					style="\
 						background-color: var(--wu-dynamic-drawer-bg-color);\
 						border-color: var(--wu-dynamic-drawer-border-color);\
 						padding: var(--wu-dynamic-drawer-padding);\
 					"
-					class=move || format!("overlay max-w-lvw max-h-svh transition transition-discrete {position_class} {border_class} {shadow_class} {size_class} {container_class}")
+					class=move || format!("overlay max-w-lvw max-h-svh h-dvh transition transition-discrete {position_class} {border_class} {shadow_class} {size_class} {container_class}")
 				>
 					// Content
 					<div class=move || format!("cover {class}")>
@@ -107,7 +110,7 @@ pub fn Drawer(
 							margin-top: var(--wu-dynamic-drawer-padding);\
 							margin-right: var(--wu-dynamic-drawer-padding);\
 						"
-						class="overlay overlay-tr size-fit"
+						class="internal-tr"
 					>
 						<button on:click=move |_| is_open.set(false) class="btn-icon size-8 autohighlight text-content-sideinfo">
 							<span class="icon i-o-x-mark"/>

@@ -162,7 +162,7 @@ where
 		view! {
 			{children()}
 			// Watermark overlay for debug mode
-			<wu-debug-console-watermark class="overlay-viewport-container p-8 z-[99]">
+			<wu-debug-console-watermark class="overlay-viewport z-9999">
 				<div class="overlay">
 					{move || overlay.run()}
 				</div>
@@ -222,7 +222,7 @@ where
 							/>
 							<button
 								style="--wu-btn-icon-border-radius: 0 0 var(--radius-md) 0"
-								class="size-12 grid center btn-icon btn-primary" on:click=move |_| submit_cmd.run(())
+								class="size-12 grid hvcenter btn-icon btn-primary" on:click=move |_| submit_cmd.run(())
 							>
 								<span class="icon i-o-cog icon-primary-content"/>
 							</button>

@@ -1,5 +1,7 @@
-use leptos::prelude::*;
 use std::time::Duration;
+
+use leptos::prelude::*;
+
 use crate::utils::*;
 
 /// A wrapper around a `<button>` that automatically
@@ -31,7 +33,7 @@ pub fn ActionButton<I, O>(
 	idle_view: ViewFn,
 	/// View to display during pending state.
 	#[prop(optional, into)]
-	pending_view: ViewFn,
+	pending_view: LocatableViewFn,
 	/// View to display during finished state.
 	#[prop(optional, into)]
 	finished_view: LocatableViewFnWithArgs<O>,
@@ -95,7 +97,10 @@ where
 		>
 			{move || match state.get() {
 				State::Idle => idle_view.run(),
-				State::Pending => pending_view.run(),
+				State::Pending => match pending_view.is_default {
+					true => view! { <span class="loading" /> }.into_any(),
+					false => pending_view.run(),
+				},
 				State::Finished => finished_view.run(action.value().get_untracked().as_ref().cloned().expect("should be Some")),
 			}}
 		</button>

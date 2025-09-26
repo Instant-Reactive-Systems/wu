@@ -50,7 +50,7 @@ pub fn Modal(
 
 	view! {
 		<wu-modal class="contents">
-			<dialog node_ref=dialog_ref class=format!("group/modal {} z-9999", global.then_some("overlay-viewport").unwrap_or("overlay"))>
+			<dialog node_ref=dialog_ref class=format!("group/modal {} cover z-9999", global.then_some("overlay-viewport").unwrap_or("overlay"))>
 				<div
 					style="\
 						background-color: var(--wu-dynamic-modal-bg-color);\
@@ -60,7 +60,7 @@ pub fn Modal(
 						box-shadow: var(--wu-dynamic-modal-shadow);\
 						padding: var(--wu-dynamic-modal-padding);\
 					"
-					class=move || format!("overlay overlay-center flex sm:w-auto h-auto max-h-svh transition starting:group-open/modal:opacity-0 {container_class}")
+					class=move || format!("overlay internal-center cover flex sm:w-auto h-auto max-h-svh transition starting:group-open/modal:opacity-0 {container_class}")
 				>
 					// Content
 					<div class=move || format!("w-full flex-1 {class}")>
@@ -73,7 +73,7 @@ pub fn Modal(
 								margin-top: var(--wu-dynamic-modal-padding);\
 								margin-right: var(--wu-dynamic-modal-padding);\
 							"
-							class="overlay overlay-tr size-fit"
+							class="internal-tr"
 						>
 							<button on:click=move |_| is_open.set(false) class="btn-icon size-8 autohighlight text-content-sideinfo">
 								<span class="icon i-o-x-mark"/>

@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+
 use crate::utils::*;
 
 #[doc(hidden)]
@@ -147,7 +148,7 @@ where
 						</wu-shell-inner-header>
 					})}
 					// wu.shell.content
-					<wu-shell-content role="main" class=move || format!("flex-1 flex overlay-container *:flex-1 {content_class}")>
+					<wu-shell-content role="main" class=move || format!("flex-1 flex relative *:flex-1 {content_class}")>
 						{children()}
 					</wu-shell-content>
 					// wu.shell.inner_footer

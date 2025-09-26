@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use leptos::{leptos_dom::helpers::TimeoutHandle, prelude::*};
 
-use crate::utils::{Text, Position};
+use crate::utils::{Position, Text};
 
 /// All possible toast levels.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -44,7 +44,7 @@ impl Toast {
 			view: ViewFn::from(move || {
 				view! {
 					<div class="horizontal vcenter gap-4">
-						<span class=format!("flex-none icon {icon_class} {color_class}") />
+						<span class=format!("flex-none size-6 icon {icon_class} {color_class}") />
 						<div class="grow overflow-hidden">
 							{view_fn.run()}
 						</div>
@@ -74,7 +74,7 @@ impl Toast {
 			view: ViewFn::from(move || {
 				view! {
 					<div class="horizontal vcenter gap-4">
-						<span class=format!("flex-none icon {icon_class} {color_class}") />
+						<span class=format!("flex-none icon size-6 {icon_class} {color_class}") />
 						<p class="grow overflow-hidden">{text}</p>
 					</div>
 				}
@@ -152,19 +152,19 @@ where
 	})));
 
 	let (position_class, radius_class) = match position {
-		Position::TopLeft => ("overlay-tl", "last:rounded-br-(--wu-dynamic-toast-border-radius)"),
-		Position::Top => ("overlay-t", "last:rounded-b-(--wu-dynamic-toast-border-radius)"),
-		Position::TopRight => ("overlay-tr", "last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
-		Position::Right => ("overlay-r", "first:rounded-tl-(--wu-dynamic-toast-border-radius) last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
-		Position::BottomRight => ("overlay-br", "first:rounded-tl-(--wu-dynamic-toast-border-radius)"),
-		Position::Bottom => ("overlay-b", "first:rounded-t-(--wu-dynamic-toast-border-radius)"),
-		Position::BottomLeft => ("overlay-bl", "first:rounded-tr-(--wu-dynamic-toast-border-radius)"),
-		Position::Left => ("overlay-l", "first:rounded-tr-(--wu-dynamic-toast-border-radius) last:rounded-br-(--wu-dynamic-toast-border-radius)"),
+		Position::TopLeft => ("internal-tl", "last:rounded-br-(--wu-dynamic-toast-border-radius)"),
+		Position::Top => ("internal-t", "last:rounded-b-(--wu-dynamic-toast-border-radius)"),
+		Position::TopRight => ("internal-tr", "last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
+		Position::Right => ("internal-r", "first:rounded-tl-(--wu-dynamic-toast-border-radius) last:rounded-bl-(--wu-dynamic-toast-border-radius)"),
+		Position::BottomRight => ("internal-br", "first:rounded-tl-(--wu-dynamic-toast-border-radius)"),
+		Position::Bottom => ("internal-b", "first:rounded-t-(--wu-dynamic-toast-border-radius)"),
+		Position::BottomLeft => ("internal-bl", "first:rounded-tr-(--wu-dynamic-toast-border-radius)"),
+		Position::Left => ("internal-l", "first:rounded-tr-(--wu-dynamic-toast-border-radius) last:rounded-br-(--wu-dynamic-toast-border-radius)"),
 	};
 
 	view! {
 		{children()}
-		<wu-toasts class=move || format!("overlay {container_class}")>
+		<wu-toasts class=move || format!("overlay cover z-9000 {container_class}")>
 			<ul class=format!("overlay w-fit {position_class}")>
 				<For
 					each=move || toasts.get()

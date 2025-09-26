@@ -57,6 +57,8 @@ html.dark {
 	--color-surface-emph-3: light-dark(var(--color-light-emph-3), var(--color-dark-emph-3));
 	--color-surface-emph-4: light-dark(var(--color-light-emph-4), var(--color-dark-emph-4));
 	--color-surface-content: var(--color-content-emph);
+	--color-dim: light-dark(rgba(0, 0, 0, 50%), rgba(255, 255, 255, 50%));
+	--color-dim-content: light-dark(var(--color-content-dark-emph), var(--color-content-light-emph));
 	/* primary */
 	--color-primary: oklch(0.6984 0.150 162.22);
 	--color-primary-darker: oklch(0.5671 0.121 162.60);
@@ -155,7 +157,7 @@ widths based on device orientation.
 /* wu.variant.hocus
 Applies a class on hover, focus or focus-within.
 */
-@custom-variant hocus (&:is(:hover, :focus, :focus-within), &:has(:hover, :focus, :focus-within));
+@custom-variant hocus (&:is(:hover, :focus, :focus-within, :active), &:has(:hover, :focus, :focus-within, :active));
 
 /* wu.preflight
 Additional preflight styles.
@@ -492,274 +494,6 @@ Custom styling for a color picker element.
 	}
 }
 
-/* wu.anchor
-Positions an element at the sides of a parent element.
-
-# Qualifiers
-Certain letters that come before the edge specification carry 
-additional information on where to put the element. These 
-letters are qualifiers that add even more nuance and control 
-to the anchor utility. Without these qualifiers, the element 
-will be placed on _its_ half at the given edge.
-- 'o' means 'outside'
-- 'i' means 'inside'
-*/
-@utility anchor {
-	position: relative;
-}
-
-@utility anchor-t {
-	position: absolute;
-	transform: translateX(-50%);
-	top: auto;
-	left: 50%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-tl {
-	position: absolute;
-	transform: translateX(-50%);
-	top: auto;
-	left: 0%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-itl {
-	position: absolute;
-	transform: translateX(0%);
-	top: auto;
-	left: 0%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-otl {
-	position: absolute;
-	transform: translateX(-100%);
-	top: auto;
-	left: 0%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-tr {
-	position: absolute;
-	transform: translateX(-50%);
-	top: auto;
-	left: 100%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-itr {
-	position: absolute;
-	transform: translateX(-100%);
-	top: auto;
-	left: 100%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-otr {
-	position: absolute;
-	transform: translateX(0%);
-	top: auto;
-	left: 100%;
-	right: auto;
-	bottom: 100%;
-}
-
-@utility anchor-b {
-	position: absolute;
-	transform: translateX(-50%);
-	top: 100%;
-	left: 50%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-bl {
-	position: absolute;
-	transform: translateX(-50%);
-	top: 100%;
-	left: 0%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-ibl {
-	position: absolute;
-	transform: translateX(0%);
-	top: 100%;
-	left: 0%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-obl {
-	position: absolute;
-	transform: translateX(-100%);
-	top: 100%;
-	left: 0%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-br {
-	position: absolute;
-	transform: translateX(-50%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-ibr {
-	position: absolute;
-	transform: translateX(-100%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-obr {
-	position: absolute;
-	transform: translateX(0%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-l {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 50%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-lt {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 0%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-ilt {
-	position: absolute;
-	transform: translateY(0%);
-	top: 0%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-olt {
-	position: absolute;
-	transform: translateY(-100%);
-	top: 0%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-lb {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 100%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-ilb {
-	position: absolute;
-	transform: translateY(-100%);
-	top: 100%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-olb {
-	position: absolute;
-	transform: translateY(0%);
-	top: 100%;
-	left: auto;
-	right: 100%;
-	bottom: auto;
-}
-
-@utility anchor-r {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 50%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-rt {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 0%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-irt {
-	position: absolute;
-	transform: translateY(0%);
-	top: 0%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-ort {
-	position: absolute;
-	transform: translateY(-100%);
-	top: 0%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-rb {
-	position: absolute;
-	transform: translateY(-50%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-irb {
-	position: absolute;
-	transform: translateY(-100%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
-@utility anchor-orb {
-	position: absolute;
-	transform: translateY(0%);
-	top: 100%;
-	left: 100%;
-	right: auto;
-	bottom: auto;
-}
-
 /* wu.bgi
 Provides with a set of custom backgrounds.
 
@@ -779,33 +513,10 @@ Provides with a set of custom backgrounds.
 	background-image: linear-gradient(135deg, --alpha(--value(--color-*) / var(--modifier, 100%)) 10%, transparent 10%, transparent 50%, --alpha(--value(--color-*) / var(--modifier, 100%)) 50%, --alpha(--value(--color-*) / var(--modifier, 100%)) 60%, transparent 60%, transparent 100%);
 }
 
-/* wu.center
-Utilities for quickly centering the contents of a container.
-
-# Usage
-
-## Center both vertically and horizontally
-```html
-<div class="w-16 h-16 center">
-	<div class="w-8 h-8"/>
-</div>
-```
-
-## Center vertically
-```html
-<div class="w-16 h-16 vcenter">
-	<div class="w-8 h-8"/>
-</div>
-```
-
-## Center horizontally 
-```html
-<div class="w-16 h-16 hcenter">
-	<div class="w-8 h-8"/>
-</div>
-```
+/* wu.flex-positioning
+A collection of aliases for justify-* and align-* that's easier to read.
 */
-@utility center {
+@utility hvcenter {
 	justify-content: center;
 	align-items: center;
 }
@@ -1139,26 +850,53 @@ A style that highlights the surrounding area on hover.
 --wu-highlight-bg-color: --alpha(var(--color-surface-content) / 10%);
 */
 @utility highlight {
-	transition-property: var(--wu-global-transition-property);
-	transition-timing-function: var(--wu-global-transition-function);
-	transition-duration: var(--wu-global-transition-duration);
-	background-color: var(--wu-highlight-bg-color, --alpha(var(--color-surface-content) / 10%));
-	border-color: var(--wu-highlight-border-color, --alpha(var(--color-surface-content) / 20%));
-}
+	position: relative;
 
-@utility autohighlight {
-	transition-property: var(--wu-global-transition-property);
-	transition-timing-function: var(--wu-global-transition-function);
-	transition-duration: var(--wu-global-transition-duration);
-
-	@variant hocus {
+	&:after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-width: 1px;
+		background-color: transparent;
+		border-color: transparent;
+		pointer-events: none;
+		transition-property: var(--wu-global-transition-property);
+		transition-timing-function: var(--wu-global-transition-function);
+		transition-duration: var(--wu-global-transition-duration);
 		background-color: var(--wu-highlight-bg-color, --alpha(var(--color-surface-content) / 10%));
 		border-color: var(--wu-highlight-border-color, --alpha(var(--color-surface-content) / 20%));
 	}
+}
+
+@utility autohighlight {
+	position: relative;
+
+	&:after {
+		border-radius: inherit;
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-width: 1px;
+		background-color: transparent;
+		border-color: transparent;
+		pointer-events: none;
+		transition-property: var(--wu-global-transition-property);
+		transition-timing-function: var(--wu-global-transition-function);
+		transition-duration: var(--wu-global-transition-duration);
+	}
+
+	@variant hocus {
+		&:after {
+			background-color: var(--wu-highlight-bg-color, --alpha(var(--color-surface-content) / 10%));
+			border-color: var(--wu-highlight-border-color, --alpha(var(--color-surface-content) / 20%));
+		}
+	}
 
 	@variant group-hocus {
-		background-color: var(--wu-highlight-bg-color, --alpha(var(--color-surface-content) / 10%));
-		border-color: var(--wu-highlight-border-color, --alpha(var(--color-surface-content) / 20%));
+		&:after {
+			background-color: var(--wu-highlight-bg-color, --alpha(var(--color-surface-content) / 10%));
+			border-color: var(--wu-highlight-border-color, --alpha(var(--color-surface-content) / 20%));
+		}
 	}
 }
 
@@ -1633,103 +1371,65 @@ Styling of UI elements that inform users about important events.
 	}
 }
 
-/* wu.avatar
-Avatar component with optional slots on its circumference at 8 points.
+/* wu.orbit
+Positions an element on the orbit of the parent container.
 
 # Usage
 
 ```html
-<img src="my-avatar.png" class="avatar avatar-size-16">
-	<span class="avatar-slot-1"/>
-	<span class="avatar-slot-3"/>
-	<span class="avatar-slot-5"/>
-	<span class="avatar-slot-7"/>
+<img src="my-avatar.png" class="relative rounded-full size-16">
+	<span class="orbit-0"/>
+	<span class="orbit orbit-1/4"/>
+	<span class="orbit orbit-tl"/>
+	<span class="orbit orbit-3/4"/>
 </img>
 ```
 
+# Note
+When the parent container isn't a circle and it's border radius isn't 50%,
+then the parent container takes the shape of a stadium, not a perfect ellipsis.
+
+This means that the orbit child will not be fully correctly placed on the edge
+of the new stadium shape. However, on modern browsers, the `--wu-orbit-approx-n` variable is
+there to adjust for a more rectangular approximation. 
+
 # Design variables
---wu-avatar-height: --spacing(8);
---wu-avatar-width: --spacing(8);
---wu-avatar-max-height: auto;
---wu-avatar-max-width: auto;
---wu-avatar-cos: 0;
---wu-avatar-sin: -1;
+--wu-orbit-value: 0; # from 0-100%
 */
-@layer components {
-	.avatar {
-		height: var(--wu-avatar-height, --spacing(8));
-		width: var(--wu-avatar-width, --spacing(8));
-		display: grid;
-		grid-template-columns: 1fr;
-		aspect-ratio: 1/1;
-		pointer-events: none !important;
-		border-radius: calc(infinity * 1px);
-		& > * {
-			pointer-events: auto;
-		}
-
-		& .avatar-slot-1, & .avatar-slot-2, & .avatar-slot-3, & .avatar-slot-4, & .avatar-slot-5, & .avatar-slot-6, & .avatar-slot-7, & .avatar-slot-8 {
-			justify-self: center;
-			align-self: center;
-			grid-row-start: 1;
-			grid-column-start: 1;
-			pointer-events: none !important;
-			transform: translate(calc(var(--wu-avatar-width, --spacing(8)) * 0.5 * var(--wu-avatar-cos, 0)), calc(var(--wu-avatar-height, --spacing(8)) * 0.5 * var(--wu-avatar-sin, -1)));
-
-			& > * {
-				pointer-events: auto;
-			}
-		}
-	}
-	.avatar-slot-1 {
-		--wu-avatar-cos: 0;
-		--wu-avatar-sin: -1;
-	}
-	.avatar-slot-2 {
-		--wu-avatar-cos: 0.70710678118;
-		--wu-avatar-sin: -0.70710678118;
-	}
-	.avatar-slot-3 {
-		--wu-avatar-cos: 1;
-		--wu-avatar-sin: 0;
-	}
-	.avatar-slot-4 {
-		--wu-avatar-cos: 0.70710678118;
-		--wu-avatar-sin: 0.70710678118;
-	}
-	.avatar-slot-5 {
-		--wu-avatar-cos: 0;
-		--wu-avatar-sin: 1;
-	}
-	.avatar-slot-6 {
-		--wu-avatar-cos: -0.70710678118;
-		--wu-avatar-sin: 0.70710678118;
-	}
-	.avatar-slot-7 {
-		--wu-avatar-cos: -1;
-		--wu-avatar-sin: 0;
-	}
-	.avatar-slot-8 {
-		--wu-avatar-cos: -0.70710678118;
-		--wu-avatar-sin: -0.70710678118;
+@utility orbit {
+	position: absolute;
+	left: calc(50% + 50% * sin(var(--wu-orbit-value, 0) * 360deg));
+	top: calc(50% - 50% * cos(var(--wu-orbit-value, 0) * 360deg));
+	bottom: auto;
+	right: auto;
+	transform: translate(-50%, -50%);
+	@supports (top: calc(sin(1rad))) and (top: calc(pow(1, 1))) and (top: calc(abs(1))) and (top: calc(sign(1))) {
+		/* superellipsis approximation of a stadium shape */
+		--wu-orbit-theta: calc(var(--wu-orbit-value, 0) * 360deg);
+		--wu-orbit-approx-n: 3; /* Adjust higher for more rectangular approximation */
+		--wu-orbit-ex: calc(2 / var(--wu-orbit-approx-n));
+		position: absolute;
+		left: calc(50% + 50% * pow(abs(sin(var(--wu-orbit-theta))), var(--wu-orbit-ex)) * sign(sin(var(--wu-orbit-theta))));
+		top: calc(50% - 50% * pow(abs(cos(var(--wu-orbit-theta))), var(--wu-orbit-ex)) * sign(cos(var(--wu-orbit-theta))));
 	}
 }
 
-@utility avatar-size-* {
-	--wu-avatar-width: --value([length], [percentage], [*]);
-	--wu-avatar-height: --value([length], [percentage], [*]);
-	--wu-avatar-width: calc(var(--spacing) * --value(integer));
-	--wu-avatar-height: calc(var(--spacing) * --value(integer));
+@theme inline {
+	--wu-orbit-value-t: 0;
+	--wu-orbit-value-tr: 1/8;
+	--wu-orbit-value-r: 2/8;
+	--wu-orbit-value-br: 3/8;
+	--wu-orbit-value-b: 4/8;
+	--wu-orbit-value-bl: 5/8;
+	--wu-orbit-value-l: 6/8;
+	--wu-orbit-value-tl: 7/8;
 }
 
-@utility avatar-w-* {
-	--wu-avatar-width: --value([length], [percentage], [*]);
-	--wu-avatar-width: calc(var(--spacing) * --value(integer));
-}
-
-@utility avatar-h-* {
-	--wu-avatar-height: --value([length], [percentage], [*]);
-	--wu-avatar-height: calc(var(--spacing) * --value(integer));
+@utility orbit-* {
+	--wu-orbit-value: --value(ratio, [*]);
+	--wu-orbit-value: calc(--value([percentage]) / 100%);
+	--wu-orbit-value: calc(--value(integer, [integer]) / 100);
+	--wu-orbit-value: --value(--wu-orbit-value-*);
 }
 
 /* wu.badge
@@ -1842,6 +1542,7 @@ Styling for elements that provide the user to take an action.
 		white-space: nowrap;
 		text-wrap: nowrap;
 		display: inline-flex;
+		position: relative;
 		justify-content: center;
 		align-items: center;
 		cursor: pointer;
@@ -1884,6 +1585,7 @@ Styling for elements that provide the user to take an action.
 	.btn-icon {
 		white-space: nowrap;
 		text-wrap: nowrap;
+		position: relative;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
@@ -1933,6 +1635,7 @@ Styling for elements that provide the user to take an action.
 		white-space: nowrap;
 		text-wrap: nowrap;
 		cursor: pointer;
+		position: relative;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -2548,7 +2251,6 @@ Shows an animation to indicate that something is loading.
 
 # Design variables
 --wu-loading-color: var(--color-content-emph);
---wu-loading-size: var(--wu-icon-size, --spacing(6));
 --wu-loading-anim: var(--wu-loading-anim-spinner);
 */
 @theme inline {
@@ -2562,8 +2264,8 @@ Shows an animation to indicate that something is loading.
 @utility loading {
 	pointer-events: none;
 	display: inline-block;
-	width: var(--wu-loading-size, var(--wu-icon-size, --spacing(6)));
-	height: var(--wu-loading-size, var(--wu-icon-size, --spacing(6)));
+	width: --spacing(6);
+	height: --spacing(6);
 	mask-size: 100%;
 	mask-repeat: no-repeat;
 	mask-position: center;
@@ -2575,58 +2277,20 @@ Shows an animation to indicate that something is loading.
 	--wu-loading-anim: --value(--wu-loading-anim-*);
 }	
 
-@utility loading-size-* {
-	--wu-loading-size: --value([length], [percentage], [*]);
-	--wu-loading-size: calc(var(--spacing) * --value(integer));
-}
+/* wu.positioning
+Set of utilities used for positioning.
 
-/* wu.overlay
-Used to overlay a new plane over an existing one.
-
-# Usage
-
-```html
-<div class="overlay-container">
-	<div class="overlay overlay-container">
-		<div class="overlay	>
-			<p>{some_content}</p>
-		</div>
-	</div>
-	<div class="overlay ove	lay-container">
-		<div class="overlay	>
-			<p>{some_conten	}</p>
-		</div>
-	</div>
-</div>
-```
+# Qualifiers
+Certain letters that come before the edge specification carry 
+additional information on where to put the element. These 
+letters are qualifiers that add even more nuance and control 
+to the positioning utilities. Without these qualifiers, the element 
+will be placed on _its_ half at the given edge.
+- 'o' means 'outside'
+- 'i' means 'inside'
 */
-@layer components {
-	.overlay-container {
-		position: relative;
-	}
-
-	.overlay-viewport {
-		position: fixed;
-		pointer-events: none !important;
-		width: 100%;
-		height: 100%;
-		& > * {
-			pointer-events: auto;
-		}
-	}
-
-	.overlay {
-		position: absolute;
-		pointer-events: none !important;
-		width: 100%;
-		height: 100%;
-		& > * {
-			pointer-events: auto;
-		}
-	}
-}
-
-@utility overlay-center {
+@utility internal-center {
+	position: absolute;
 	transform: translateX(-50%) translateY(-50%);
 	transform-origin: top left;
 	top: 50%;
@@ -2635,7 +2299,8 @@ Used to overlay a new plane over an existing one.
 	bottom: auto;
 }
 
-@utility overlay-t {
+@utility internal-t {
+	position: absolute;
 	transform: translateX(-50%);
 	transform-origin: left;
 	top: 0%;
@@ -2644,21 +2309,24 @@ Used to overlay a new plane over an existing one.
 	bottom: auto;
 }
 
-@utility overlay-tl {
+@utility internal-tl {
+	position: absolute;
 	top: 0%;
 	left: 0%;
 	right: auto;
 	bottom: auto;
 }
 
-@utility overlay-tr {
+@utility internal-tr {
+	position: absolute;
 	top: 0%;
 	left: auto;
 	right: 0%;
 	bottom: auto;
 }
 
-@utility overlay-l {
+@utility internal-l {
+	position: absolute;
 	transform: translateY(-50%);
 	transform-origin: top;
 	top: 50%;
@@ -2667,7 +2335,8 @@ Used to overlay a new plane over an existing one.
 	bottom: auto;
 }
 
-@utility overlay-r {
+@utility internal-r {
+	position: absolute;
 	transform: translateY(-50%);
 	transform-origin: top;
 	top: 50%;
@@ -2676,7 +2345,8 @@ Used to overlay a new plane over an existing one.
 	bottom: auto;
 }
 
-@utility overlay-b {
+@utility internal-b {
+	position: absolute;
 	transform: translateX(-50%);
 	transform-origin: left;
 	top: auto;
@@ -2685,18 +2355,310 @@ Used to overlay a new plane over an existing one.
 	bottom: 0%;
 }
 
-@utility overlay-bl {
+@utility internal-bl {
+	position: absolute;
 	top: auto;
 	left: 0%;
 	right: auto;
 	bottom: 0%;
 }
 
-@utility overlay-br {
+@utility internal-br {
+	position: absolute;
 	top: auto;
 	left: auto;
 	right: 0%;
 	bottom: 0%;
+}
+
+@utility external-t {
+	position: absolute;
+	transform: translateX(-50%);
+	top: auto;
+	left: 50%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-tl {
+	position: absolute;
+	transform: translateX(-50%);
+	top: auto;
+	left: 0%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-itl {
+	position: absolute;
+	transform: translateX(0%);
+	top: auto;
+	left: 0%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-otl {
+	position: absolute;
+	transform: translateX(-100%);
+	top: auto;
+	left: 0%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-tr {
+	position: absolute;
+	transform: translateX(-50%);
+	top: auto;
+	left: 100%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-itr {
+	position: absolute;
+	transform: translateX(-100%);
+	top: auto;
+	left: 100%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-otr {
+	position: absolute;
+	transform: translateX(0%);
+	top: auto;
+	left: 100%;
+	right: auto;
+	bottom: 100%;
+}
+
+@utility external-b {
+	position: absolute;
+	transform: translateX(-50%);
+	top: 100%;
+	left: 50%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-bl {
+	position: absolute;
+	transform: translateX(-50%);
+	top: 100%;
+	left: 0%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-ibl {
+	position: absolute;
+	transform: translateX(0%);
+	top: 100%;
+	left: 0%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-obl {
+	position: absolute;
+	transform: translateX(-100%);
+	top: 100%;
+	left: 0%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-br {
+	position: absolute;
+	transform: translateX(-50%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-ibr {
+	position: absolute;
+	transform: translateX(-100%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-obr {
+	position: absolute;
+	transform: translateX(0%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-l {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 50%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-lt {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 0%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-ilt {
+	position: absolute;
+	transform: translateY(0%);
+	top: 0%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-olt {
+	position: absolute;
+	transform: translateY(-100%);
+	top: 0%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-lb {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 100%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-ilb {
+	position: absolute;
+	transform: translateY(-100%);
+	top: 100%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-olb {
+	position: absolute;
+	transform: translateY(0%);
+	top: 100%;
+	left: auto;
+	right: 100%;
+	bottom: auto;
+}
+
+@utility external-r {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 50%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-rt {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 0%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-irt {
+	position: absolute;
+	transform: translateY(0%);
+	top: 0%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-ort {
+	position: absolute;
+	transform: translateY(-100%);
+	top: 0%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-rb {
+	position: absolute;
+	transform: translateY(-50%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-irb {
+	position: absolute;
+	transform: translateY(-100%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+@utility external-orb {
+	position: absolute;
+	transform: translateY(0%);
+	top: 100%;
+	left: 100%;
+	right: auto;
+	bottom: auto;
+}
+
+/* wu.overlay
+Used to overlay a new plane over an existing one.
+
+# Usage
+
+```html
+<div class="relative">
+	<div class="overlay">
+		<div class="overlay internal-center">
+			<p>{some_content}</p>
+		</div>
+	</div>
+	<div class="overlay">
+		<div class="overlay">
+			<p>{some_content}</p>
+		</div>
+	</div>
+</div>
+```
+*/
+@layer components {
+	.overlay-viewport {
+		position: fixed;
+		pointer-events: none !important;
+		& > * {
+			pointer-events: auto;
+		}
+	}
+
+	.overlay {
+		position: absolute;
+		pointer-events: none !important;
+		& > * {
+			pointer-events: auto;
+		}
+	}
 }
 	
 /* wu.placeholder
@@ -2747,19 +2709,12 @@ Used to show the progress of a task or to show the passing of time.
 
 # Design variables
 --wu-radial-color: transparent;
---wu-radial-width: --spacing(8);
---wu-radial-height: --spacing(8);
 --wu-radial-thickness: --spacing(1);
 */
 @utility radial {
-	width: var(--wu-radial-width, --spacing(8));
-	height: var(--wu-radial-height, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
-	display: inline-grid;
-	place-content: center;
 	position: relative;
-	vertical-align: middle;
 	box-sizing: content-box;
 
 	&::-moz-progress-bar {
@@ -2786,21 +2741,16 @@ Used to show the progress of a task or to show the passing of time.
 
 	&:before {
 		inset: 0;
-		background: conic-gradient(var(--wu-radial-color, transparent) calc(var(--wu-radial-value, 0) * 1%), #0000 0);
+		background: conic-gradient(var(--wu-radial-color, transparent) calc(clamp(0, var(--wu-radial-value, 0), 100) * 1%), #0000 0);
 		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
 		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
 	}
 }
 
 @utility radial-rounded {
-	height: var(--wu-radial-height, --spacing(8));
-	width: var(--wu-radial-width, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
-	display: inline-grid;
-	place-content: center;
 	position: relative;
-	vertical-align: middle;
 	box-sizing: content-box;
 
 	&::-moz-progress-bar {
@@ -2827,30 +2777,25 @@ Used to show the progress of a task or to show the passing of time.
 
 	&:before {
 		inset: 0;
-		background: radial-gradient(farthest-side, var(--wu-radial-color, transparent) 98%, #0000) top / var(--wu-radial-thickness, --spacing(1)) var(--wu-radial-thickness, --spacing(1)) no-repeat, conic-gradient(var(--wu-radial-color, transparent) calc(var(--wu-radial-value, 0) * 1%), #0000 0);
+		background: radial-gradient(farthest-side, var(--wu-radial-color, transparent) 98%, #0000) top / var(--wu-radial-thickness, --spacing(1)) var(--wu-radial-thickness, --spacing(1)) no-repeat, conic-gradient(var(--wu-radial-color, transparent) calc(clamp(0, var(--wu-radial-value, 0), 100) * 1%), #0000 0);
 		-webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
 		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
-		opacity: calc(100% * var(--wu-radial-value, 0));
+		opacity: calc(100% * clamp(0, var(--wu-radial-value, 0), 100));
 	}
 
 	&:after {
 		background-color: var(--wu-radial-color, transparent);
-		inset: calc(50% - var(--wu-radial-thickness, --spacing(1)) / 2);
-		opacity: calc(100% * var(--wu-radial-value, 0));
-		transform: rotate(calc(var(--wu-radial-value, 0) * 3.6deg - 90deg)) translate(calc(var(--wu-radial-width, --spacing(8)) / 2 - 50%, calc(var(--wu-radial-height, --spacing(8)) / 2 - 50%)));
-		z-index: 2;
+		position: absolute;
+		left: calc(50% + 50% * sin(clamp(0, var(--wu-radial-value, 0), 100) * 3.6deg));
+		top: calc(50% + 50% * -1 * cos(clamp(0, var(--wu-radial-value, 0), 100) * 3.6deg));
+		opacity: calc(100% * clamp(0, var(--wu-radial-value, 0), 100));
 	}
 }
 
 @utility radial-bg {
-	width: var(--wu-radial-width, --spacing(8));
-	height: var(--wu-radial-height, --spacing(8));
 	background-color: transparent;
 	border-radius: calc(infinity * 1px);
-	display: inline-grid;
-	place-content: center;
 	position: relative;
-	vertical-align: middle;
 	box-sizing: content-box;
 
 	&::-moz-progress-bar {
@@ -2879,23 +2824,6 @@ Used to show the progress of a task or to show the passing of time.
 		mask: radial-gradient(farthest-side, #0000 calc(99% - var(--wu-radial-thickness, --spacing(1))), #000 calc(100% - var(--wu-radial-thickness, --spacing(1))));
 		opacity: calc(100% * var(--wu-radial-value, 100));
 	}
-}
-
-@utility radial-size-* {
-	--wu-radial-width: --value([length], [percentage], [*]);
-	--wu-radial-width: calc(var(--spacing) * --value(integer));
-	--wu-radial-height: --value([length], [percentage], [*]);
-	--wu-radial-height: calc(var(--spacing) * --value(integer));
-}
-
-@utility radial-w-* {
-	--wu-radial-width: --value([length], [percentage], [*]);
-	--wu-radial-width: calc(var(--spacing) * --value(integer));
-}
-
-@utility radial-h-* {
-	--wu-radial-height: --value([length], [percentage], [*]);
-	--wu-radial-height: calc(var(--spacing) * --value(integer));
 }
 
 @utility radial-thickness-* {
@@ -3326,18 +3254,12 @@ Changes the writing-mode of the text
 }
 
 /* wu.icons
-Shows an animation to indicate that something is loading.
-
-# Categorization
-- o - outline
-- s - solid
-- m - mini
-- u - micro
+Displays an icon inside of a container.
 
 # Usage
 
 ```html
-<span class="loading <the-type-of-anim-you-want>"/>
+<span class="icon i-o-info-circle"/>
 ```
 
 # Design variables
@@ -3411,8 +3333,9 @@ Shows an animation to indicate that something is loading.
 @layer components {
 	.icon {
 		pointer-events: none;
-		width: var(--wu-icon-size, --spacing(6));
-		height: var(--wu-icon-size, --spacing(6));
+		width: --spacing(6);
+		height: --spacing(6);
+		aspect-ratio: 1/1;
 		display: inline-block;
 		mask-size: 100%;
 		mask-repeat: no-repeat;
@@ -3428,11 +3351,6 @@ Shows an animation to indicate that something is loading.
 @utility icon-* {
     --modifier: calc(--modifier(integer) * 1%);
     --wu-icon-color: --alpha(--value(--color-*) / var(--modifier, 100%));
-}
-
-@utility icon-size-* {
-	--wu-icon-size: --value([length], [percentage], [*]);
-	--wu-icon-size: calc(var(--spacing) * --value(integer));
 }
 
 @utility i-o-* {

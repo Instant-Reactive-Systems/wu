@@ -58,10 +58,10 @@ where
 					{match res {
 						Err(err) => Either::Left(view! {
 							<tbody class=move || tbody_class.get()>
-								<div class="cover flex center">
+								<div class="cover flex hvcenter">
 									<div class="vertical gap-2">
 										<div class="flex hcenter">
-											<span class="icon i-o-exclamation-triangle icon-error-500 icon-size-12"/>
+											<span class="icon i-o-exclamation-triangle icon-error-500 size-12"/>
 										</div>
 										<span class="font-semibold text-content-emph">
 											{format!("{err:?}")}
@@ -87,10 +87,10 @@ where
 									}
 								</tbody>
 								<tfoot>
-									<td class="grow center">
+									<td class="grow hvcenter">
 										<div class="horizontal gap-4">
 											// Previous
-											<div class="flex center">
+											<div class="flex hvcenter">
 												{move || match offset.get() != 0 {
 													false => Either::Left(view! { <div class="flex-none size-8"/> }),
 													true => Either::Right(view ! {
@@ -117,7 +117,7 @@ where
 												</span>
 											</div>
 											// Next
-											<div class="flex center">
+											<div class="flex hvcenter">
 												{move || match offset.get() < total_count.checked_div(limit).unwrap_or(0) {
 													false => Either::Left(view! { <div class="flex-none size-8"/> }),
 													true => Either::Right(view! {
