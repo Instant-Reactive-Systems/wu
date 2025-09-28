@@ -220,7 +220,7 @@ impl From<LocatableViewFn> for ShellCtxItem {
 }
 
 /// Holds all slots for a context.
-#[derive(Clone, Default, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct ShellCtx {
 	/// Header slot.
 	header: ShellCtxItem,
@@ -261,6 +261,7 @@ impl ShellCtx {
 	}
 
 	/// Adds a header to the context.
+	#[track_caller]
 	pub fn header(mut self, header: impl Into<LocatableViewFn>) -> Self {
 		self.header = ShellCtxItem::Some(header.into());
 		self
@@ -273,6 +274,7 @@ impl ShellCtx {
 	}
 
 	/// Adds an inner header to the context.
+	#[track_caller]
 	pub fn inner_header(mut self, inner_header: impl Into<LocatableViewFn>) -> Self {
 		self.inner_header = ShellCtxItem::Some(inner_header.into());
 		self
@@ -285,6 +287,7 @@ impl ShellCtx {
 	}
 
 	/// Adds a left sidebar to the context.
+	#[track_caller]
 	pub fn left_sidebar(mut self, left_sidebar: impl Into<LocatableViewFn>) -> Self {
 		self.left_sidebar = ShellCtxItem::Some(left_sidebar.into());
 		self
@@ -297,6 +300,7 @@ impl ShellCtx {
 	}
 
 	/// Adds a right sidebar to the context.
+	#[track_caller]
 	pub fn right_sidebar(mut self, right_sidebar: impl Into<LocatableViewFn>) -> Self {
 		self.right_sidebar = ShellCtxItem::Some(right_sidebar.into());
 		self
@@ -309,6 +313,7 @@ impl ShellCtx {
 	}
 
 	/// Adds an inner footer to the context.
+	#[track_caller]
 	pub fn inner_footer(mut self, inner_footer: impl Into<LocatableViewFn>) -> Self {
 		self.inner_footer = ShellCtxItem::Some(inner_footer.into());
 		self
@@ -321,6 +326,7 @@ impl ShellCtx {
 	}
 
 	/// Adds a footer to the context.
+	#[track_caller]
 	pub fn footer(mut self, footer: impl Into<LocatableViewFn>) -> Self {
 		self.footer = ShellCtxItem::Some(footer.into());
 		self
