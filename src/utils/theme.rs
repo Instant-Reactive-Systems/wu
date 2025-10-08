@@ -27,7 +27,7 @@ pub fn change_theme(theme: Theme) {
 	match window().dispatch_event(&custom_event) {
 		Ok(success) => {
 			if success {
-				log::info!("sent `{THEME_EVENT_CHANGE_NAME}` event");
+				log::trace!("sent `{THEME_EVENT_CHANGE_NAME}` event");
 			} else {
 				log::error!("failed to send `{THEME_EVENT_CHANGE_NAME}` event");
 			}
@@ -90,7 +90,7 @@ pub fn provide_theme_context() {
 			})
 			.expect_throw("should never fail");
 
-		log::info!("changed theme to `{theme:?}`");
+		log::trace!("changed theme to `{theme:?}`");
 	});
 
 	provide_context(theme.read_only());
@@ -121,7 +121,7 @@ fn set_theme_to_local_storage(new_theme: Theme) {
 	match window().local_storage() {
 		Ok(storage) => match storage {
 			Some(storage) => match storage.set_item(THEME_NAME, &serde_json::to_string(&new_theme).expect("should always be valid")) {
-				Ok(..) => log::info!("successfully set `{THEME_NAME}` to local storage"),
+				Ok(..) => log::trace!("successfully set `{THEME_NAME}` to local storage"),
 				Err(err) => log::error!("error while setting `{THEME_NAME}` to local storage: {err:?}"),
 			},
 			None => log::error!("could not get local storage"),
