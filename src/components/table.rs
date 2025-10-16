@@ -109,16 +109,14 @@ where
 													{move || offset.get() + 1}
 													" / "
 													{
-														let div = total_count.checked_div(limit).unwrap_or(0);
-														let has_rem = total_count.checked_rem(limit).map(|rem| (rem != 0) as u64).unwrap_or(1);
-														let result = div + has_rem;
-														(result == 0).then_some(1).unwrap_or(result)
+														(total_count + limit - 1) / limit
+
 													}
 												</span>
 											</div>
 											// Next
 											<div class="flex hvcenter">
-												{move || match offset.get() < total_count.checked_div(limit).unwrap_or(0) {
+												{move || match offset.get() < (total_count + limit - 1) / limit - 1 {
 													false => Either::Left(view! { <div class="flex-none size-8"/> }),
 													true => Either::Right(view! {
 														<button
