@@ -109,14 +109,18 @@ where
 													{move || offset.get() + 1}
 													" / "
 													{
-														(total_count + limit - 1) / limit
+														if limit != 0 {
+															(total_count + limit - 1) / limit
+														} else {
+															1
+														}
 
 													}
 												</span>
 											</div>
 											// Next
 											<div class="flex hvcenter">
-												{move || match offset.get() < (total_count + limit - 1) / limit - 1 {
+												{move || match limit != 0 && offset.get() < (total_count + limit - 1) / limit - 1 {
 													false => Either::Left(view! { <div class="flex-none size-8"/> }),
 													true => Either::Right(view! {
 														<button
